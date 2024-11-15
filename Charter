@@ -1,0 +1,88 @@
+Group Charter: Group 3, Error 418
+
+Goal of the Project
+    - Our goal with this project is to create an application for TA Scheduling
+
+Contact Information
+    - Sam: smaillis@uwm.edu
+    - Aadi: ftiwari@uwm.edu
+    - Matt: mmaijala@uwm.edu
+    - Ignacio: vegariv2@uwm.edu
+    - Max: maxkrug@uwm.edu
+
+Meeting Schedule
+    We have decided we can meet on these days below:
+    - Monday/Wednesday: 3:00pm to 3:20pm,
+    - Friday 2:00pm to 2:20pm.
+
+Time Commitment
+    - Daily Scrum meetings (20 minutes)
+    - Lab Meetings (2 Hours)
+    - At least 1 hour a day for each member working on their tasks, in case we need more time we will update this to be longer each day
+    - 3 weeks for Sprint 1
+
+Managing PBIs
+    - If a PBI is too large then we will break it up into smaller PBIs in cases where they also vary in importance
+    - Removing PBIs: if a PBI is deemed unnecessary by the product owner then it will be removed or at least moved down in the Product Backlog
+    - Adding PBIs: if more tasks become apparent during our sprint review meeting then they will be added as new PBIs for the next sprint
+
+When is a task done
+    - A task is complete when a minimum of two people have reviewed the code and have okayed the submission.
+    - A task is complete when it passes all unit tests, acceptance tests, and is committted to the main branch.
+    - When it succefully intergrates the feature requested in the User Story.
+
+Scrum Meeting Format
+    - Scrum meetings are during Monday meetings
+    - Documents will be distributed during monday's scrum meeting, in accordance to what tasks people can handle for that scrum length
+    - Tasks/documentation will be organized on Trello
+
+Procedure for our work
+    if you adopt such a policy during the initial meeting, put it here
+    - Comments on methods/functions are necessary
+    - Start simple with code, then add on later and in between the time period
+    - Keep everyone updated on all the code/documentation changes on discord/trello
+    - Trello changes need to be confirmed by the members on discord before publishing it on the board
+    - If a task is falling behind (you are stuck for an hour or more with no progress) you must let the group members know so we can get
+      The project back on track.
+
+Rules
+    - Make sure to attend every single daily scrum meeting at the designated time.
+    - Make sure to attend every lab section, if you can't then provide a reason as to why.
+    - Respond to other team members when they are contacting you in a reasonable time (12 hours), if you can't respond for a period of time
+      let the others know ahead of time that you will be temporarily unavailable for an extensive period of time.
+    - Make sure you do the tasks that you took on in the previous meeting, if they get stuck for whatever reason then contact the other members
+    - Make sure your pull request comments are relevant and appropriate to what you did within the fork.
+    - Make sure to attend lectures to be kept up to date on relevant information that is provided during them, if you cannot attend check the
+      recoreding that is archived in the canvas module for past lectures.
+    - All deadlines must be met for each task without exception.
+
+    Minor Offenses
+        - Missing 1 daily scrum within a week
+        - Your pull messages are irrelevant and/or inappropriate.
+        - Not doing assignments you were given in a reasonable time, and not contacting/telling other members in the event of a task being stuck.
+        - Not communicating with other members about your progress.
+        - Missing 1 minor deadline (a daily scrum task), becomes major if any more are missed.
+
+    Major Offenses
+        - Missing meeting in lab without contacting the others and working out your responsibilities for the upcoming week
+        - Missing at least 3 daily scrum meetings.
+        - Missing a strict deadline (assignment due date)
+        - 3 different minor offenses within a given week.
+
+How we will handle members who aren't meeting our expectations
+    - In the event of a minor offense Someone in our group will talk to the group member who is falling short within 24 hours
+      of the minor offense.
+    - After the first offense if another is commited within the week of the first offense
+      we will give a group warning to the offender
+    - If a major offense or a 3rd minor offense is committed within the same week of the group intervention
+      we will get the Scrum Master (TA) involved to consult the member.
+    - If all previous attempts to correct the offender's behavior are not successful within the week of the major offense
+      we will get the Product Owner to take action against the offender (Professor Jayson Rock).
+
+We as a team agree to all of these terms and conditions and by signing here we are expected to hold ourselves to these standards.
+      Name                  Email              Date
+    - Sotirios Maillis      smaillis@uwm.edu   11/14/2024
+    - Aaditya Tiwari        ftiwari@uwm.edu    11/14/2024
+    - Matthew Maijala       mmaijala@uwm.edu   11/14/2024
+    - Ignacio Vega Rivera   vegariv2@uwm.edu   11/14/2024
+    - Max Krug              maxkrug@uwm.edu    11/14/2024
