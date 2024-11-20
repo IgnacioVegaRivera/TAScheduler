@@ -14,3 +14,7 @@ class ConfigureUserPage(View):
 class HomePage(View):
     def get(self, request):
         return render(request, "home.html", {})
+
+class AdminHomePage(View):
+        def get(self, request):
+            return render(request, "admin_Home.html", {})
