@@ -8,4 +8,4 @@ class LoginPage(View):
 
 class HomePage(View):
     def get(self, request):
-        return render(request, "hello.html", {})
+        return render(request, "home.html", {})
