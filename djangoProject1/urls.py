@@ -21,5 +21,5 @@ from djangoProject1.views import LoginPage, HomePage
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LoginPage.as_view()),
-    path('home.html',HomePage.as_view())
+    path('home/',HomePage.as_view())
 ]
