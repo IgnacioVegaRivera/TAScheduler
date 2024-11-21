@@ -16,5 +16,5 @@ class HomePage(View):
         return render(request, "home.html", {})
 
 class AdminHomePage(View):
-        def get(self, request):
-            return render(request, "admin_Home.html", {})
+    def get(self, request):
+        return render(request, "admin_Home.html", {})
