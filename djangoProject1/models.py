@@ -8,7 +8,6 @@ class User(models.Model): # basic for now
         ('Admin', 'Administrator'),
     ]
 
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) #unique id
     first_name = models.CharField(max_length=50, default="DefaultFirst") #first name of user
     last_name = models.CharField(max_length=50, default="DefaultLast") #last name of user
