@@ -7,7 +7,7 @@ class TestLoginUnit(TestCase):
     def setUp(self):
         self.donkey = Client()
         temp = User(name="one", password="two")
-        temp.save()
+        # temp.save()
 
     def test_page_access(self):
         # gets the login url and makes sure the user can access it

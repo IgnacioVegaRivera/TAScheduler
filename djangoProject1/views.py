@@ -7,6 +7,9 @@ class LoginPage(View):
     def get(self, request):
         return render(request, "login.html", {})
 
+    def post(self, request):
+        return redirect("home.html")
+
 
 class ConfigureUserPage(View):
     def get(self, request):
