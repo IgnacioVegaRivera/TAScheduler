@@ -14,7 +14,7 @@ class User(models.Model): # basic for now
     username = models.CharField(max_length=50, unique=True, default="Default_Username")  #unique username (ISSUES LATER ON, default AND unique doesn't work well)
     password = models.CharField(max_length=128, default="Default_Password")  #stored password (128 for hash(? idk documentation recommended it))
     email = models.EmailField(default="default@example.com")  #unique email address (cant run unless blank by default
-    phone_number = models.CharField(max_length=14, blank=True, null=True)  #optional phone number (can make required later)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)  #optional phone number (can make required later)
     address = models.TextField(blank=True, null=True)  #optional home address (can make required later)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='TA')  #role of the user (TA, Instructor, Admin)
 
