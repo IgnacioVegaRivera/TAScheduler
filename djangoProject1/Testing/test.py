@@ -6,8 +6,8 @@ from djangoProject1.models import User
 class TestLoginUnit(TestCase):
     def setUp(self):
         self.donkey = Client()
-        temp = User(name="one", password="two")
-        # temp.save()
+        temp = User(username="one", password="two")
+        temp.save()
 
     def test_page_access(self):
         # gets the login url and makes sure the user can access it
@@ -20,21 +20,32 @@ class TestLoginUnit(TestCase):
         # if the login info is correct then the user redirects
         response = self.donkey.post('/', {"username": "one", "password": "two"})
         self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "home.html")
 
     def test_fail_login(self):
         #if the login info is incorrect then the user doesn't redirect
         response = self.donkey.post('/', {"username": "one", "password": "wrong"})
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.url, "login.html")
+
+    def test_empty(self):
+        response = self.donkey.post('/', {"username": "", "password": ""})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.url, "login.html")
 
     def test_no_username(self):
         #if no username entered then user doesn't redirect
-        response = self.client.post('/', {"username": "", "password": "two"})
+        response = self.donkey.post('/', {"username": "", "password": "two"})
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.url, "login.html")
 
     def test_no_password(self):
         # if no password entered then user doesn't redirect
-        response = self.client.post('/', {"username": "one", "password": ""})
+        response = self.donkey.post('/', {"username": "one", "password": ""})
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.url, "login.html")
+
+
 
 
 #Acceptance Tests for logging in
