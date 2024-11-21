@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
+
 
 
 class LoginPage(View):
@@ -10,6 +11,9 @@ class LoginPage(View):
 class ConfigureUserPage(View):
     def get(self, request):
         return render(request, "configureUser.html", {})
+
+    def post(self, request):
+        return redirect('/home/')
 
 class HomePage(View):
     def get(self, request):
