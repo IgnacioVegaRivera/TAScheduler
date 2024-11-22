@@ -18,6 +18,20 @@ class ConfigureUserPage(View):
     def post(self, request):
         return redirect('/home/')
 
+class UserDirectoryPage(View):
+    def get(self, request):
+        return render(request, "user_Directory.html", {})
+
+    def post(self, request):
+        return redirect('/home/')
+
+class CourseDirectoryPage(View):
+    def get(self, request):
+        return render(request, "course_Directory.html", {})
+
+    def post(self, request):
+        return redirect('/home/')
+
 class HomePage(View):
     def get(self, request):
         return render(request, "home.html", {})
