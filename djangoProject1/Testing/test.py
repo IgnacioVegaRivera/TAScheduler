@@ -24,26 +24,38 @@ class TestLoginUnit(TestCase):
 
     def test_fail_login(self):
         #if the login info is incorrect then the user doesn't redirect
-        response = self.donkey.post('/', {"username": "one", "password": "wrong"})
+        response = self.donkey.post('/', {"username": "three", "password": "wrong"})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.url, "login.html")
+        self.assertTemplateUsed(response, 'login.html')
 
     def test_empty(self):
         response = self.donkey.post('/', {"username": "", "password": ""})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.url, "login.html")
+        self.assertTemplateUsed(response, 'login.html')
 
     def test_no_username(self):
         #if no username entered then user doesn't redirect
         response = self.donkey.post('/', {"username": "", "password": "two"})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.url, "login.html")
+        self.assertTemplateUsed(response, 'login.html')
+
+    def test_wrong_username(self):
+        #if no username entered then user doesn't redirect
+        response = self.donkey.post('/', {"username": "wrong", "password": "two"})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'login.html')
 
     def test_no_password(self):
         # if no password entered then user doesn't redirect
         response = self.donkey.post('/', {"username": "one", "password": ""})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.url, "login.html")
+        self.assertTemplateUsed(response, 'login.html')
+
+    def test_wrong_password(self):
+        # if no password entered then user doesn't redirect
+        response = self.donkey.post('/', {"username": "one", "password": "wrong"})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'login.html')
 
 
 
@@ -52,7 +64,7 @@ class TestLoginUnit(TestCase):
 class TestLoginAcceptance(TestCase):
     def setUp(self):
         self.donkey = Client()
-        temp = User(name="one", password="two")
+        temp = User(username="one", password="two")
         temp.save()
 
     def test_login_success(self):
@@ -61,9 +73,9 @@ class TestLoginAcceptance(TestCase):
         self.assertEqual(response.status_code, 200)
 
         #check that we get redirected to the things page after we enter the right password
-        self.assertRedirects(response, "/home/", 302)
+        self.assertRedirects(response, "home.html", 302)
 
-    def test_login_fail(self):
+    def test_login_fail_password(self):
         response = self.donkey.post("/", {"username": "one", "password": "wrong"}, follow=True)
         # even though the password is wrong the site stays up so check for 200
         self.assertEqual(response.status_code, 200)
@@ -73,4 +85,15 @@ class TestLoginAcceptance(TestCase):
 
         # is the message equal to "bad password"
         self.assertEqual(response.context["message"], "Username or Password is incorrect")
+
+    def test_login_fail_username(self):
+        response = self.donkey.post("/", {"username": "wrong", "password": "two"}, follow=True)
+        # even though the password is wrong the site stays up so check for 200
+        self.assertEqual(response.status_code, 200)
+
+        # is the message appearing
+        self.assertIn("message", response.context)
+
+        # is the message equal to "bad password"
+        self.assertEqual(response.context["message"], "User does not exist")
 
