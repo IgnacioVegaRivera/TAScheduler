@@ -22,13 +22,6 @@
     color: black;
 }
 
-.addUser{
-    margin-left: 1250px;
-    margin-top: 10px;
-    padding: 8px;
-    font-size: 15px;
-}
-
 .userBox{
     width: 260px;
     height: 260px;
@@ -40,4 +33,18 @@
 .edit-modal{
     width: 500px;
     height: 500px;
+}
+
+.addUserModal{
+    padding: 8px;
+    font-size: 15px;
+}
+.create-user{
+    width: 500px;
+    height: 500px;
+}
+
+.required:after {
+    content: "*";
+    color: red;
 }
