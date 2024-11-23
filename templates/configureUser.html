@@ -13,28 +13,95 @@
         <a href="">Configure Courses</a>
         <a href="">Databases</a>
     </div>
-    <button class="addUser" type="button">Add User</button>
+
+    <div class="addUserModal">
+        <div class="create-user" popover id="createUser">
+            <div class="createNewUserModalHeader">
+                <h2>Create new Course</h2>
+            </div>
+            <div class="modal-header" id="myModal">
+                <div class="modal-dialog">
+                            <form>
+                                <div>
+                                    <label class="form-label required">Name</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="roleControlSelect1">Role</label>
+                                        <select class="form-control" id="roleControlSelect1">
+                                            <option> </option>
+                                            <option>TA</option>
+                                            <option>Instructor</option>
+                                            <option>Admin</option>
+                                        </select>
+                                </div>
+                                <div>
+                                    <label class="form-label required">Courses</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div>
+                                    <label class="form-label required">Email</label>
+                                    <input type="email" class="form-control">
+                                </div>
+                                <div>
+                                    <label class="form-label required">Phone Number</label>
+                                    <input type="number" class="form-control">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button popovertarget="createUser" popovertargetaction="hide">
+                                Cancel
+                            </button>
+                        </div>
+                </div>
+            </div>
+        </div>
+    <button popovertarget="createUser">Add User</button>
     <div class="userBox">
         <h2>Jayson Rock</h2>
         <p>Instructor <br /> Comp Sci 361, Comp Sci 337 <br />
             rock@uwm.edu <br /> 414-414-4141</p>
         <div class="edit-modal" popover id="editModal">
             <h2>Edit user info:</h2>
-            <button popovertarget="editModal" popovertargetaction="hide">
-                Close
-            </button>
-        </div>
-        <button popovertarget="editModal">Edit</button>
-    </div>
-    <div class="userBox">
-        <h2>Ayesha Siddika Nipu</h2>
-        <p>Instructor <br /> Comp Sci 361, Comp Sci 999<br />
-            ninpau@uwm.edu <br />414-414-4141</p>
-        <div class="edit-modal" popover id="editModal">
-            <h2>Edit user info:</h2>
-            <button popovertarget="editModal" popovertargetaction="hide">
-                Close
-            </button>
+            <div class="modal-header" id="myModal">
+                <div class="modal-dialog">
+                            <form>
+                                <div>
+                                    <label class="form-label required">Name</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                 <div class="form-group">
+                                    <label for="roleControlSelect1">Role</label>
+                                        <select class="form-control" id="roleControlSelect1">
+                                            <option> </option>
+                                            <option>TA</option>
+                                            <option>Instructor</option>
+                                            <option>Admin</option>
+                                        </select>
+                                </div>
+                                <div>
+                                    <label class="form-label required">Courses</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div>
+                                    <label class="form-label required">Email</label>
+                                    <input type="email" class="form-control">
+                                </div>
+                                <div>
+                                    <label class="form-label required">Phone Number</label>
+                                    <input type="number" class="form-control">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button popovertarget="editModal" popovertargetaction="hide">
+                                Cancel
+                            </button>
+                        </div>
+            </div>
         </div>
         <button popovertarget="editModal">Edit</button>
     </div>
