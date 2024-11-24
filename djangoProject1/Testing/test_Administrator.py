@@ -1,8 +1,10 @@
 # from Administrator import Admin
+from djangoProject1.MethodFiles import Administrator
 from djangoProject1.models import User, Course
 from django.test import TestCase, Client
 import unittest
 from unittest.mock import Mock
+from djangoProject1.MethodFiles.Administrator import CreateCourse
 
 class UnitAdminTest(unittest.TestCase):
     def setUp(self):
@@ -87,4 +89,43 @@ class UnitAdminTest(unittest.TestCase):
     def test_Delete_Account(self):
         a = User("Bob", "Smith", "login", "password", "<EMAIL>", "4141234567", "UWM", "Admin")
         alt_user = User("Steve", "Jobs", "login2", "password2", "<EMAIL2>", "4141234568", "UWM2", "TA")
-        self.assertEquals(alt_user, a.delete_account(),"")
+        self.assertEqual(alt_user, a.delete_account(),"")
+
+
+class CreateCourseUnitTest(unittest.TestCase):
+    def setUp(self):
+        self.user = User(first_name="(no", last_name="instructor)", role="Instructor")
+
+    #to test properly we must save within the helper method
+    def test_create_course(self):
+        course = CreateCourse.create_course("name", self.user)
+        self.assertEqual(course.name,"name")
+        self.assertEqual(course.instructors.first(), self.user)
+
+    #if anything is wrong then we want to set course to none and don't save it to the database
+    def test_no_name(self):
+        course = CreateCourse.create_course("", self.user)
+        self.assertEqual(course, None)
+
+    def test_no_instructor(self):
+        course = CreateCourse.create_course("name", None)
+        self.assertEqual(course, None)
+
+    def test_not_an_instructor(self):
+        ta = User(role="TA")
+        course = CreateCourse.create_course("name", ta)
+        self.assertEqual(course, None)
+
+    def test_invalid_type(self):
+        course = CreateCourse.create_course(123, self.user)
+        self.assertEqual(course, None)
+
+    def test_invalid_type_again(self):
+        course = CreateCourse.create_course("name", "user")
+        self.assertEqual(course, None)
+
+
+class CreateCourseAcceptanceTest(unittest.TestCase):
+    def setUp(self):
+        pass
+
