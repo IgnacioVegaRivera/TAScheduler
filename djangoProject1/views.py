@@ -39,10 +39,26 @@ class LoginPage(View):
 
 class ConfigureUserPage(View):
     def get(self, request):
-        return render(request, "configureUser.html", {})
+        return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES})
 
     def post(self, request):
-        return redirect('/home/')
+        #Get the required fields for creating a user
+        firstname = request.POST['first_name']
+        lastname = request.POST['last_name']
+        username = request.POST['username']
+        password=request.POST['password']
+        #course= request.POST['name']
+        email = request.POST['email']
+        phone = request.POST['phone_number']
+        address = request.POST['address']
+        role = request.POST['role']
+
+
+        User.objects.create(first_name=firstname, last_name=lastname, username=username,
+                                    password=password, email=email, phone_number=phone, address=address, role=role)
+
+
+        return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES})
 
 class UserDirectoryPage(View):
     def get(self, request):
