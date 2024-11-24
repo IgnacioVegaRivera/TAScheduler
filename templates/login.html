@@ -1,20 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+    table{
+        margin: auto
+    }
+    td{
+        text-align: center
+    }
+</style>
 <head>
     <meta charset="UTF-8">
     <title>TA Scheduler Login Page</title>
 </head>
-<body>
-    <h1>Login</h1>
-    <form action="/" method="post">
-        {% csrf_token %}
-        <table>
-            <tr><td>Username: </td><td><input type="text" name="username"></td></tr>
-            <tr><td>Password: </td><td><input type="password" name="password"></td></tr>
-        </table>
-        <input type="submit">
-    </form>
-    {{ message }}
-    <a href="home.html">Go To Home (for testing so we don't have to log in everytime)</a>
+<body style="text-align: center">
+    <br><br><br><br><br><br><br><br><br><br><br><br>
+    <div style=" display: flex; justify-content: center">
+        <h1 style="background-color: #54d38e; width:400px; height: 50px; border: 2px solid black;
+        margin: 0; padding: 0">Login</h1>
+    </div>
+    <div style="display: flex; justify-content: center">
+        <form action="/" method="post" style="border: 2px solid black; width:400px; height: 166px;
+        background-color: rgb(217,217,217)">
+            <br>
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td style="font-size: 20px">Username: </td>
+                    <td><input style="font-size: 20px" type="text" name="username"></td>
+                </tr>
+                <tr>
+                    <td style="font-size: 20px">Password: </td>
+                    <td><input style="font-size: 20px" type="password" name="password"></td>
+                </tr>
+            </table>
+            <input type="submit">
+            <br><br>
+            {{ message }}
+        </form>
+        </div>
+        <br>
+        <a href="home.html">Go To Homepage (for testing so we don't have to log in everytime)</a>
+    </div>
 </body>
 </html>
