@@ -81,3 +81,14 @@ class HomePage(View):
 class AdminHomePage(View):
     def get(self, request):
         return render(request, "admin_Home.html", {})
+
+class ConfigureCoursePage(View):
+    def get(self, request):
+        #make this into a method
+        instructors = User.objects.filter(role="Instructor")
+        return render(request, "configureCourse.html", {"instructors": instructors})
+
+    def post(self, request):
+        #make this into a method
+        instructors = User.objects.filter(role="Instructor")
+        return render(request, "configureCourse.html", {"instructors": instructors})
