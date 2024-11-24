@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Configure Course</title>
+    <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body style="background-color: rgb(217,217,217)">
+{#    <br/><a href="/templates/home.html">TA Scheduler</a>#}
+<br/><a href="home.html">TA Scheduler</a>
+<div class="navbar">
+    <a href="configureUser.html">Configure Users</a>
+    <a class="active" href="configureCourse.html">Configure Courses</a>
+    <a href="">Databases</a>
+</div>
+
+<div class="addCourseModal">
+    <div class="create-course" popover id="createCourse">
+        <div class="createNewCourseModalHeader">
+            <h2>Add new Course</h2>
+        </div>
+        <div class="modal-header" id="myModal">
+            <div class="modal-dialog">
+                <form action=" " method="post">
+                    {% csrf_token %}
+                    <div>
+                        <label class="form-label required">Course Name</label>
+                        <input type="text" class="form-control" name="course_name">
+                    <div>
+                        Instructor:
+                        <select name="instructor">
+                            {% for i in instructors %}
+                                <option>{{ i.first_name }} {{ i.last_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                <input type="submit">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button popovertarget="createCourse" popovertargetaction="hide">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<button popovertarget="createCourse">Add Course</button>
+</body>
+</html>
