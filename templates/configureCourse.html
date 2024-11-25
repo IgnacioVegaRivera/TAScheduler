@@ -30,13 +30,13 @@
                     <div>
                         Instructor:
                         <select name="instructor">
+                            <option></option>
                             {% for i in instructors %}
                                 <option>{{ i.first_name }} {{ i.last_name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-
-                <input type="submit">
+                    <input type="submit">
                 </form>
             </div>
             <div class="modal-footer">

@@ -160,6 +160,14 @@ class CreateCourseAcceptanceTest(TestCase):
         self.assertIn('message', response.context)
         self.assertEqual(response.context["message"], "Something went wrong when creating the course \"course name\"")
 
+    def test_no_instructor_selected(self):
+        response = self.donkey.post("/configureCourse.html",
+                                    {"instructors": User.objects.filter(role="Instructor"), "instructor": "",
+                                     "course_name": "course name", "form_name": "create_course"}, follow=True)
+        self.assertEqual(Course.objects.count(), 0)
+        self.assertIn('message', response.context)
+        self.assertEqual(response.context["message"], "Something went wrong when creating the course \"course name\"")
+
     def test_invalid_name(self):
         response = self.donkey.post("/configureCourse.html",
                                 {"instructors" : User.objects.filter(role="Instructor"), "instructor" : self.valid,
