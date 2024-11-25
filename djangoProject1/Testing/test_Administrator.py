@@ -3,8 +3,9 @@ from djangoProject1.models import User, Course
 from django.test import TestCase, Client
 import unittest
 from unittest.mock import Mock
+from djangoProject1.MethodFiles.Administrator import CreateCourse
 
-class UnitAdminTest(unittest.TestCase):
+class UnitAdminTest(TestCase):
     def setUp(self):
         self.client = Client()
         temp  = User(first_name="Bob", last_name="Smith", username="login", passwword="thepassword",
@@ -87,4 +88,83 @@ class UnitAdminTest(unittest.TestCase):
     def test_Delete_Account(self):
         a = User("Bob", "Smith", "login", "password", "<EMAIL>", "4141234567", "UWM", "Admin")
         alt_user = User("Steve", "Jobs", "login2", "password2", "<EMAIL2>", "4141234568", "UWM2", "TA")
-        self.assertEquals(alt_user, a.delete_account(),"")
+        self.assertEqual(alt_user, a.delete_account(),"")
+
+
+class CreateCourseUnitTest(TestCase):
+    def setUp(self):
+        self.user = User(first_name="(no", last_name="instructor)", role="Instructor")
+        self.user.save()
+
+    #to test properly we must save within the helper method
+    def test_create_course(self):
+        course = CreateCourse.create_course("name", self.user)
+        self.assertEqual(course.name,"name")
+        self.assertEqual(course.instructors.first(), self.user)
+
+    #if anything is wrong then we want to set course to none and don't save it to the database
+    def test_no_name(self):
+        course = CreateCourse.create_course("", self.user)
+        self.assertEqual(course, None)
+
+    def test_no_instructor(self):
+        course = CreateCourse.create_course("name", None)
+        self.assertEqual(course, None)
+
+    def test_not_an_instructor(self):
+        ta = User(role="TA")
+        course = CreateCourse.create_course("name", ta)
+        self.assertEqual(course, None)
+
+    def test_invalid_type(self):
+        course = CreateCourse.create_course(123, self.user)
+        self.assertEqual(course, None)
+
+    def test_invalid_type_again(self):
+        course = CreateCourse.create_course("name", "user")
+        self.assertEqual(course, None)
+
+    def test_course_already_exists(self):
+        course = CreateCourse.create_course("name", self.user)
+        self.assertEqual(course.name, "name")
+        self.assertEqual(course.instructors.first(), self.user)
+
+        course2 = CreateCourse.create_course("name", self.user)
+        self.assertEqual(course2, None)
+
+
+
+class CreateCourseAcceptanceTest(TestCase):
+    def setUp(self):
+        self.donkey = Client()
+        self.valid = User(username="valid", first_name="(no", last_name="instructor)", role="Instructor")
+        self.invalid = User(role="TA")
+        self.valid.save()
+        self.invalid.save()
+
+    #test if the inputted course is valid then it is added to the database
+    def test_valid_course(self):
+        response = self.donkey.post("/configureCourse.html",
+                                    {"instructors": User.objects.filter(role="Instructor"),
+                                     "instructor": self.valid, "course_name": "course name"}, follow=True)
+        self.assertEqual(Course.objects.count(), 1)
+        self.assertIn('message', response.context)
+        self.assertEqual(response.context["message"], "The course \"course name\" has been created")
+
+
+    def test_invalid_role(self):
+        response = self.donkey.post("/configureCourse.html",
+                                {"instructors" : User.objects.filter(role="Instructor"),
+                                      "instructor" : self.invalid, "course_name": "course name"}, follow=True)
+        self.assertEqual(Course.objects.count(), 0)
+        self.assertIn('message', response.context)
+        self.assertEqual(response.context["message"], "Something went wrong when creating the course \"course name\"")
+
+    def test_invalid_name(self):
+        response = self.donkey.post("/configureCourse.html",
+                                {"instructors" : User.objects.filter(role="Instructor"),
+                                      "instructor" : self.valid, "course_name": ""}, follow=True)
+        self.assertEqual(Course.objects.count(), 0)
+        self.assertIn('message', response.context)
+        self.assertEqual(response.context["message"], "Something went wrong when creating the course \"\"")
+

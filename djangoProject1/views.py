@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 
+from djangoProject1.MethodFiles.Administrator import CreateCourse
 from djangoProject1.models import User, Course, Lab
 
 #this is for when we log in we have the current user
@@ -89,6 +90,22 @@ class ConfigureCoursePage(View):
         return render(request, "configureCourse.html", {"instructors": instructors})
 
     def post(self, request):
-        #make this into a method
+        #this gets the first and last name of the instructor
+        instructor_name = request.POST['instructor']
+
+        #splits first and last into 2 separate strings
+        name = instructor_name.split(" ")
+
+        #get the instructor by finding a user with the same first and last name
+        #no need to filter role because the create_course method already does that
+        instructor = User.objects.get(first_name=name[0], last_name=name[1])
+        name = request.POST['course_name']
+
+        course = CreateCourse.create_course(name, instructor)
         instructors = User.objects.filter(role="Instructor")
-        return render(request, "configureCourse.html", {"instructors": instructors})
+        if course is None:
+            return render(request, "configureCourse.html",
+                      {"instructors": instructors, 'message': "Something went wrong when creating the course \"" + name + "\""})
+        else:
+            return render(request, "configureCourse.html",
+                          {"instructors": instructors, 'message': "The course \"" + name +"\" has been created"})
