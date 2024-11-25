@@ -23,6 +23,8 @@
 }
 
 .userBox{
+    display: flex;
+    flex-wrap: wrap;
     width: 260px;
     height: 260px;
     background-color: white;
