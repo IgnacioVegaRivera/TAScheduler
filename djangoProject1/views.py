@@ -40,7 +40,8 @@ class LoginPage(View):
 
 class ConfigureUserPage(View):
     def get(self, request):
-        return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES})
+        users = User.objects.all()
+        return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES, "users": users})
 
     def post(self, request):
         #Get the required fields for creating a user
@@ -53,13 +54,26 @@ class ConfigureUserPage(View):
         phone = request.POST['phone_number']
         address = request.POST['address']
         role = request.POST['role']
+        #course_name = request.POST['name']
 
-
+        #Create users:
         User.objects.create(first_name=firstname, last_name=lastname, username=username,
                                     password=password, email=email, phone_number=phone, address=address, role=role)
 
+        #Display users list:
+        users = User.objects.filter(first_name=firstname, last_name=lastname, role=role,
+                                    email=email, phone_number=phone)
+        users_info = []
+        for user in users:
+            users_info.append({
+                "firstname": user.first_name,
+                "lastname": user.last_name,
+                "role": user.role,
+                "email": user.email,
+                "phone_number": user.phone_number,
+            })
 
-        return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES})
+        return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES, "users": users_info})
 
 class UserDirectoryPage(View):
     def get(self, request):

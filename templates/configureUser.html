@@ -92,10 +92,12 @@
     </div>
 </div>
 <button popovertarget="createUser">Add User</button>
+
+{% for user in users %}
 <div class="userBox">
-    <h2>Jayson Rock</h2>
-    <p>Instructor <br/> Comp Sci 361, Comp Sci 337 <br/>
-        rock@uwm.edu <br/> 414-414-4141</p>
+    <h2>{{ user.firstname }} {{ user.lastname }}</h2>
+    <p>{{ user.role }} <br/> course<br/>
+        {{ user.email }}<br/>{{  user.phone_number }}</p>
     <div class="edit-modal" popover id="editModal">
         <h2>Edit user info:</h2>
         <div class="modal-header" id="myModal">
@@ -118,10 +120,12 @@
                             <option>Admin</option>
                         </select>
                     </div>
+
                     <div>
                         <label class="form-label required">Courses</label>
                         <input type="text" class="form-control">
                     </div>
+
                     <div>
                         <label class="form-label required">Email</label>
                         <input type="email" class="form-control">
@@ -142,5 +146,6 @@
     </div>
     <button popovertarget="editModal">Edit</button>
 </div>
+{% endfor %}
 </body>
 </html>
