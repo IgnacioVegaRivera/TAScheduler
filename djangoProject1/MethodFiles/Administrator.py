@@ -1,5 +1,5 @@
 # file for Admin methods
-from Interfaces import CreateCourseInterface
+from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface
 
 
 class CreateCourse(CreateCourseInterface):

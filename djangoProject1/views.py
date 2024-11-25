@@ -91,4 +91,7 @@ class ConfigureCoursePage(View):
     def post(self, request):
         #make this into a method
         instructors = User.objects.filter(role="Instructor")
-        return render(request, "configureCourse.html", {"instructors": instructors})
+        instructor = request.POST['instructor']
+        name = request.POST['name']
+        return render(request, "configureCourse.html",
+                      {"instructors": instructors, 'message': "", "instructor": instructor, "name": name})

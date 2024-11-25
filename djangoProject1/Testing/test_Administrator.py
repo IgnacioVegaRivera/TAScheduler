@@ -1,12 +1,11 @@
 # from Administrator import Admin
-from djangoProject1.MethodFiles import Administrator
 from djangoProject1.models import User, Course
 from django.test import TestCase, Client
 import unittest
 from unittest.mock import Mock
 from djangoProject1.MethodFiles.Administrator import CreateCourse
 
-class UnitAdminTest(unittest.TestCase):
+class UnitAdminTest(TestCase):
     def setUp(self):
         self.client = Client()
         temp  = User(first_name="Bob", last_name="Smith", username="login", passwword="thepassword",
@@ -92,7 +91,7 @@ class UnitAdminTest(unittest.TestCase):
         self.assertEqual(alt_user, a.delete_account(),"")
 
 
-class CreateCourseUnitTest(unittest.TestCase):
+class CreateCourseUnitTest(TestCase):
     def setUp(self):
         self.user = User(first_name="(no", last_name="instructor)", role="Instructor")
 
@@ -125,7 +124,29 @@ class CreateCourseUnitTest(unittest.TestCase):
         self.assertEqual(course, None)
 
 
-class CreateCourseAcceptanceTest(unittest.TestCase):
+class CreateCourseAcceptanceTest(TestCase):
     def setUp(self):
-        pass
+        self.donkey = Client()
+        self.valid = User(username="valid", first_name="(no", last_name="instructor)", role="Instructor")
+        self.invalid = User(role="TA")
+        self.valid.save()
+        self.invalid.save()
+
+    #test if the inputted course is valid then it is added to the database
+    def test_valid_course(self):
+        response = self.donkey.post("/configureCourse.html",
+                                    {"instructors": User.objects.filter(role="Instructor"),
+                                     "instructor": self.valid, "name": "course name"}, follow=True)
+        self.assertEqual(Course.objects.count(), 1)
+        self.assertIn('message', response.context)
+        self.assertEqual(response.context["message"], "The course has been created")
+
+
+    def test_invalid_course(self):
+        response = self.donkey.post("/configureCourse.html",
+                                {"instructors" : User.objects.filter(role="Instructor"),
+                                      "instructor" : self.invalid, "name": "course name"}, follow=True)
+        self.assertEqual(Course.objects.count(), 0)
+        self.assertIn('message', response.context)
+        self.assertEqual(response.context["message"], "Something went wrong when creating the course")
 
