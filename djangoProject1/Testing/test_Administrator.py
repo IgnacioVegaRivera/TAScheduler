@@ -174,4 +174,4 @@ class CreateCourseAcceptanceTest(TestCase):
                                     "course_name": "course name", "form_name": "fake_form"}, follow=True)
         self.assertEqual(Course.objects.count(), 0)
         self.assertIn('message', response.context)
-        self.assertEqual(response.context["message"], "Something went wrong when fetching the form, please try again")
+        self.assertEqual(response.context["message"], "Something went wrong when fetching the form, please try again.")

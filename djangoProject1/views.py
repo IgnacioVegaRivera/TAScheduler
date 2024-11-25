@@ -132,4 +132,4 @@ class ConfigureCoursePage(View):
 
         else:
             return render(request, "configureCourse.html",
-        {"instructors": instructors, 'message': "Something went wrong when fetching the form, please try again"})
+        {"instructors": instructors, 'message': "Something went wrong when fetching the form, please try again."})
