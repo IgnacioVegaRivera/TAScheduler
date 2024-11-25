@@ -94,6 +94,7 @@ class UnitAdminTest(TestCase):
 class CreateCourseUnitTest(TestCase):
     def setUp(self):
         self.user = User(first_name="(no", last_name="instructor)", role="Instructor")
+        self.user.save()
 
     #to test properly we must save within the helper method
     def test_create_course(self):
@@ -123,6 +124,15 @@ class CreateCourseUnitTest(TestCase):
         course = CreateCourse.create_course("name", "user")
         self.assertEqual(course, None)
 
+    def test_course_already_exists(self):
+        course = CreateCourse.create_course("name", self.user)
+        self.assertEqual(course.name, "name")
+        self.assertEqual(course.instructors.first(), self.user)
+
+        course2 = CreateCourse.create_course("name", self.user)
+        self.assertEqual(course2, None)
+
+
 
 class CreateCourseAcceptanceTest(TestCase):
     def setUp(self):
@@ -136,17 +146,25 @@ class CreateCourseAcceptanceTest(TestCase):
     def test_valid_course(self):
         response = self.donkey.post("/configureCourse.html",
                                     {"instructors": User.objects.filter(role="Instructor"),
-                                     "instructor": self.valid, "name": "course name"}, follow=True)
+                                     "instructor": self.valid, "course_name": "course name"}, follow=True)
         self.assertEqual(Course.objects.count(), 1)
         self.assertIn('message', response.context)
-        self.assertEqual(response.context["message"], "The course has been created")
+        self.assertEqual(response.context["message"], "The course \"course name\" has been created")
 
 
-    def test_invalid_course(self):
+    def test_invalid_role(self):
         response = self.donkey.post("/configureCourse.html",
                                 {"instructors" : User.objects.filter(role="Instructor"),
-                                      "instructor" : self.invalid, "name": "course name"}, follow=True)
+                                      "instructor" : self.invalid, "course_name": "course name"}, follow=True)
         self.assertEqual(Course.objects.count(), 0)
         self.assertIn('message', response.context)
-        self.assertEqual(response.context["message"], "Something went wrong when creating the course")
+        self.assertEqual(response.context["message"], "Something went wrong when creating the course \"course name\"")
+
+    def test_invalid_name(self):
+        response = self.donkey.post("/configureCourse.html",
+                                {"instructors" : User.objects.filter(role="Instructor"),
+                                      "instructor" : self.valid, "course_name": ""}, follow=True)
+        self.assertEqual(Course.objects.count(), 0)
+        self.assertIn('message', response.context)
+        self.assertEqual(response.context["message"], "Something went wrong when creating the course \"\"")
 
