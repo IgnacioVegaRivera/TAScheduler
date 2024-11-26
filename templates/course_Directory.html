@@ -22,7 +22,16 @@
         <h2 class="container">Courses:</h2>
         <ol class="centered-list ">
             {% for course in courses %}
-                <p class="p">{{ course.name }} <br> {{ course.instructors }}</p>
+                <p class="p" >
+                    {{ course.name }} <br>
+                    <ul>
+                        {% for instructor in course.instructors.all %}
+                            <li>{{ instructor }}</li>
+                        {% empty %}
+                            <li>No instructors assigned.</li>
+                        {% endfor %}
+                    </ul>
+                </p>
             {% endfor %}
         </ol>
     </div>
