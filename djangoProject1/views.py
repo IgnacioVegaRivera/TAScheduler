@@ -77,7 +77,9 @@ class ConfigureUserPage(View):
 
 class UserDirectoryPage(View):
     def get(self, request):
-        return render(request, "user_Directory.html", {})
+        users = User.objects.all()
+        courses = Course.objects.all()
+        return render(request, "user_Directory.html", {"users": users, "courses": courses})
 
     def post(self, request):
         return redirect('/home/')

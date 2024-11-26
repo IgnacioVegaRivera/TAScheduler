@@ -72,3 +72,22 @@
     margin: 10px 0;
     border: 2px solid #54d38e
 }
+
+ul { /*Outer bullet*/
+    list-style-type: disc;
+    margin: 0;
+}
+ul ul{/*Inner bullet*/
+    margin: 0;
+    list-style-type: circle;
+}
+
+.courselist{
+    position: relative;
+    left: -15px;
+}
+
+li span{
+    position: relative;
+    left: -15%;
+}

@@ -17,6 +17,28 @@
         <a class = "active" href="user_Directory.html">User Directory</a>
         <a href="course_Directory.html">Course Directory</a>
     </div>
-
+    <div class="container">
+        <h2 class="container">Users:</h2>
+        <ol class="centered-list ">
+            {% for user in users %}
+                <p class="p" >
+                    {{ user.first_name }} {{ user.last_name }}<br>
+                    <ul>
+                        <li><span>{{ user.role }}</span></li>
+                        <li><span>Courses:</span></li>
+                        {% for course in courses %}
+                            <ul>
+                                <li class="courselist">{{ course.name }}</li>
+                            </ul>
+                        {% empty %}
+                            <li>No courses assigned.</li>
+                        {% endfor %}
+                        <li><span>{{ user.email }}</span></li>
+                        <li><span>{{ user.phone_number }}</span></li>
+                    </ul>
+                </p>
+            {% endfor %}
+        </ol>
+    </div>
 </body>
 </html>

@@ -95,7 +95,7 @@
 
 {% for user in users %}
 <div class="userBox">
-    <h2>{{ user.firstname }} {{ user.lastname }}</h2>
+    <h2>{{ user.first_name }} {{ user.last_name }}</h2>
     <p>{{ user.role }} <br/> course<br/>
         {{ user.email }}<br/>{{  user.phone_number }}</p>
     <div class="edit-modal" popover id="editModal">
