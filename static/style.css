@@ -50,3 +50,25 @@
     content: "*";
     color: red;
 }
+
+/*
+    Display Courses style:
+ */
+.container {
+    text-align: center;
+}
+
+.centered-list {
+    display: inline-block;
+    text-align: center;
+}
+
+.ol {
+    border: 5px solid cornflowerblue;
+}
+
+.p {
+    font-size: 20px;
+    margin: 10px 0;
+    border: 2px solid #54d38e
+}

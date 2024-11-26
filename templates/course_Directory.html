@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Home | User Directory | Scheduler</title>
-    <link rel="stylesheet" href="/static/style.css"/>
+    <link href="/static/style.css" rel="stylesheet"/>
 </head>
 <body style="background-color: rgb(217,217,217)">
 <h1>Course Directory</h1>
-<h1>Accessible via Home Page Through a Button</h1>
+<h1></h1>
 <br/><a href="home.html">TA Scheduler</a>
     <div class="navbar">
 {#        <a href="configureUser.html">Configure Users</a>#}
@@ -17,6 +17,14 @@
         <a href="user_Directory.html">User Directory</a>
         <a class = "active" href="course_Directory.html">Course Directory</a>
         
+    </div>
+    <div class="container">
+        <h2 class="container">Courses:</h2>
+        <ol class="centered-list ">
+            {% for course in courses %}
+                <p class="p">{{ course.name }} <br> {{ course.instructors }}</p>
+            {% endfor %}
+        </ol>
     </div>
 
 </body>
