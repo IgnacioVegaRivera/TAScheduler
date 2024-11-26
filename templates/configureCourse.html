@@ -23,19 +23,20 @@
             <div class="modal-dialog">
                 <form action=" " method="post">
                     {% csrf_token %}
+                    <input type="hidden" name="form_name" value="create_course">
                     <div>
                         <label class="form-label required">Course Name</label>
                         <input type="text" class="form-control" name="course_name">
                     <div>
                         Instructor:
                         <select name="instructor">
+                            <option></option>
                             {% for i in instructors %}
                                 <option>{{ i.first_name }} {{ i.last_name }}</option>
                             {% endfor %}
                         </select>
                     </div>
-
-                <input type="submit">
+                    <input type="submit">
                 </form>
             </div>
             <div class="modal-footer">
