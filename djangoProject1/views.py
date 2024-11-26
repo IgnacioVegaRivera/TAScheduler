@@ -101,8 +101,9 @@ class AdminHomePage(View):
 class ConfigureCoursePage(View):
     def get(self, request):
         #make this into a method
+        courses = Course.objects.all()
         instructors = User.objects.filter(role="Instructor")
-        return render(request, "configureCourse.html", {"instructors": instructors})
+        return render(request, "configureCourse.html", {"instructors": instructors, "courses": courses})
 
     def post(self, request):
         #this is to filter based on which form is being accessed
