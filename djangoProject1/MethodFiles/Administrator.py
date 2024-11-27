@@ -1,6 +1,5 @@
 # file for Admin methods
-from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateLabInterface, CheckPermissionInterface,
-    EditUserInterface, CreateUserInterface
+from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateLabInterface, CheckPermissionInterface, EditUserInterface, CreateUserInterface
 
 from djangoProject1.models import Course, User
 
