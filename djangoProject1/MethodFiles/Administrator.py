@@ -1,4 +1,5 @@
 # file for Admin methods
+
 from django.template.defaultfilters import first
 
 from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateLabInterface, CheckPermissionInterface, EditUserInterface, CreateUserInterface
