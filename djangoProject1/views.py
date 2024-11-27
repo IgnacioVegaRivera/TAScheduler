@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from djangoProject1.MethodFiles.Administrator import CreateCourse
-from djangoProject1.models import User, Course, Lab
+from djangoProject1.models import User, Course
 
 #this is for when we log in we have the current user
 curUser = None
@@ -90,7 +90,8 @@ class CourseDirectoryPage(View):
         return render(request, "course_Directory.html", {'courses': courses})
 
     def post(self, request):
-        return redirect('/home/')
+        courses = Course.objects.all()
+        return render(request, "course_Directory.html", {'courses': courses})
 
 class HomePage(View):
     def get(self, request):
@@ -110,34 +111,44 @@ class ConfigureCoursePage(View):
     def post(self, request):
         #this is to filter based on which form is being accessed
         form = request.POST.get('form_name')
-
+        courses = Course.objects.all()
         #get the list of the instructors so that we can show it
         instructors = User.objects.filter(role="Instructor")
 
         if form == "create_course":
-            # this gets the first and last name of the instructor as well as their role
-            instructor_name = request.POST['instructor']
-
-            #checks if the no instructor option was selected, course must be initialized with an instructor
-            if instructor_name != "":
-                # splits first and last into 2 separate strings
-                names = instructor_name.split(" ")
-                instructor = User.objects.get(first_name=names[0], last_name=names[1])
-            else:
-                instructor = None
-
-            #get the instructor by finding a user with the same first and last name
-            #no need to filter role because the create_course method already does that
-            cname = request.POST['course_name']
-
-            course = CreateCourse.create_course(cname, instructor)
-            if course is None:
-                return render(request, "configureCourse.html",
-        {"instructors": instructors, 'message': "Something went wrong when creating the course \"" + cname + "\""})
-            else:
-                return render(request, "configureCourse.html",
-        {"instructors": instructors, 'message': "The course \"" + cname +"\" has been created"})
-
+            return self.add_course_helper(courses, instructors, request)
+        elif form == "create_lab":
+            return self.add_lab_helper(courses, instructors, request)
         else:
-            return render(request, "configureCourse.html",
-        {"instructors": instructors, 'message': "Something went wrong when fetching the form, please try again."})
+            return render(request, "configureCourse.html",{"instructors": instructors,
+                'courses':courses, 'message': "Something went wrong when fetching the form, please try again."})
+
+
+    def add_course_helper(self, courses, instructors, request):
+        # this gets the first and last name of the instructor as well as their role
+        instructor_name = request.POST['instructor']
+
+        # checks if the no instructor option was selected, course must be initialized with an instructor
+        if instructor_name != "":
+            # splits first and last name into 2 separate strings, also the role in () but that's not necessary here
+            names = instructor_name.split(" ")
+            instructor = User.objects.get(first_name=names[0], last_name=names[1])
+        else:
+            instructor = None
+
+        # get the instructor by finding a user with the same first and last name
+        # no need to filter role because the create_course method already does that
+        cname = request.POST['course_name']
+
+        course = CreateCourse.create_course(cname, instructor)
+        if course is None:
+            return render(request, "configureCourse.html", {"instructors": instructors,
+                'courses': courses, 'message': "Something went wrong when creating the course \"" + cname + "\""})
+        else:
+            return render(request, "configureCourse.html", {"instructors": instructors,
+                'courses': courses, 'message': "The course \"" + cname + "\" has been created"})
+
+
+    def add_lab_helper(self, courses, instructors, request):
+        return render(request, "configureCourse.html", {"instructors": instructors,
+            'courses': courses, 'message': "Something went wrong when fetching the form, please try again."})

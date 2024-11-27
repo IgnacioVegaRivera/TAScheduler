@@ -1,5 +1,5 @@
 # file for Admin methods
-from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface
+from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateLabInterface, CheckPermissionInterface
 from djangoProject1.models import Course, User
 
 class CreateCourse(CreateCourseInterface):
@@ -29,3 +29,16 @@ class CreateCourse(CreateCourseInterface):
 
         return course
 
+class CreateLab(CreateLabInterface):
+    @staticmethod
+    def create_lab(name, instructor):
+        pass
+
+class CheckPermission(CheckPermissionInterface):
+    @staticmethod
+    def check_admin(user):
+        pass
+
+    @staticmethod
+    def check_instructor(self, user):
+        pass
