@@ -18,3 +18,8 @@ class CheckPermissionInterface(abc.ABC):
     @abc.abstractmethod
     def check_instructor(self, user):
         pass
+
+class EditUserInterface(abc.ABC):
+    @abc.abstractmethod
+    def edit_user(self, user):
+        pass
