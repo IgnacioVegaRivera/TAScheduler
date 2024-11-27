@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from djangoProject1.MethodFiles.Administrator import CreateCourse
-from djangoProject1.models import User, Course
+from djangoProject1.models import User, Course, Lab
 
 #this is for when we log in we have the current user
 curUser = None
@@ -86,8 +86,32 @@ class UserDirectoryPage(View):
 
 class CourseDirectoryPage(View):
     def get(self, request):
+        # Get the logged-in user
+        current_username = request.session.get('cur_user_name')
+        if not current_username:
+            return redirect('/')  # Redirect to login if no user session exists
+
+        user = User.objects.filter(username=current_username).first()
+        if not user:
+            return redirect('/')  # Redirect to login if user not found
+
+        # Check for filtering in the query parameters
+        filter_assigned = request.GET.get('filter') == 'assigned'
+
+        # Default to all courses
         courses = Course.objects.all()
-        return render(request, "course_Directory.html", {'courses': courses})
+
+        # Apply filtering based on role
+        if filter_assigned:
+            if user.role == 'TA':
+                # Get labs assigned to the TA and their parent courses
+                labs = Lab.objects.filter(ta=user)
+                courses = Course.objects.filter(labs__in=labs).distinct()
+            elif user.role == 'Instructor':
+                # Get courses assigned to the instructor
+                courses = user.courses.all()
+
+        return render(request, "course_Directory.html", {'courses': courses, 'user': user, 'filter_assigned': filter_assigned})
 
     def post(self, request):
         courses = Course.objects.all()
