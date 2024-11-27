@@ -23,6 +23,7 @@
             <div class="modal-dialog">
                 <form action=" " method="post">
                     {% csrf_token %}
+                    <input type="hidden" name = "form_name" value = "create_user">
                     <div>
                         <label class="form-label required">First Name</label>
                         <input type="text" class="form-control" name="first_name">
@@ -96,56 +97,62 @@
 {% for user in users %}
 <div class="userBox">
     <h2>{{ user.first_name }} {{ user.last_name }}</h2>
-    <p>{{ user.role }} <br/> course<br/>
+    <p>{{ user.role }} <br/> {%  if user.role is  %}<br/>
         {{ user.email }}<br/>{{  user.phone_number }}</p>
-    <div class="edit-modal" popover id="editModal">
+    <div class="edit-modal" popover id="editModal {{ user.id }}">
         <h2>Edit user info:</h2>
-        <div class="modal-header" id="myModal">
+        <div class="modal-header" id="myModal {{ user.id }}">
             <div class="modal-dialog">
-                <form>
+                <form method="POST" action="editUserHelper">
+                    <input type="hidden" name="form_name" value = "edit_user">
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
                     <div>
                         <label class="form-label required">First Name</label>
-                        <input type="text" class="form-control">
+                        <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
                     </div>
                     <div>
                         <label class="form-label required">Last Name</label>
-                        <input type="text" class="form-control">
+                        <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
                     </div>
                     <div class="form-group">
                         <label for="roleControlSelect1">Role</label>
-                        <select class="form-control" id="roleControlSelect1">
-                            <option></option>
-                            <option>TA</option>
-                            <option>Instructor</option>
-                            <option>Admin</option>
+                        <select name="role" class="form-control" id="roleControlSelect1">
+                            <option value="" {% if not user.role %}selected{% endif %}></option>
+                            <option value="TA" {% if user.role == "TA" %}selected{% endif %}>TA</option>
+                            <option value="Instructor" {% if user.role == "Instructor" %}selected{% endif %}>Instructor</option>
+                            <option value="Admin" {% if user.role == "Admin" %}selected{% endif %}>Admin</option>
                         </select>
                     </div>
-
+                <!--
                     <div>
                         <label class="form-label required">Courses</label>
-                        <input type="text" class="form-control">
-                    </div>
 
+                        find out how to show courses properly
+
+                        <input type="text" name="courses" class="form-control" value="{{ user.courses }}">
+                    </div>
+                    -->
                     <div>
                         <label class="form-label required">Email</label>
-                        <input type="email" class="form-control">
+                        <input type="email" name="email" class="form-control" value="{{ user.email }}">
                     </div>
                     <div>
                         <label class="form-label required">Phone Number</label>
-                        <input type="number" class="form-control">
+                        <input type="text" name="phone_number" class="form-control" value="{{ user.phone_number }}">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <button popovertarget="editModal" popovertargetaction="hide">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button popovertarget="editModal {{ user.id }}" popovertargetaction="hide">
                     Cancel
                 </button>
             </div>
         </div>
     </div>
-    <button popovertarget="editModal">Edit</button>
+    <button popovertarget="editModal {{ user.id }}">Edit</button>
 </div>
 {% endfor %}
+
 </body>
 </html>
