@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views import View
 
-from djangoProject1.MethodFiles.Administrator import CreateCourse
-from djangoProject1.models import User, Course, Lab
+from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser
+from djangoProject1.models import User, Course
 
 #this is for when we log in we have the current user
 curUser = None
@@ -44,21 +44,19 @@ class ConfigureUserPage(View):
         return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES, "users": users})
 
     def post(self, request):
-        #Get the required fields for creating a user
+        #filter to see which form is being accessed:
+        form = request.POST.get('form_name')
+        # Get the required fields for creating a user
         firstname = request.POST['first_name']
         lastname = request.POST['last_name']
         username = request.POST['username']
-        password=request.POST['password']
-        #course= request.POST['name']
+        password = request.POST['password']
+        # course= request.POST['name']
         email = request.POST['email']
         phone = request.POST['phone_number']
-        address = request.POST['address']
         role = request.POST['role']
-        #course_name = request.POST['name']
+        # course_name = request.POST['name']
 
-        #Create users:
-        User.objects.create(first_name=firstname, last_name=lastname, username=username,
-                                    password=password, email=email, phone_number=phone, address=address, role=role)
 
         #Display users list:
         users = User.objects.filter(first_name=firstname, last_name=lastname, role=role,
@@ -72,8 +70,52 @@ class ConfigureUserPage(View):
                 "email": user.email,
                 "phone_number": user.phone_number,
             })
+        if form == "create_user":
+            return self.addUserHelper(firstname, lastname, username, password, email, phone, role, request)
+        elif form == "edit_user":
+            return self.editUserHelper(firstname, lastname, username, password, email, phone, role, request)
+        else:
+            return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES, "users": users_info})
 
-        return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES, "users": users_info})
+    #helper class to enable the addition of user
+    def addUserHelper(self, firstname, lastname, username, password, email, phone, role, request):
+        # Get only the address since it is not requested in the post method
+        address = request.POST['address']
+        # course_name = request.POST['name']
+
+        name = firstname + " " + lastname
+
+        # Create user:
+        user = CreateUser.create_user(firstname, lastname, username, password, email, phone, role, address)
+
+        # Get all users to pass to the templateDesign
+        all_users = User.objects.all()
+
+        if user is None:
+            return render(request, "configureUser.html", {
+                "roles": User.ROLE_CHOICES,
+                "users": all_users,
+                'message': "Something went wrong when creating the user \"" + name + "\""})
+        else:
+            return render(request, "configureUser.html", {
+                "roles": User.ROLE_CHOICES,
+                "users": all_users,
+                'message': "The user \"" + name + "\" has been created"})
+
+    #Helper class to save/edit the user
+    def editUserHelper(self,username,request):
+        if request.method.get == "POST":
+            user = User.objects.get(username=username)
+
+            #Update user fields based on inputs:
+            user.first_name = request.POST.get("first_name")
+            user.last_name = request.POST.get("last_name")
+            user.role = request.POST.get("role")
+            user.courses = request.POST.get("courses")
+            user.email = request.POST.get("email")
+            user.phone_number = request.POST.get("phone_number")
+            user.save()
+            return redirect("configureUser.html.html")
 
 class UserDirectoryPage(View):
     def get(self, request):
@@ -86,32 +128,8 @@ class UserDirectoryPage(View):
 
 class CourseDirectoryPage(View):
     def get(self, request):
-        # Get the logged-in user
-        current_username = request.session.get('cur_user_name')
-        if not current_username:
-            return redirect('/')  # Redirect to login if no user session exists
-
-        user = User.objects.filter(username=current_username).first()
-        if not user:
-            return redirect('/')  # Redirect to login if user not found
-
-        # Check for filtering in the query parameters
-        filter_assigned = request.GET.get('filter') == 'assigned'
-
-        # Default to all courses
         courses = Course.objects.all()
-
-        # Apply filtering based on role
-        if filter_assigned:
-            if user.role == 'TA':
-                # Get labs assigned to the TA and their parent courses
-                labs = Lab.objects.filter(ta=user)
-                courses = Course.objects.filter(labs__in=labs).distinct()
-            elif user.role == 'Instructor':
-                # Get courses assigned to the instructor
-                courses = user.courses.all()
-
-        return render(request, "course_Directory.html", {'courses': courses, 'user': user, 'filter_assigned': filter_assigned})
+        return render(request, "course_Directory.html", {'courses': courses})
 
     def post(self, request):
         courses = Course.objects.all()
