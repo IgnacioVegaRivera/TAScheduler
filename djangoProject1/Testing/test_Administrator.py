@@ -32,8 +32,6 @@ class UnitAdmin_CreateCourseTest(TestCase):
         newClass = self.a.create_course()
         self.assertEqual(newClass.name,"Default Course Name","The default course name is not correct")
 
-
-    #unit tests for each field in creation(user input)
 class UnitAdmin_CreateAccountTest(TestCase):
     def setUp(self):
         self.client = Client()
