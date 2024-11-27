@@ -5,24 +5,22 @@ from djangoProject1.models import User
 
 class UserUnitTest(TestCase):
     def setUp(self):
-        self.user = User(first_name="Bob", last_name="Smith", username="login", password="thepassword",
+        self.user = User( username="login", first_name="Bob", last_name="Smith", password="thepassword",
                      email="bob@gmail.com", phone_number="4141234567",
                          address="UWM Campus", role="Admin" )
         self.user.save()
 
-    def test_creation_users(self):
-        #Allow the self.user data info to be passed as an arguement
-        user_data = vars(self.user)
-
+    def test_creation_default_users(self):
         # Tests for creating users helper method
-        user = CreateUser.create_user(user_name=user_data["username"],
-            user_email=user_data["email"],
-            user_password=user_data["password"],
-            user_first_name=user_data["first_name"],
-            user_last_name=user_data["last_name"],
-            user_phone_number=user_data["phone_number"],
-            user_address=user_data["address"],
-            user_role=user_data["role"]
+        user = CreateUser.create_user(
+            username="username",
+            email="email",
+            password="password",
+            first_name="first_name",
+            last_name="last_name",
+            phone_number="phone_number",
+            address="address",
+            role="role"
         )
         self.assertIsNotNone(user.id)
         self.assertEqual(user.first_name, "Bob")
@@ -39,37 +37,37 @@ class UserUnitTest(TestCase):
         user_data = vars(self.user)
         with self.assertRaises(ValueError):
             CreateUser.create_user(
-                user_name=user_data[" "],
-                user_password=user_data["password"],
-                user_first_name=user_data["first_name"],
-                user_last_name=user_data["last_name"],
-                user_phone_number=user_data["phone_number"],
-                user_address=user_data["address"],
-                user_role=user_data["role"],
-                user_email=user_data["email"]
+                " ",
+                email="email",
+                password="password",
+                first_name="first_name",
+                last_name="last_name",
+                phone_number="phone_number",
+                address="address",
+                role="role"
             )
 
     def test_username_exists(self):
-        user = CreateUser.create_user(user_name="username",
-            user_email="email",
-            user_password="password",
-            user_first_name="first_name",
-            user_last_name="last_name",
-            user_phone_number="phone_number",
-            user_address="address",
-            user_role="role"
+        user = CreateUser.create_user(username="username",
+            email="email",
+            password="password",
+            first_name="first_name",
+            last_name="last_name",
+            phone_number="phone_number",
+            address="address",
+            role="role"
         )
         self.assertEqual(user.user_name, "username")
 
     def test_email_exists(self):
-        user = CreateUser.create_user(user_name="username",
-                                      user_email="email",
-                                      user_password="password",
-                                      user_first_name="first_name",
-                                      user_last_name="last_name",
-                                      user_phone_number="phone_number",
-                                      user_address="address",
-                                      user_role="role"
+        user = CreateUser.create_user(username="username",
+            email="email",
+            password="password",
+            first_name="first_name",
+            last_name="last_name",
+            phone_number="phone_number",
+            address="address",
+            role="role"
                                       )
         self.assertEqual(user.user_email, "email")
 
