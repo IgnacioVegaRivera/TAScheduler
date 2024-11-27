@@ -97,7 +97,7 @@
 {% for user in users %}
 <div class="userBox">
     <h2>{{ user.first_name }} {{ user.last_name }}</h2>
-    <p>{{ user.role }} <br/> {%  if user.role is  %}<br/>
+    <p>{{ user.role }} <br/> course<br/> <!-- check if the user is an instructor then show that users courses-->
         {{ user.email }}<br/>{{  user.phone_number }}</p>
     <div class="edit-modal" popover id="editModal {{ user.id }}">
         <h2>Edit user info:</h2>
