@@ -27,6 +27,7 @@
                     <div>
                         <label class="form-label required">Course Name</label>
                         <input type="text" class="form-control" name="course_name">
+                    </div>
                     <div>
                         Instructor:
                         <select name="instructor">
@@ -48,6 +49,52 @@
     </div>
 </div>
 <button popovertarget="createCourse">Add Course</button>
+
+<br>
+<div class="addLabModal">
+    <div class="create-lab" popover id="createLab">
+        <div class="createNewLabModalHeader">
+            <h2>Add new Lab</h2>
+        </div>
+        <div class="modal-header" id="myModal">
+            <div class="modal-dialog">
+                <form action=" " method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_name" value="create_lab">
+                    <div>
+                        <label class="form-label required">Lab Name</label>
+                        <input type="text" class="form-control" name="lab_name">
+                    </div>
+                    <div>
+                        Course:
+                        <select name="course">
+                            <option></option>
+                            {% for i in courses %}
+                                <option>{{ i.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        TA:
+                        <select name="ta">
+                            <option></option>
+                            {% for i in tas %}
+                                <option>{{ i.first_name }} {{ i.last_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="submit">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button popovertarget="createLab" popovertargetaction="hide">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<button popovertarget="createLab">Add Lab</button>
 <p style="text-align: center">{{ message }}</p>
     <div class="container">
         <h2 class="container">Courses:</h2>
