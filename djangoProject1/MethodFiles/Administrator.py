@@ -11,26 +11,23 @@ class CreateUser(CreateUserInterface):
     def create_user(user_name, user_email, user_password, user_first_name, user_last_name, user_phone_number, user_address, user_role):
         #Check if the username already exists
         if User.objects.filter(username=user_name).exists():
-            raise ValueError("User with that name already exists")
+            return None
 
-        #Validation of user_email
-        try:
-            validate_email(user_email)
-        except ValidationError:
-            raise ValueError("Invalid email address")
-
-        #Username should only have alphabetical characters
+        #First name should only have alphabetical characters
         if not user_first_name.isalpha():
-            raise ValueError("First name must contain only alphabetical characters")
+            return None
 
+        #Last name should only have alphabetical characters
         if not user_last_name.isalpha():
-            raise ValueError("Last name must contain only alphabetical characters")
+            return None
 
+        #Phone can only have digits and must be between 10 and 15 digits
         if not re.match(r'^\d{10,15}$', user_phone_number):
-            raise ValueError("Phone number must contain only digits and must be between 10 to 15 digits")
+            return None
 
+        #Address cannot be empty
         if not user_address:
-            raise ValueError("Address cannot be empty")
+            return None
 
 
         user = User(username=user_name, email=user_email, password=user_password,
