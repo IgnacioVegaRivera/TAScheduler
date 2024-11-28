@@ -1,25 +1,20 @@
 # file for Admin methods
-
-from django.template.defaultfilters import first
-
-from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateLabInterface, CheckPermissionInterface, EditUserInterface, CreateUserInterface
+from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateLabInterface, CheckPermissionInterface,EditUserInterface, CreateUserInterface
 
 from djangoProject1.models import Course, User
 
 class CreateUser(CreateUserInterface):
     @staticmethod
-    def create_user(username, email, password, first_name, last_name, phone_number, address, role):
-        #Check if all the fields are the right types
+    def create_user(user_name, user_email, user_password, user_first_name, user_last_name, user_phone_number, user_address, user_role):
+        if User.objects.filter(username=user_name).exists():
+            return None
 
-
-
-        user = User(username=username, email=email, password=password,
-                    first_name=first_name, last_name=last_name, phone_number=phone_number,
-                    address=address, role=role)
+        user = User(username=user_name, email=user_email, password=user_password,
+                    first_name=user_first_name, last_name=user_last_name, phone_number=user_phone_number,
+                    address=user_address, role=user_role)
 
         user.save()
         return user
-
 class CreateCourse(CreateCourseInterface):
     @staticmethod
     def create_course(name, instructor):
