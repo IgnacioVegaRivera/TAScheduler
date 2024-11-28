@@ -27,5 +27,10 @@ class EditUserInterface(abc.ABC):
 
 class CreateUserInterface(abc.ABC):
     @abc.abstractmethod
-    def create_user(self, username, email, password, first_name, last_name, phone_number, address, role):
+    def create_user(self, user_name, user_email, user_password, user_first_name, user_last_name, user_phone_number, user_address, user_role):
       pass
+
+class GetUserInterface(abc.ABC):
+    @abc.abstractmethod
+    def get_user(self, request):
+        pass

@@ -68,8 +68,9 @@
                     <div>
                         Role:
                         <select name="role">
+                            <option></option>
                             {% for i in roles %}
-                                <option value="{{ i.1 }}">{{ i.0 }}</option>
+                                <option value="{{ i.0 }}">{{ i.1 }}</option>
                             {% endfor %}
                         </select>
                     </div>
