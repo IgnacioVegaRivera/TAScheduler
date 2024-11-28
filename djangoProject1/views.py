@@ -41,18 +41,15 @@ class LoginPage(View):
 class ConfigureUserPage(View):
     def get(self, request):
         users = User.objects.all()
-        current_username = request.session['cur_user_name']
 
-        if not current_username:
+        #Display the courses assigned to that user, if the user is a instructor
+        user = GetUser.get_user(request)
+        if not user:
             return redirect('/')
 
-        user = User.objects.get(username=current_username)
-        role = user.role
 
-        #if role == "Instructor":
-
-
-        return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES, "users": users})
+        return render(request, "configureUser.html",
+                          {"roles": User.ROLE_CHOICES, "users": users})
 
     def post(self, request):
         #filter to see which form is being accessed:
@@ -125,7 +122,7 @@ class ConfigureUserPage(View):
             user.email = request.POST.get("email")
             user.phone_number = request.POST.get("phone_number")
             user.save()
-            return redirect("configureUser.html.html")
+            return redirect("configureUser.html")
 
 class UserDirectoryPage(View):
     def get(self, request):
