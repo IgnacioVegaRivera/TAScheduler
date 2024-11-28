@@ -58,12 +58,10 @@ class ConfigureUserPage(View):
         firstname = request.POST['first_name']
         lastname = request.POST['last_name']
         username = request.POST['username']
-        password = request.POST['password']
         # course= request.POST['name']
         email = request.POST['email']
         phone = request.POST['phone_number']
         role = request.POST['role']
-        address = request.POST['address']
         # course_name = request.POST['name']
 
         #Display users list:
@@ -79,9 +77,9 @@ class ConfigureUserPage(View):
                 "phone_number": user.phone_number,
             })
         if form == "create_user":
-            return self.addUserHelper(username, email, password, firstname, lastname, phone, address, role, request)
+            return self.addUserHelper(username, email, request.POST.get('password'), firstname, lastname, phone, request.POST.get['address'], role, request)
         elif form == "edit_user":
-            return self.editUserHelper(username, email, password, firstname, lastname, phone, address, role, request)
+            return self.editUserHelper(username, request)
         else:
             return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES, "users": users_info})
 
@@ -111,18 +109,17 @@ class ConfigureUserPage(View):
 
     #Helper class to save/edit the user
     def editUserHelper(self,username,request):
-        if request.method.get == "POST":
-            user = User.objects.get(username=username)
+        user = User.objects.get(username=username)
 
-            #Update user fields based on inputs:
-            user.first_name = request.POST.get("first_name")
-            user.last_name = request.POST.get("last_name")
-            user.role = request.POST.get("role")
-            user.courses = request.POST.get("courses")
-            user.email = request.POST.get("email")
-            user.phone_number = request.POST.get("phone_number")
-            user.save()
-            return redirect("configureUser.html")
+        # Update user fields based on inputs:
+        user.first_name = request.POST.get("first_name", user.first_name)
+        user.last_name = request.POST.get("last_name", user.last_name)
+        user.role = request.POST.get("role", user.role)
+        user.email = request.POST.get("email", user.email)
+        user.phone_number = request.POST.get("phone_number", user.phone_number)
+
+        user.save()
+        return redirect("configure_user")
 
 class UserDirectoryPage(View):
     def get(self, request):
