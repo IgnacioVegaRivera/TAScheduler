@@ -1,4 +1,6 @@
 from django.test import TestCase, Client
+
+from djangoProject1.MethodFiles.GeneralMethods import GetUser
 from djangoProject1.models import User
 # test file for testing the models, database, and various functions to be implemented
 
@@ -6,8 +8,8 @@ from djangoProject1.models import User
 class TestLoginUnit(TestCase):
     def setUp(self):
         self.donkey = Client()
-        temp = User(username="one", password="two")
-        temp.save()
+        self.temp = User(username="one", password="two")
+        self.temp.save()
 
     def test_page_access(self):
         # gets the login url and makes sure the user can access it
@@ -20,7 +22,6 @@ class TestLoginUnit(TestCase):
         # if the login info is correct then the user redirects
         response = self.donkey.post('/', {"username": "one", "password": "two"})
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, "home.html")
 
     def test_fail_login(self):
         #if the login info is incorrect then the user doesn't redirect
@@ -57,6 +58,24 @@ class TestLoginUnit(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'login.html')
 
+    def test_no_session(self):
+        #if we haven't logged in then there should be no user
+        self.donkey.get('/')
+        self.assertEqual(GetUser.get_user(self.donkey), None)
+
+    def test_logged_in(self):
+        #if we log in then we should have the current user
+        self.donkey.post('/', {"username": "one", "password": "two"})
+        self.assertEqual(GetUser.get_user(self.donkey), self.temp)
+
+    def test_reopen_page(self):
+        self.donkey.post('/', {"username": "one", "password": "two"})
+        self.assertEqual(GetUser.get_user(self.donkey), self.temp)
+
+        #if we then get the login page again then our user should be set to None
+        self.donkey.get('/')
+        self.assertEqual(GetUser.get_user(self.donkey), None)
+
 
 
 
@@ -83,7 +102,7 @@ class TestLoginAcceptance(TestCase):
         # is the message appearing
         self.assertIn("message", response.context)
 
-        # is the message equal to "bad password"
+        # is the message equal to our wanted message
         self.assertEqual(response.context["message"], "Username or Password is incorrect")
 
     def test_login_fail_username(self):

@@ -2,13 +2,13 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser
+from djangoProject1.MethodFiles.GeneralMethods import GetUser, CheckPermission
 from djangoProject1.models import User, Course, Lab
-
-#this is for when we log in we have the current user
-curUser = None
 
 class LoginPage(View):
     def get(self, request):
+        if GetUser.get_user(request) is not None:
+            del request.session['cur_user_name']
         return render(request, "login.html", {})
 
     def post(self, request):
@@ -24,7 +24,7 @@ class LoginPage(View):
             #check for valid password, if valid then redirect to home page, if not then show the error message on login page
             if user[0].password == password:
                 #if we have a match this stores the user's username this can be used to access the current user's data
-                #in all the other pages using this: user = User.objects.filter(username=request.session['cur_user_name'])
+                #in all the other pages using this: user = GetUser.get_user(request)
                 request.session['cur_user_name'] = user[0].username
                 return redirect("home.html")
             else:
@@ -139,13 +139,9 @@ class UserDirectoryPage(View):
 class CourseDirectoryPage(View):
     def get(self, request):
         # Get the logged-in user
-        current_username = request.session.get('cur_user_name')
-        if not current_username:
+        user = GetUser.get_user(request)
+        if user is None:
             return redirect('/')  # Redirect to login if no user session exists
-
-        user = User.objects.filter(username=current_username).first()
-        if not user:
-            return redirect('/')  # Redirect to login if user not found
 
         # Check for filtering in the query parameters
         filter_assigned = request.GET.get('filter') == 'assigned'
@@ -175,7 +171,12 @@ class HomePage(View):
 
 class AdminHomePage(View):
     def get(self, request):
-        return render(request, "admin_Home.html", {})
+        user = GetUser.get_user(request)
+        can_access = CheckPermission.check_admin(user)
+        if can_access:
+            return render(request, "admin_Home.html", {})
+        else:
+            return render(request, "home.html", {'message':"You cannot access this page."})
 
 class ConfigureCoursePage(View):
     def get(self, request):
