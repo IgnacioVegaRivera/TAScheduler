@@ -41,6 +41,17 @@ class LoginPage(View):
 class ConfigureUserPage(View):
     def get(self, request):
         users = User.objects.all()
+        current_username = request.session['cur_user_name']
+
+        if not current_username:
+            return redirect('/')
+
+        user = User.objects.get(username=current_username)
+        role = user.role
+
+        #if role == "Instructor":
+
+
         return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES, "users": users})
 
     def post(self, request):
@@ -55,8 +66,8 @@ class ConfigureUserPage(View):
         email = request.POST['email']
         phone = request.POST['phone_number']
         role = request.POST['role']
+        address = request.POST['address']
         # course_name = request.POST['name']
-
 
         #Display users list:
         users = User.objects.filter(first_name=firstname, last_name=lastname, role=role,
@@ -71,22 +82,21 @@ class ConfigureUserPage(View):
                 "phone_number": user.phone_number,
             })
         if form == "create_user":
-            return self.addUserHelper(firstname, lastname, username, password, email, phone, role, request)
+            return self.addUserHelper(username, email, password, firstname, lastname, phone, address, role, request)
         elif form == "edit_user":
-            return self.editUserHelper(firstname, lastname, username, password, email, phone, role, request)
+            return self.editUserHelper(username, email, password, firstname, lastname, phone, address, role, request)
         else:
             return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES, "users": users_info})
 
     #helper class to enable the addition of user
-    def addUserHelper(self, firstname, lastname, username, password, email, phone, role, request):
-        # Get only the address since it is not requested in the post method
-        address = request.POST['address']
+    def addUserHelper(self, username, email, password, firstname, lastname, phone, address, role, request):
+
         # course_name = request.POST['name']
 
         name = firstname + " " + lastname
 
         # Create user:
-        user = CreateUser.create_user(firstname, lastname, username, password, email, phone, role, address)
+        user = CreateUser.create_user(username, email, password, firstname, lastname, phone, address, role)
 
         # Get all users to pass to the templateDesign
         all_users = User.objects.all()
