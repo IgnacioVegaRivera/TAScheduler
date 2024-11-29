@@ -4,7 +4,8 @@ from django.core.validators import validate_email
 import re
 from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateLabInterface,EditUserInterface, CreateUserInterface
 
-from djangoProject1.models import Course, User
+from djangoProject1.models import Course, User, Lab
+
 
 class CreateUser(CreateUserInterface):
     @staticmethod
@@ -64,8 +65,27 @@ class CreateCourse(CreateCourseInterface):
 
 class CreateLab(CreateLabInterface):
     @staticmethod
-    def create_lab(name, instructor):
-        pass
+    def create_lab(lab_name, course, ta):
+        if not isinstance(ta, User) or not isinstance(lab_name, str) or not isinstance(course, Course):
+            return None
+
+        # if any of the inputs are none then return None
+        if lab_name == None or lab_name == "" or ta == None or course == None or course.instructors.first() == None:
+            return None
+
+        # if the role isn't TA then we can't assign to a lab so we return None
+        if ta.role != "TA":
+            return None
+
+        # if a lab of the same name already exists then return None
+        if Lab.objects.filter(name=lab_name).exists():
+            return None
+
+        # if everything is fine then we can create the lab no problem
+        lab = Lab(name=lab_name, course=course, ta=ta)
+        lab.save()
+
+        return lab
 
 class EditUser(EditUserInterface):
     @staticmethod

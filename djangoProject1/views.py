@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 
-from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser
+from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser, CreateLab
 from djangoProject1.MethodFiles.GeneralMethods import GetUser, CheckPermission
 from djangoProject1.models import User, Course, Lab
 
@@ -177,7 +177,8 @@ class ConfigureCoursePage(View):
         #make this into a method
         courses = Course.objects.all()
         instructors = User.objects.filter(role="Instructor")
-        return render(request, "configureCourse.html", {"instructors": instructors, "courses": courses})
+        tas = User.objects.filter(role="TA")
+        return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas, "courses": courses})
 
     def post(self, request):
         #this is to filter based on which form is being accessed
@@ -185,17 +186,18 @@ class ConfigureCoursePage(View):
         courses = Course.objects.all()
         #get the list of the instructors so that we can show it
         instructors = User.objects.filter(role="Instructor")
+        tas = User.objects.filter(role="TA")
 
         if form == "create_course":
-            return self.add_course_helper(courses, instructors, request)
+            return self.add_course_helper(courses, instructors, tas, request)
         elif form == "create_lab":
-            return self.add_lab_helper(courses, instructors, request)
+            return self.add_lab_helper(courses, instructors, tas, request)
         else:
-            return render(request, "configureCourse.html",{"instructors": instructors,
+            return render(request, "configureCourse.html",{"instructors": instructors, "tas": tas,
                 'courses':courses, 'message': "Something went wrong when fetching the form, please try again."})
 
 
-    def add_course_helper(self, courses, instructors, request):
+    def add_course_helper(self, courses, instructors, tas, request):
         # this gets the first and last name of the instructor as well as their role
         instructor_name = request.POST['instructor']
 
@@ -211,15 +213,41 @@ class ConfigureCoursePage(View):
         # no need to filter role because the create_course method already does that
         cname = request.POST['course_name']
 
+        #will return None if the creation failed, will return a course and save it to the database if it succeeded
         course = CreateCourse.create_course(cname, instructor)
         if course is None:
-            return render(request, "configureCourse.html", {"instructors": instructors,
+            return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas,
                 'courses': courses, 'message': "Something went wrong when creating the course \"" + cname + "\""})
         else:
-            return render(request, "configureCourse.html", {"instructors": instructors,
+            return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas,
                 'courses': courses, 'message': "The course \"" + cname + "\" has been created"})
 
 
-    def add_lab_helper(self, courses, instructors, request):
-        return render(request, "configureCourse.html", {"instructors": instructors,
-            'courses': courses, 'message': "Something went wrong when fetching the form, please try again."})
+    def add_lab_helper(self, courses, instructors, tas, request):
+        #get the course name from the form and use it to find the course
+        course_name = request.POST['course']
+        if course_name != "":
+            course = Course.objects.get(name=course_name)
+        else:
+            course = None
+
+        #get the ta name from the form and use it to find the ta
+        ta_name = request.POST['ta']
+        if ta_name != "":
+            # splits first and last name into 2 separate strings, also the role in () but that's not necessary here
+            names = ta_name.split(" ")
+            ta = User.objects.get(first_name=names[0], last_name=names[1])
+        else:
+            ta = None
+
+
+        lname = request.POST['lab_name']
+
+        # will return None if the creation failed, will return a lab and save it to the database if it succeeded
+        lab = CreateLab.create_lab(lname, course, ta)
+        if lab is None:
+            return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas,
+                'courses': courses, 'message': "Something went wrong when creating the lab \"" + lname + "\""})
+        else:
+            return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas,
+                'courses': courses, 'message': "The lab \"" + lname + "\" has been created"})

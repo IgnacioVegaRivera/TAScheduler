@@ -7,7 +7,7 @@ class CreateCourseInterface(abc.ABC):
 
 class CreateLabInterface(abc.ABC):
     @abc.abstractmethod
-    def create_lab(self, lab_name, course_name, ta):
+    def create_lab(self, lab_name, course, ta):
         pass
 
 class CheckPermissionInterface(abc.ABC):
