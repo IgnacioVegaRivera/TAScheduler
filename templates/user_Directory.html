@@ -26,13 +26,27 @@
                     <ul>
                         <li><span>{{ user.role }}</span></li>
                         <li><span>Courses:</span></li>
-                        {% for course in courses %}
-                            <ul>
-                                <li class="courselist">{{ course.name }}</li>
-                            </ul>
-                        {% empty %}
+                        {% if user.role == "Instructor" %}
+                            <!-- Display courses where the user is an instructor -->
+                            {% for course in user.courses.all %}
+                                <ul>
+                                    <li class="courselist">{{ course.name }}</li>
+                                </ul>
+                            {% empty %}
+                                <li>No courses assigned.</li>
+                            {% endfor %}
+                        {% elif user.role == "TA" %}
+                            <!-- Display courses where the user is a TA -->
+                            {% for lab in user.labs.all %}
+                                <ul>
+                                    <li class="courselist">{{ lab.course.name }} (Lab: {{ lab.name }})</li>
+                                </ul>
+                            {% empty %}
+                                <li>No courses assigned.</li>
+                            {% endfor %}
+                        {% else %}
                             <li>No courses assigned.</li>
-                        {% endfor %}
+                        {% endif %}
                         <li><span>{{ user.email }}</span></li>
                         <li><span>{{ user.phone_number }}</span></li>
                     </ul>
