@@ -1,4 +1,7 @@
 # file for Admin methods
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+import re
 from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateLabInterface,EditUserInterface, CreateUserInterface
 
 from djangoProject1.models import Course, User, Lab
@@ -7,8 +10,26 @@ from djangoProject1.models import Course, User, Lab
 class CreateUser(CreateUserInterface):
     @staticmethod
     def create_user(user_name, user_email, user_password, user_first_name, user_last_name, user_phone_number, user_address, user_role):
+        #Check if the username already exists
         if User.objects.filter(username=user_name).exists():
             return None
+
+        #First name should only have alphabetical characters
+        if not user_first_name.isalpha():
+            return None
+
+        #Last name should only have alphabetical characters
+        if not user_last_name.isalpha():
+            return None
+
+        #Phone can only have digits and must be between 10 and 15 digits
+        if not re.match(r'^\d{10,15}$', user_phone_number):
+            return None
+
+        #Address cannot be empty
+        if not user_address:
+            return None
+
 
         user = User(username=user_name, email=user_email, password=user_password,
                     first_name=user_first_name, last_name=user_last_name, phone_number=user_phone_number,

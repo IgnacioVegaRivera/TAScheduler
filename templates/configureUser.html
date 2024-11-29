@@ -23,7 +23,7 @@
             <div class="modal-dialog">
                 <form action=" " method="post">
                     {% csrf_token %}
-                    <input type="hidden" name = "form_name" value = "create_user">
+                    <input type="hidden" name="form_name" value="create_user">
                     <div>
                         <label class="form-label required">First Name</label>
                         <input type="text" class="form-control" name="first_name">
@@ -82,7 +82,7 @@
                         </div>
 
                     -->
-                <input type="submit">
+                    <input type="submit">
                 </form>
             </div>
             <div class="modal-footer">
@@ -94,66 +94,74 @@
     </div>
 </div>
 <button popovertarget="createUser">Add User</button>
+<div class="userContainer">
+    {% for user in users %}
+        <div class="userBox">
+            <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+            <p>{{ user.role }} <br/>
+                {% if user.role == "Instructor" %}
+                    {% for course in user.courses.all %}
+                        {{ course.name }}
+                    {% empty %}
+                        No Courses.
+                    {% endfor %}
+                {% endif %}
+                {% if user.role != "Instructor" %}
+                    No Courses.
+                {% endif %}
+                <br/> <!-- check if the user is an instructor then list the courses assigned to the user-->
+                {{ user.email }}<br/>{{ user.phone_number }}</p>
+            <div class="edit-modal" popover id="editModal {{ user.id }}">
+                <h2>Edit user info:</h2>
+                <div class="modal-header" id="myModal {{ user.id }}">
+                    <form method="POST" action="{% url 'configure_user' %}">
+                        <div class="modal-dialog">
 
-{% for user in users %}
-<div class="userBox">
-    <h2>{{ user.first_name }} {{ user.last_name }}</h2>
-    <p>{{ user.role }} <br/> course<br/> <!-- check if the user is an instructor then show that users courses-->
-        {{ user.email }}<br/>{{  user.phone_number }}</p>
-    <div class="edit-modal" popover id="editModal {{ user.id }}">
-        <h2>Edit user info:</h2>
-        <div class="modal-header" id="myModal {{ user.id }}">
-            <div class="modal-dialog">
-                <form method="POST" action="editUserHelper">
-                    <input type="hidden" name="form_name" value = "edit_user">
-                    <input type="hidden" name="user_id" value="{{ user.id }}">
-                    <div>
-                        <label class="form-label required">First Name</label>
-                        <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
-                    </div>
-                    <div>
-                        <label class="form-label required">Last Name</label>
-                        <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="roleControlSelect1">Role</label>
-                        <select name="role" class="form-control" id="roleControlSelect1">
-                            <option value="" {% if not user.role %}selected{% endif %}></option>
-                            <option value="TA" {% if user.role == "TA" %}selected{% endif %}>TA</option>
-                            <option value="Instructor" {% if user.role == "Instructor" %}selected{% endif %}>Instructor</option>
-                            <option value="Admin" {% if user.role == "Admin" %}selected{% endif %}>Admin</option>
-                        </select>
-                    </div>
-                <!--
-                    <div>
-                        <label class="form-label required">Courses</label>
-
-                        find out how to show courses properly
-
-                        <input type="text" name="courses" class="form-control" value="{{ user.courses }}">
-                    </div>
-                    -->
-                    <div>
-                        <label class="form-label required">Email</label>
-                        <input type="email" name="email" class="form-control" value="{{ user.email }}">
-                    </div>
-                    <div>
-                        <label class="form-label required">Phone Number</label>
-                        <input type="text" name="phone_number" class="form-control" value="{{ user.phone_number }}">
-                    </div>
-                </form>
+                            {% csrf_token %}
+                            <input type="hidden" name="form_name" value="edit_user">
+                            <input type="hidden" name="username" value="{{ user.username }}">
+                            <div>
+                                <label class="form-label required">First Name</label>
+                                <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
+                            </div>
+                            <div>
+                                <label class="form-label required">Last Name</label>
+                                <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="roleControlSelect1">Role</label>
+                                <select name="role" class="form-control" id="roleControlSelect1">
+                                    <option value="TA" {% if user.role == "TA" %}selected{% endif %}>TA</option>
+                                    <option value="Instructor" {% if user.role == "Instructor" %}selected{% endif %}>
+                                        Instructor
+                                    </option>
+                                    <option value="Admin" {% if user.role == "Admin" %}selected{% endif %}>Admin
+                                    </option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="form-label required">Email</label>
+                                <input type="email" name="email" class="form-control" value="{{ user.email }}">
+                            </div>
+                            <div>
+                                <label class="form-label required">Phone Number</label>
+                                <input type="text" name="phone_number" class="form-control"
+                                       value="{{ user.phone_number }}">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" popovertarget="editModal {{ user.id }}"
+                                    popovertargetaction="hide">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Save</button>
-                <button popovertarget="editModal {{ user.id }}" popovertargetaction="hide">
-                    Cancel
-                </button>
-            </div>
+            <button popovertarget="editModal {{ user.id }}">Edit</button>
         </div>
-    </div>
-    <button popovertarget="editModal {{ user.id }}">Edit</button>
+    {% endfor %}
 </div>
-{% endfor %}
-
 </body>
 </html>

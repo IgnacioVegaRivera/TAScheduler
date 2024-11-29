@@ -1,6 +1,7 @@
 /*
     Configure Users Style:
 */
+
 .navbar{
     background-color: #54d38e;
     overflow: hidden;
@@ -22,11 +23,16 @@
     color: black;
 }
 
-.userBox{
+.userContainer{
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
-    width: 260px;
-    height: 260px;
+
+}
+
+.userBox{
+    width: 300px;
+    height: 300px;
     background-color: white;
     margin-left: 20px;
     margin-top:10px;
