@@ -240,6 +240,7 @@ class ConfigureCoursePage(View):
         else:
             ta = None
 
+
         lname = request.POST['lab_name']
 
         # will return None if the creation failed, will return a lab and save it to the database if it succeeded
