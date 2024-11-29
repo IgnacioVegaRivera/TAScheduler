@@ -77,7 +77,7 @@ class ConfigureUserPage(View):
                 "phone_number": user.phone_number,
             })
         if form == "create_user":
-            return self.addUserHelper(username, email, request.POST.get('password'), firstname, lastname, phone, request.POST.get['address'], role, request)
+            return self.addUserHelper(username, email, request.POST.get('password'), firstname, lastname, phone, request.POST.get('address'), role, request)
         elif form == "edit_user":
             return self.editUserHelper(username, request)
         else:
