@@ -131,7 +131,7 @@ class EditUser(EditUserInterface, ABC):
         user.role = request.POST.get("role", user.role)
         user.email = request.POST.get("email", user.email)
         user.phone_number = request.POST.get("phone_number", user.phone_number)
-
+        #Saves user
         user.save()
 
 
