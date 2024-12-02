@@ -7,50 +7,42 @@
 </head>
 <body style="background-color: rgb(217,217,217)">
 <h1>User Directory</h1>
-<h1>Accessible via Home Page Through a Button</h1>
 <br/><a href="home.html">TA Scheduler</a>
-    <div class="navbar">
-        <a href="admin_Home.html" style="padding: 125px">Admin Home</a>
-        <a class="active" href="user_Directory.html" style="padding: 125px">User Directory</a>
-        <a href="course_Directory.html" style="padding: 125px">Course Directory</a>
-        <a href="/" style="padding: 125px">Log Out</a>
-    </div>
-    <div class="container">
-        <h2 class="container">Users:</h2>
-        <ol class="centered-list ">
-            {% for user in users %}
-                <p class="p" >
-                    {{ user.first_name }} {{ user.last_name }}<br>
-                    <ul>
-                        <li><span>{{ user.role }}</span></li>
-                        <li><span>Courses:</span></li>
-                        {% if user.role == "Instructor" %}
-                            <!-- Display courses where the user is an instructor -->
-                            {% for course in user.courses.all %}
-                                <ul>
-                                    <li class="courselist">{{ course.name }}</li>
-                                </ul>
-                            {% empty %}
-                                <li>No courses assigned.</li>
-                            {% endfor %}
-                        {% elif user.role == "TA" %}
-                            <!-- Display courses where the user is a TA -->
-                            {% for lab in user.labs.all %}
-                                <ul>
-                                    <li class="courselist">{{ lab.course.name }} (Lab: {{ lab.name }})</li>
-                                </ul>
-                            {% empty %}
-                                <li>No courses assigned.</li>
-                            {% endfor %}
-                        {% else %}
-                            <li>No courses assigned.</li>
-                        {% endif %}
-                        <li><span>{{ user.email }}</span></li>
-                        <li><span>{{ user.phone_number }}</span></li>
-                    </ul>
-                </p>
-            {% endfor %}
-        </ol>
-    </div>
+<div class="navbar">
+    <a href="admin_Home.html" style="padding: 110px">Admin Home</a>
+    <a class="active" href="user_Directory.html" style="padding: 110px">User Directory</a>
+    <a href="course_Directory.html" style="padding: 110px">Course Directory</a>
+    <a href="/" style="padding: 110px">Log Out</a>
+</div>
+<h2 class="container">Users:</h2>
+<div class="userContainer">
+    {% for user in users %}
+        <div class="userBox">
+            <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+            <p>{{ user.role }} <br/>
+            {% if user.role == "Instructor" %}
+            {% endif %}
+                {% if user.role == "Instructor" %}
+                    {% for course in user.courses.all %}
+                        {{ course.name }}
+                    {% empty %}
+                        No Courses.
+                    {% endfor %}
+                {% elif user.role == "TA" %}
+                    <!-- Display courses where the user is a TA -->
+                    {% for lab in user.labs.all %}
+                        {{ lab.course.name }} (Lab: {{ lab.name }})
+                    {% empty %}
+                        <li>No labs assigned.</li>
+                    {% endfor %}
+                {% endif %}
+                {% if user.role != "Instructor" %}
+                    Not a Instructor
+                {% endif %}
+                <br/>
+                {{ user.email }}<br/>{{ user.phone_number }}</p>
+        </div>
+    {% endfor %}
+</div>
 </body>
 </html>

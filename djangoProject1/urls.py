@@ -27,7 +27,7 @@ urlpatterns = [
 
     path('course_Directory.html', CourseDirectoryPage.as_view()),
     path('configureUser.html', ConfigureUserPage.as_view(), name='configure_user'),
-    path('configureCourse.html', ConfigureCoursePage.as_view()),
+    path('configureCourse.html', ConfigureCoursePage.as_view(), name='configure_course'),
     path('admin_Home.html', AdminHomePage.as_view())
 
 ]
