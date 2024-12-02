@@ -8,10 +8,10 @@
 }
 
 .navbar a{
-    padding: 10%;
+    padding: 10px;
     color: white;
     text-align: center;
-    font-size: 20px;
+    font-size: 17px;
 }
 .navbar a:hover {
     background-color: black;
@@ -90,15 +90,43 @@ ul ul{/*Inner bullet*/
 }
 
 
+
+
 /*
     User directory formatting
 */
-.courselist{
-    position: relative;
-    left: -15px;
+
+
+/*
+Configure Courses page css:
+*/
+
+.instructor-checkboxes {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
 }
 
-li span{
-    position: relative;
-    left: -15%;
+.instructor-checkboxes div {
+    margin-bottom: 5px;
+}
+
+.courseContainer{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.courseBox{
+    width: 300px;
+    height: 200px;
+    background-color: white;
+    margin-left: 20px;
+    margin-top:10px;
+    text-align: center;
+}
+
+.edit-course-modal{
+    width: 350px;
+    height: 350px;
 }

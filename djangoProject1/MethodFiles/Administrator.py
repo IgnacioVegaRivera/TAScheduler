@@ -23,7 +23,7 @@ class CreateUser(CreateUserInterface):
         if not user_last_name.isalpha():
             return None
 
-        #Phone can only have digits and must be between 10 and 15 digits
+        #Phone number must be between 10 and 15 digits
         if not re.match(r'^\d{10,15}$', user_phone_number):
             return None
 
@@ -90,10 +90,28 @@ class CreateLab(CreateLabInterface):
 
 class EditUser(EditUserInterface):
     @staticmethod
-    def edit_user(self, user):
-        pass
+    def edit_user(username, request):
+        user = User.objects.get(username=username)
+
+        user.first_name = request.POST.get('first_name', user.first_name)
+        user.last_name = request.POST.get("last_name", user.last_name)
+        user.role = request.POST.get("role", user.role)
+        user.email = request.POST.get("email", user.email)
+        user.phone_number = request.POST.get("phone_number", user.phone_number)
+
+        return user
+
 
 class EditCourse(EditCourseInterface):
     @staticmethod
-    def edit_course(self, course):
-        pass
+    def edit_course(course_name, request):
+        course = Course.objects.get(name=course_name)
+
+        course.name = request.POST.get("name", course.name)
+        course.save()
+
+        selected_instructors = request.POST.getlist("instructor[]")
+        instructors = User.objects.filter(id__in=selected_instructors)
+        course.instructors.set(instructors)
+
+        return course

@@ -9,9 +9,9 @@
 {#    <br/><a href="/templates/home.html">TA Scheduler</a>#}
 <br/><a href="home.html">TA Scheduler</a>
 <div class="navbar">
-        <a class="active" href="configureUser.html" style="padding: 182px">Configure Users</a>
-        <a href="configureCourse.html" style="padding: 182px">Configure Courses</a>
-        <a href="/" style="padding: 182px">Log Out</a>
+        <a class="active" href="configureUser.html" style="padding: 150px">Configure Users</a>
+        <a href="configureCourse.html" style="padding: 150px">Configure Courses</a>
+        <a href="/" style="padding: 150px">Log Out</a>
 {#        <a href="">Databases</a>#}
 {#        <a class="active" href="admin_Home.html">Admin Home</a>#}
     </div>
@@ -64,7 +64,7 @@
                         <input type="number" class="form-control" name="phone_number">
                     </div>
                     <div>
-                        <label class="form-label required">Address</label>
+                        <label class="form-label ">Address</label>
                         <input type="text" class="form-control" name="address">
                     </div>
                     <div>
@@ -96,6 +96,7 @@
     </div>
 </div>
 <button popovertarget="createUser">Add User</button>
+<h2 class="container">Users:</h2>
 <div class="userContainer">
     {% for user in users %}
         <div class="userBox">
@@ -111,7 +112,7 @@
                 {% if user.role != "Instructor" %}
                     No Courses.
                 {% endif %}
-                <br/> <!-- check if the user is an instructor then list the courses assigned to the user-->
+                <br/>
                 {{ user.email }}<br/>{{ user.phone_number }}</p>
             <div class="edit-modal" popover id="editModal {{ user.id }}">
                 <h2>Edit user info:</h2>
@@ -147,7 +148,7 @@
                             </div>
                             <div>
                                 <label class="form-label required">Phone Number</label>
-                                <input type="text" name="phone_number" class="form-control"
+                                <input type="number" name="phone_number" class="form-control"
                                        value="{{ user.phone_number }}">
                             </div>
                         </div>
