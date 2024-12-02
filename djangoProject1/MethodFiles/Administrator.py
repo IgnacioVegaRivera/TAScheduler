@@ -13,16 +13,25 @@ from djangoProject1.models import Course, User, Lab
 class CreateUser(CreateUserInterface):
     @staticmethod
     def create_user(user_name, user_email, user_password, user_first_name, user_last_name, user_phone_number, user_address, user_role):
-        #Check if the username already exists
-        if User.objects.filter(username=user_name).exists():
+        #Check if the username already exists and if it is valid
+        if User.objects.filter(username=user_name).exists() or user_name == '':
+            return None
+
+        #check for valid role
+        valid_role = False
+        for role in User.ROLE_CHOICES:
+            if role[0] == user_role or role[1] == user_role:
+                valid_role = True
+
+        if not valid_role:
             return None
 
         #First name should only have alphabetical characters
-        if not user_first_name.isalpha():
+        if not user_first_name.isalpha() or user_first_name == '':
             return None
 
         #Last name should only have alphabetical characters
-        if not user_last_name.isalpha():
+        if not user_last_name.isalpha() or user_last_name == '':
             return None
 
         #Phone can only have digits and must be between 10 and 15 digits
@@ -33,6 +42,13 @@ class CreateUser(CreateUserInterface):
         if not user_address:
             return None
 
+        #email cannot be empty
+        if user_email == '':
+            return None
+
+        #password should not be empty
+        if user_password == '':
+            return None
 
         user = User(username=user_name, email=user_email, password=user_password,
                     first_name=user_first_name, last_name=user_last_name, phone_number=user_phone_number,

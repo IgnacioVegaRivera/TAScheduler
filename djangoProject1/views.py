@@ -62,6 +62,8 @@ class ConfigureUserPage(View):
         email = request.POST['email']
         phone = request.POST['phone_number']
         role = request.POST['role']
+        password = request.POST['password']
+        address = request.POST['address']
         # course_name = request.POST['name']
 
         #Display users list:
@@ -77,11 +79,12 @@ class ConfigureUserPage(View):
                 "phone_number": user.phone_number,
             })
         if form == "create_user":
-            return self.addUserHelper(username, email, request.POST.get('password'), firstname, lastname, phone, request.POST.get('address'), role, request)
+            return self.addUserHelper(username, email, password, firstname, lastname, phone, address, role, request)
         elif form == "edit_user":
             return self.editUserHelper(username, request)
         else:
-            return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES, "users": users_info})
+            return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES, "users": users_info,
+                                        'message': "Something went wrong when fetching the form, please try again"})
 
     #helper class to enable the addition of user
     def addUserHelper(self, username, email, password, firstname, lastname, phone, address, role, request):
