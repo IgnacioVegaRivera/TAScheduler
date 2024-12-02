@@ -17,6 +17,7 @@ class EditUserUnitTest(unittest.TestCase):
             address="123 Main St",
             role="User"
         )
+        #self.mock_user.save()
 
     def test_EditFirstName(self):
         EditUser.edit_first_name(self.mock_user, "Jane")
@@ -96,6 +97,7 @@ class EditUserAcceptanceTest(TestCase):
             address="123 Main St",
             role="TA"
         )
+        self.user.save()
 
     def test_EditFirstName(self):
         response = self.client.post('/configureUser.html', {'id': self.user.id, 'first_name': 'Jane'})

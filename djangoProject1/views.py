@@ -181,7 +181,8 @@ class ConfigureCoursePage(View):
         courses = Course.objects.all()
         instructors = User.objects.filter(role="Instructor")
         tas = User.objects.filter(role="TA")
-        return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas, "courses": courses})
+        labs = Lab.objects.all()
+        return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas, "courses": courses, 'labs':labs})
 
     def post(self, request):
         #this is to filter based on which form is being accessed
@@ -190,17 +191,18 @@ class ConfigureCoursePage(View):
         #get the list of the instructors so that we can show it
         instructors = User.objects.filter(role="Instructor")
         tas = User.objects.filter(role="TA")
+        labs = Lab.objects.all()
 
         if form == "create_course":
-            return self.add_course_helper(courses, instructors, tas, request)
+            return self.add_course_helper(courses, instructors, tas, labs,  request)
         elif form == "create_lab":
-            return self.add_lab_helper(courses, instructors, tas, request)
+            return self.add_lab_helper(courses, instructors, tas, labs,  request)
         else:
             return render(request, "configureCourse.html",{"instructors": instructors, "tas": tas,
                 'courses':courses, 'message': "Something went wrong when fetching the form, please try again."})
 
 
-    def add_course_helper(self, courses, instructors, tas, request):
+    def add_course_helper(self, courses, instructors, tas, labs, request):
         # this gets the first and last name of the instructor as well as their role
         instructor_name = request.POST['instructor']
 
@@ -220,13 +222,13 @@ class ConfigureCoursePage(View):
         course = CreateCourse.create_course(cname, instructor)
         if course is None:
             return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas,
-                'courses': courses, 'message': "Something went wrong when creating the course \"" + cname + "\""})
+                'courses': courses, 'labs':labs, 'message': "Something went wrong when creating the course \"" + cname + "\""})
         else:
             return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas,
-                'courses': courses, 'message': "The course \"" + cname + "\" has been created"})
+                'courses': courses, 'labs':labs, 'message': "The course \"" + cname + "\" has been created"})
 
 
-    def add_lab_helper(self, courses, instructors, tas, request):
+    def add_lab_helper(self, courses, instructors, tas, labs, request):
         #get the course name from the form and use it to find the course
         course_name = request.POST['course']
         if course_name != "":
@@ -250,7 +252,7 @@ class ConfigureCoursePage(View):
         lab = CreateLab.create_lab(lname, course, ta)
         if lab is None:
             return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas,
-                'courses': courses, 'message': "Something went wrong when creating the lab \"" + lname + "\""})
+                'courses': courses, 'labs':labs, 'message': "Something went wrong when creating the lab \"" + lname + "\""})
         else:
             return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas,
-                'courses': courses, 'message': "The lab \"" + lname + "\" has been created"})
+                'courses': courses, 'labs':labs, 'message': "The lab \"" + lname + "\" has been created"})
