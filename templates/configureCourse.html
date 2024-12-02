@@ -99,9 +99,9 @@
 <button popovertarget="createLab">Add Lab</button>
 <p style="text-align: center">{{ message }}</p>
 
-<div class="courseContainer">
+<div class="userContainer">
     {% for course in courses %}
-        <div class="courseBox">
+        <div class="userBox">
             <h2>{{ course.name }}</h2>
             <p>{% for instructor in course.instructors.all %}
                 {{ instructor }}<br/>
