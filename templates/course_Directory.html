@@ -34,21 +34,21 @@
             <p class="p">
                 {{ course.name }} <br>
                 <ul>
-                    <!-- Display Labs for TAs, later change this so all users see lab sections -->
-                    {% if user.role == 'TA' %}
-                        {% for lab in course.labs.all %}
-                            {% if lab.ta == user %}
-                                <li>Lab: {{ lab.name }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-
                     <!-- Display Instructors -->
                     {% for instructor in course.instructors.all %}
                         <li>{{ instructor.first_name }} {{ instructor.last_name }} ({{ instructor.get_role_display }})</li>
                     {% empty %}
                         <li>No instructors assigned.</li>
                     {% endfor %}
+
+                    <!-- Display Labs -->
+                    <ul>
+                        {% for lab in course.labs.all %}
+                            <li>Lab: {{ lab.name }}</li>
+                        {% empty %}
+                            <li>No labs available.</li>
+                        {% endfor %}
+                    </ul>
                 </ul>
             </p>
         {% endfor %}
