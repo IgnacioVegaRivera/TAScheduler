@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 
-from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser, CreateLab
+from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser, CreateLab, EditUser, EditCourse
 from djangoProject1.MethodFiles.GeneralMethods import GetUser, CheckPermission
 from djangoProject1.models import User, Course, Lab
 
@@ -81,7 +81,7 @@ class ConfigureUserPage(View):
         if form == "create_user":
             return self.addUserHelper(username, email, password, firstname, lastname, phone, address, role, request)
         elif form == "edit_user":
-            return self.editUserHelper(username, request)
+            return self.editUserHelper(request, username, firstname, lastname, phone, email, role)
         else:
             return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES, "users": users_info,
                                         'message': "Something went wrong when fetching the form, please try again"})
@@ -111,17 +111,8 @@ class ConfigureUserPage(View):
                 'message': "The user \"" + name + "\" has been created"})
 
     #Helper class to save/edit the user
-    def editUserHelper(self,username,request):
-        user = User.objects.get(username=username)
-
-        # Update user fields based on inputs:
-        user.first_name = request.POST.get("first_name", user.first_name)
-        user.last_name = request.POST.get("last_name", user.last_name)
-        user.role = request.POST.get("role", user.role)
-        user.email = request.POST.get("email", user.email)
-        user.phone_number = request.POST.get("phone_number", user.phone_number)
-
-        user.save()
+    def editUserHelper(self,request, username, firstname, lastname, phone, email, role):
+        EditUser.edit_user(request, username, firstname, lastname, phone, email, role)
         return redirect("configure_user")
 
 class UserDirectoryPage(View):
@@ -187,6 +178,7 @@ class ConfigureCoursePage(View):
     def post(self, request):
         #this is to filter based on which form is being accessed
         form = request.POST.get('form_name')
+        course_name = request.POST.get('name')
         courses = Course.objects.all()
         #get the list of the instructors so that we can show it
         instructors = User.objects.filter(role="Instructor")
@@ -197,6 +189,8 @@ class ConfigureCoursePage(View):
             return self.add_course_helper(courses, instructors, tas, labs,  request)
         elif form == "create_lab":
             return self.add_lab_helper(courses, instructors, tas, labs,  request)
+        elif form == "edit_course":
+            return self.edit_course_helper(course_name, request)
         else:
             return render(request, "configureCourse.html",{"instructors": instructors, "tas": tas,
                 'courses':courses, 'message': "Something went wrong when fetching the form, please try again."})
@@ -256,3 +250,7 @@ class ConfigureCoursePage(View):
         else:
             return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas,
                 'courses': courses, 'labs':labs, 'message': "The lab \"" + lname + "\" has been created"})
+
+    def edit_course_helper(self, course_name, request):
+        EditCourse.edit_course(course_name, request)
+        return redirect('configure_course')

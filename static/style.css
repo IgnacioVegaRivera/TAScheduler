@@ -2,17 +2,19 @@
     Configure Users Style:
 */
 
-.navbar{
+.navbar {
     background-color: #54d38e;
     overflow: hidden;
 }
 
-.navbar a{
+.navbar a {
     padding: 10px;
     color: white;
     text-align: center;
     font-size: 17px;
+
 }
+
 .navbar a:hover {
     background-color: black;
     color: white;
@@ -23,32 +25,33 @@
     color: black;
 }
 
-.userContainer{
+.userContainer {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
 
 }
 
-.userBox{
+.userBox {
     width: 300px;
     height: 300px;
     background-color: white;
     margin-left: 20px;
-    margin-top:10px;
+    margin-top: 10px;
     text-align: center;
 }
 
-.edit-modal{
+.edit-modal {
     width: 500px;
     height: 500px;
 }
 
-.addUserModal{
+.addUserModal {
     padding: 8px;
     font-size: 15px;
 }
-.create-user{
+
+.create-user {
     width: 500px;
     height: 500px;
 }
@@ -84,12 +87,11 @@ ul { /*Outer bullet*/
     list-style-type: disc;
     margin: 0;
 }
-ul ul{/*Inner bullet*/
+
+ul ul { /*Inner bullet*/
     margin: 0;
     list-style-type: circle;
 }
-
-
 
 
 /*
@@ -111,22 +113,22 @@ Configure Courses page css:
     margin-bottom: 5px;
 }
 
-.courseContainer{
+.courseContainer {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
 }
 
-.courseBox{
+.courseBox {
     width: 300px;
     height: 200px;
     background-color: white;
     margin-left: 20px;
-    margin-top:10px;
+    margin-top: 10px;
     text-align: center;
 }
 
-.edit-course-modal{
+.edit-course-modal {
     width: 350px;
     height: 350px;
 }

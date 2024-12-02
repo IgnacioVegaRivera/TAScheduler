@@ -34,7 +34,7 @@ class CreateUser(CreateUserInterface):
             return None
 
         #Phone can only have digits and must be between 10 and 15 digits
-        if not re.match(r'^\d{10,15}$', user_phone_number):
+        if not re.match(r'^\d{10}$', user_phone_number):
             return None
 
         #Address cannot be empty
@@ -107,6 +107,34 @@ class CreateLab(CreateLabInterface):
 
 class EditUser(EditUserInterface, ABC):
     @staticmethod
+    def edit_user(request, username, newFirstname, newLastname, newPhone, newEmail, newRole):
+        user = User.objects.get(username=username)
+
+        if not isinstance(user, User) or not isinstance(newFirstname, str) or not newFirstname.strip() or not newFirstname == "":
+            return None
+
+        if not isinstance(user, User) or not isinstance(newLastname, str) or not newLastname.strip() or not newLastname == "":
+            return None
+
+        if not isinstance(user, User) or not isinstance(newEmail, str) or not len(newEmail) > 0:
+            return None
+
+        if not isinstance(user, User) or not isinstance(newPhone, str) or not newPhone.isdigit() or len(newPhone) > 10:
+            return None
+
+        valid_roles = {"TA", "Instructor", "Admin"}  # Add other valid roles as needed
+        if not isinstance(user, User) or not isinstance(newRole, str) or newRole not in valid_roles:
+            return None
+
+        user.first_name = request.POST.get('first_name', user.first_name)
+        user.last_name = request.POST.get("last_name", user.last_name)
+        user.role = request.POST.get("role", user.role)
+        user.email = request.POST.get("email", user.email)
+        user.phone_number = request.POST.get("phone_number", user.phone_number)
+
+        user.save()
+
+
     def edit_first_name(user, newFirstname):
         if not isinstance(user, User) or not isinstance(newFirstname, str) or not newFirstname.strip():
             raise ValueError("Invalid first name")
@@ -158,5 +186,14 @@ class EditUser(EditUserInterface, ABC):
 
 class EditCourse(EditCourseInterface):
     @staticmethod
-    def edit_course(self, course):
-        pass
+    def edit_course(course_name, request):
+        course = Course.objects.get(name=course_name)
+
+        course.name = request.POST.get("name", course.name)
+        course.save()
+
+        selected_instructors = request.POST.getlist("instructor[]")
+        instructors = User.objects.filter(id__in=selected_instructors)
+        course.instructors.set(instructors)
+
+        return course
