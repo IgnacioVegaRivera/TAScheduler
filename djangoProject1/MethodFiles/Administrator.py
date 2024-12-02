@@ -2,7 +2,8 @@
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 import re
-from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateLabInterface,EditUserInterface, CreateUserInterface
+from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateLabInterface, EditUserInterface, \
+    CreateUserInterface, EditCourseInterface
 
 from djangoProject1.models import Course, User, Lab
 
@@ -90,4 +91,9 @@ class CreateLab(CreateLabInterface):
 class EditUser(EditUserInterface):
     @staticmethod
     def edit_user(self, user):
+        pass
+
+class EditCourse(EditCourseInterface):
+    @staticmethod
+    def edit_course(self, course):
         pass
