@@ -7,6 +7,7 @@ class Unit_Admin_CreateAccountTest(TestCase):
     def setUp(self):
         pass
 
+    #tests for valid creations
     def test_Create_Account_firstName(self):
         newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
                                             "Bob", "Smith", "4141234567", "UWM", "Admin")
