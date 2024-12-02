@@ -110,10 +110,10 @@ class EditUser(EditUserInterface, ABC):
     def edit_user(request, username, newFirstname, newLastname, newPhone, newEmail, newRole):
         user = User.objects.get(username=username)
 
-        if not isinstance(user, User) or not isinstance(newFirstname, str) or not newFirstname.strip() or not newFirstname == "":
+        if not isinstance(user, User) or not isinstance(newFirstname, str) or newFirstname.strip() or not newFirstname == "":
             return None
 
-        if not isinstance(user, User) or not isinstance(newLastname, str) or not newLastname.strip() or not newLastname == "":
+        if not isinstance(user, User) or not isinstance(newLastname, str) or newLastname.strip() or not newLastname == "":
             return None
 
         if not isinstance(user, User) or not isinstance(newEmail, str) or not len(newEmail) > 0:
@@ -132,57 +132,10 @@ class EditUser(EditUserInterface, ABC):
         user.email = request.POST.get("email", user.email)
         user.phone_number = request.POST.get("phone_number", user.phone_number)
         #Saves user
-        user.save()
+
+        return user
 
 
-    def edit_first_name(user, newFirstname):
-        if not isinstance(user, User) or not isinstance(newFirstname, str) or not newFirstname.strip():
-            raise ValueError("Invalid first name")
-        user.first_name = newFirstname
-
-    @staticmethod
-    def edit_last_name(user, newLastname):
-        if not isinstance(user, User) or not isinstance(newLastname, str) or not newLastname.strip():
-            raise ValueError("Invalid last name")
-        user.last_name = newLastname
-
-    @staticmethod
-    def edit_username(user, newUsername):
-        if not isinstance(user, User) or not isinstance(newUsername, str) or not newUsername.isalnum() or len(
-                newUsername) > 50:
-            raise ValueError("Invalid username")
-        user.username = newUsername
-
-    @staticmethod
-    def edit_password(user, newPassword):
-        if not isinstance(user, User) or not isinstance(newPassword, str) or len(newPassword) > 128 or len(newPassword) < 4:
-            raise ValueError("Invalid password")
-        user.password = newPassword
-
-    @staticmethod
-    def edit_email(user, newEmail):
-        if not isinstance(user, User) or not isinstance(newEmail, str) or not len(newEmail) > 0:
-            raise ValueError("Invalid email")
-        user.email = newEmail
-
-    @staticmethod
-    def edit_phone(user, newPhone):
-        if not isinstance(user, User) or not isinstance(newPhone, str) or not newPhone.isdigit() or len(newPhone) > 20:
-            raise ValueError("Invalid phone number")
-        user.phone_number = newPhone
-
-    @staticmethod
-    def edit_address(user, newAddress):
-        if not isinstance(user, User) or not isinstance(newAddress, str) or not newAddress.strip():
-            raise ValueError("Invalid address")
-        user.address = newAddress
-
-    @staticmethod
-    def edit_role(user, newRole):
-        valid_roles = {"TA", "Instructor", "Admin"}  # Add other valid roles as needed
-        if not isinstance(user, User) or not isinstance(newRole, str) or newRole not in valid_roles:
-            raise ValueError("Invalid role")
-        user.role = newRole
 
 class EditCourse(EditCourseInterface):
     @staticmethod

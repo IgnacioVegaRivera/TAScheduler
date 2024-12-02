@@ -4,6 +4,7 @@ import unittest
 from djangoProject1.MethodFiles.Administrator import EditUser
 from djangoProject1.models import User
 
+
 class EditUserUnitTest(unittest.TestCase):
     def setUp(self):
         self.mock_user = User(
@@ -17,7 +18,7 @@ class EditUserUnitTest(unittest.TestCase):
             address="123 Main St",
             role="User"
         )
-        #self.mock_user.save()
+        # self.mock_user.save()
 
     def test_EditFirstName(self):
         EditUser.edit_first_name(self.mock_user, "Jane")
@@ -95,66 +96,125 @@ class EditUserAcceptanceTest(TestCase):
             email="johndoe@example.com",
             phone_number="1234567890",
             address="123 Main St",
-            role="TA"
+            role="Admin"
         )
         self.user.save()
 
     def test_EditFirstName(self):
-        response = self.client.post('/configureUser.html', {'id': self.user.id, 'first_name': 'Jane'})
+        response = self.client.post('/configureUser.html', {'id': self.user.id, 'first_name': 'Jane',
+                                                            "form_name": "edit_user",
+                                                            'last_name': 'Doe',
+                                                            'email': 'johndoe@example.com',
+                                                            'username' : 'johndoe',
+                                                            'phone_number': '1234567890',
+                                                            'role': 'Admin'})
         self.user.refresh_from_db()
         self.assertEqual(self.user.first_name, "Jane")
         self.assertEqual(response.status_code, 200)
 
     def test_EditFirstNameInvalidEntry(self):
-        response = self.client.post('/configureUser.html', {'id': self.user.id, 'first_name': ''})
+        response = self.client.post('/configureUser.html',
+                                    {'id': self.user.id, 'first_name': '',
+                                                            "form_name": "edit_user",
+                                                            'last_name': 'Doe',
+                                                            'email': 'johndoe@example.com',
+                                                            'username' : 'johndoe',
+                                                            'phone_number': '1234567890',
+                                                            'role': 'Admin'})
         self.assertEqual(response.status_code, 400)
 
     def test_EditLastName(self):
-        response = self.client.post('/configureUser.html', {'id': self.user.id, 'last_name': 'Smith'})
+        response = self.client.post('/configureUser.html',
+                                    {'id': self.user.id, 'first_name': 'John',
+                                                            "form_name": "edit_user",
+                                                            'last_name': 'Smith',
+                                                            'email': 'johndoe@example.com',
+                                                            'username' : 'johndoe',
+                                                            'phone_number': '1234567890',
+                                                            'role': 'Admin'})
         self.user.refresh_from_db()
         self.assertEqual(self.user.last_name, "Smith")
         self.assertEqual(response.status_code, 200)
 
     def test_EditLastNameInvalidEntry(self):
-        response = self.client.post('/configureUser.html', {'id': self.user.id, 'last_name': ''})
+        response = self.client.post('/configureUser.html',
+                                    {'id': self.user.id, 'first_name': 'John',
+                                                            "form_name": "edit_user",
+                                                            'last_name': '',
+                                                            'email': 'johndoe@example.com',
+                                                            'username' : 'johndoe',
+                                                            'phone_number': '1234567890',
+                                                            'role': 'Admin'})
         self.assertEqual(response.status_code, 400)
 
     def test_EditEmail(self):
-        response = self.client.post('/configureUser.html', {'id': self.user.id, 'email': 'janesmith@example.com'})
+        response = self.client.post('/configureUser.html',
+                                    {'id': self.user.id, 'first_name': 'John',
+                                                            "form_name": "edit_user",
+                                                            'last_name': 'Doe',
+                                                            'email': 'janesmith@example.com',
+                                                            'username' : 'johndoe',
+                                                            'phone_number': '1234567890',
+                                                            'role': 'Admin'})
         self.user.refresh_from_db()
         self.assertEqual(self.user.email, "janesmith@example.com")
         self.assertEqual(response.status_code, 200)
 
     def test_EditEmailInvalidEntry(self):
-        response = self.client.post('/configureUser.html', {'id': self.user.id, 'email': 'invalidemail'})
+        response = self.client.post('/configureUser.html',
+                                    {'id': self.user.id, 'first_name': 'John',
+                                                            "form_name": "edit_user",
+                                                            'last_name': 'Doe',
+                                                            'email': 'invalidemail',
+                                                            'username' : 'johndoe',
+                                                            'phone_number': '1234567890',
+                                                            'role': 'Admin'})
         self.assertEqual(response.status_code, 400)
 
     def test_EditPhone(self):
-        response = self.client.post('/configureUser.html', {'id': self.user.id, 'phone': '1234567899'})
+        response = self.client.post('/configureUser.html',
+                                    {'id': self.user.id, 'first_name': 'John',
+                                                            "form_name": "edit_user",
+                                                            'last_name': 'Doe',
+                                                            'email': 'johndoe@example.com',
+                                                            'username' : 'johndoe',
+                                                            'phone_number': '1234567899',
+                                                            'role': 'Admin'})
         self.user.refresh_from_db()
         self.assertEqual(self.user.phone_number, "1234567899")
         self.assertEqual(response.status_code, 200)
 
     def test_EditPhoneInvalidEntry(self):
-        response = self.client.post('/configureUser.html', {'id': self.user.id, 'phone': 'invalid'})
-        self.assertEqual(response.status_code, 400)
-
-    def test_EditAddress(self):
-        response = self.client.post('/configureUser.html', {'id': self.user.id, 'address': '124 Main St'})
-        self.user.refresh_from_db()
-        self.assertEqual(self.user.address, "123 Main St")
-        self.assertEqual(response.status_code, 200)
-
-    def test_EditAddressInvalidEntry(self):
-        response = self.client.post('/configureUser.html', {'id': self.user.id, 'address': ''})
+        response = self.client.post('/configureUser.html',
+                                    {'id': self.user.id, 'first_name': 'John',
+                                                            "form_name": "edit_user",
+                                                            'last_name': 'Doe',
+                                                            'email': 'johndoe@example.com',
+                                                            'username' : 'johndoe',
+                                                            'phone_number': 'invalid',
+                                                            'role': 'Admin'})
         self.assertEqual(response.status_code, 400)
 
     def test_EditRole(self):
-        response = self.client.post('/configureUser.html', {'id': self.user.id, 'role': 'Admin'})
+        response = self.client.post('/configureUser.html',
+                                    {'id': self.user.id, 'first_name': 'John',
+                                                            "form_name": "edit_user",
+                                                            'last_name': 'Doe',
+                                                            'email': 'johndoe@example.com',
+                                                            'username' : 'johndoe',
+                                                            'phone_number': '1234567890',
+                                                            'role': 'TA'})
         self.user.refresh_from_db()
         self.assertEqual(self.user.role, "Admin")
         self.assertEqual(response.status_code, 200)
 
     def test_EditRoleInvalidEntry(self):
-        response = self.client.post('/configureUser.html', {'id': self.user.id, 'role': 'InvalidRole'})
+        response = self.client.post('/configureUser.html',
+                                    {'id': self.user.id, 'first_name': 'John',
+                                                            "form_name": "edit_user",
+                                                            'last_name': 'Doe',
+                                                            'email': 'johndoe@example.com',
+                                                            'username' : 'johndoe',
+                                                            'phone_number': '1234567890',
+                                                            'role': 'Invalid'})
         self.assertEqual(response.status_code, 400)

@@ -118,11 +118,11 @@
                 <h2>Edit user info:</h2>
                 <div class="modal-header" id="myModal {{ user.id }}">
                     <form method="POST" action="{% url 'configure_user' %}">
+                       {% csrf_token %}
+                        <input type="hidden" name="form_name" value="edit_user">
+                        <input type="hidden" name="username" value="{{ user.username }}">
                         <div class="modal-dialog">
 
-                            {% csrf_token %}
-                            <input type="hidden" name="form_name" value="edit_user">
-                            <input type="hidden" name="username" value="{{ user.username }}">
                             <div>
                                 <label class="form-label required">First Name</label>
                                 <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">

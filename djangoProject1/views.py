@@ -55,35 +55,32 @@ class ConfigureUserPage(View):
         #filter to see which form is being accessed:
         form = request.POST.get('form_name')
         # Get the required fields for creating a user
-        firstname = request.POST['first_name']
-        lastname = request.POST['last_name']
-        username = request.POST['username']
-        # course= request.POST['name']
-        email = request.POST['email']
-        phone = request.POST['phone_number']
-        role = request.POST['role']
-        password = request.POST['password']
-        address = request.POST['address']
+
         # course_name = request.POST['name']
 
-        #Display users list:
-        users = User.objects.filter(first_name=firstname, last_name=lastname, role=role,
-                                    email=email, phone_number=phone)
-        users_info = []
-        for user in users:
-            users_info.append({
-                "firstname": user.first_name,
-                "lastname": user.last_name,
-                "role": user.role,
-                "email": user.email,
-                "phone_number": user.phone_number,
-            })
+        users = User.objects.all()
         if form == "create_user":
+            firstname = request.POST['first_name']
+            lastname = request.POST['last_name']
+            username = request.POST['username']
+            # course= request.POST['name']
+            email = request.POST['email']
+            phone = request.POST['phone_number']
+            role = request.POST['role']
+            password = request.POST['password']
+            address = request.POST['address']
             return self.addUserHelper(username, email, password, firstname, lastname, phone, address, role, request)
         elif form == "edit_user":
+            firstname = request.POST['first_name']
+            lastname = request.POST['last_name']
+            username = request.POST['username']
+            # course= request.POST['name']
+            email = request.POST['email']
+            phone = request.POST['phone_number']
+            role = request.POST['role']
             return self.editUserHelper(request, username, firstname, lastname, phone, email, role)
         else:
-            return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES, "users": users_info,
+            return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES, "users": users,
                                         'message': "Something went wrong when fetching the form, please try again"})
 
     #helper class to enable the addition of user
@@ -112,7 +109,8 @@ class ConfigureUserPage(View):
 
     #Helper class to save/edit the user
     def editUserHelper(self,request, username, firstname, lastname, phone, email, role):
-        EditUser.edit_user(request, username, firstname, lastname, phone, email, role)
+        user = EditUser.edit_user(request, username, firstname, lastname, phone, email, role)
+        user.save()
         return redirect("configure_user")
 
 class UserDirectoryPage(View):
