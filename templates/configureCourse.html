@@ -105,8 +105,12 @@
             <h2>{{ course.name }}</h2>
             <p>{% for instructor in course.instructors.all %}
                 {{ instructor }}<br/>
-            {% empty %}
-                No instructors assigned.
+                {% for lab in labs %}
+                    {% if lab.course.name == course.name %}
+                        {{ lab }}<br/>
+                        {{ lab.ta }}<br/>
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
                 <br/>
             </p>
