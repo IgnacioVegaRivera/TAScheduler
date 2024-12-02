@@ -1,4 +1,6 @@
 # file for Admin methods
+from abc import ABC
+
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 import re
@@ -104,9 +106,29 @@ class CreateLab(CreateLabInterface):
 
         return lab
 
-class EditUser(EditUserInterface):
-    @staticmethod
-    def edit_user(self, user):
+class EditUser(EditUserInterface, ABC):
+    def edit_first_name(self, user, firstname):
+        pass
+
+    def edit_last_name(self, user, lastname):
+        pass
+
+    def edit_username(self, user, username):
+        pass
+
+    def edit_password(self, user, password):
+        pass
+
+    def edit_email(self, user, email):
+        pass
+
+    def edit_phone(self, user, phone):
+        pass
+
+    def edit_address(self, user, address):
+        pass
+
+    def edit_role(self, user, role):
         pass
 
 class EditCourse(EditCourseInterface):
