@@ -24,7 +24,7 @@ class CreateUser(CreateUserInterface):
             return None
 
         #Phone number must be between 10 and 15 digits
-        if not re.match(r'^\d{10,15}$', user_phone_number):
+        if not re.match(r'^\d{10}$', user_phone_number):
             return None
 
         #Address cannot be empty
