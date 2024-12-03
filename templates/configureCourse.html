@@ -100,18 +100,19 @@
 <p style="text-align: center">{{ message }}</p>
 
 <div class="userContainer">
+{# displays in the order of course name, all instructors, and all labs and their respective ta #}
     {% for course in courses %}
         <div class="userBox">
             <h2>{{ course.name }}</h2>
             <p>{% for instructor in course.instructors.all %}
                 {{ instructor }}<br/>
+                {% endfor %}
                 {% for lab in labs %}
                     {% if lab.course.name == course.name %}
                         {{ lab }}<br/>
                         {{ lab.ta }}<br/>
                     {% endif %}
                 {% endfor %}
-            {% endfor %}
                 <br/>
             </p>
             <div class="edit-course-modal" popover id="editCourseModal {{ course.id }}">
