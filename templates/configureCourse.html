@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Configure Course</title>
-    <link rel="stylesheet" href="/static/style.css"/>
+    <link rel="stylesheet" href="/static/style.css?v=1"/>
 </head>
 <body style="background-color: rgb(217,217,217)">
 {#    <br/><a href="/templates/home.html">TA Scheduler</a>#}
@@ -100,20 +100,14 @@
 <p style="text-align: center">{{ message }}</p>
 
 <div class="userContainer">
+{# displays in the order of course name, all instructors, and all labs and their respective ta #}
     {% for course in courses %}
         <div class="userBox">
             <h2>{{ course.name }}</h2>
-            <p>{% for instructor in course.instructors.all %}
+            <p><b>Instructors</b><br/>
+            {% for instructor in course.instructors.all %}
                 {{ instructor }}<br/>
-                {% for lab in labs %}
-                    {% if lab.course.name == course.name %}
-                        {{ lab }}<br/>
-                        {{ lab.ta }}<br/>
-                    {% endif %}
                 {% endfor %}
-            {% endfor %}
-                <br/>
-            </p>
             <div class="edit-course-modal" popover id="editCourseModal {{ course.id }}">
                 <h2>Edit Course info:</h2>
                 <div class="modal-header" id="myModal {{ course.id }}">
@@ -151,7 +145,57 @@
                     </form>
                 </div>
             </div>
-            <button popovertarget="editCourseModal {{ course.id }}">Edit</button>
+            <button popovertarget="editCourseModal {{ course.id }}">Edit Course</button>
+                <br/><br/>
+                <b>TAs and Labs</b><br/>
+                {% for lab in labs %}
+                    {% if lab.course.name == course.name %}
+                        {{ lab.ta }}<br/>
+                        {{ lab }}<br/>
+                        <div class="edit-course-modal" popover id="editCourseModal {{ course.id }}">
+                <h2>Edit Course info:</h2>
+                <div class="modal-header" id="myModal {{ course.id }}">
+                    <form method="POST" action="{% url 'configure_course' %}">
+                        <div class="modal-dialog">
+                            {% csrf_token %}
+                            <input type="hidden" name="form_name" value="edit_lab">
+                            <div>
+                                <label class="form-label required">Course Name</label>
+                                <input type="text" name="name" class="form-control" value="{{ course.name }}">
+                            </div>
+                            <div>
+                                <label class="form-label required">Instructors</label>
+                                <div class="instructor-checkboxes">
+                                    {% for instructor in instructors %}
+                                        <div>
+                                            <input type="checkbox"
+                                                   name="instructor[]"
+                                                   value="{{ instructor.id }}"
+                                                   {% if instructor in course.instructors.all %}checked{% endif %}>
+                                            <label>{{ instructor }}</label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary"
+                                    popovertarget="editCourseModal {{ course.id }}"
+                                    popovertargetaction="hide">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <button popovertarget="editCourseModal {{ course.id }}">Edit Lab</button>
+                        <br/><br/>
+                    {% endif %}
+                {% endfor %}
+                <br/>
+            </p>
+
         </div>
     {% endfor %}
 </div>

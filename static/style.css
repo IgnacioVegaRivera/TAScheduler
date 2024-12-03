@@ -34,7 +34,7 @@
 
 .userBox {
     width: 300px;
-    height: 300px;
+    height: auto;
     background-color: white;
     margin-left: 20px;
     margin-top: 10px;
