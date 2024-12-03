@@ -3,9 +3,9 @@ from django.test import TestCase, Client
 import unittest
 from unittest.mock import Mock
 
-class UnitTATest(unittest.TestCase):
-    def setUp(self):
-        self.temp = User(phone_number="4144340987", address= "3028 N 89th St")
+# class UnitTATest(unittest.TestCase):
+#     def setUp(self):
+#         self.temp = User(phone_number="4144340987", address= "3028 N 89th St")
 
     #def test_edit_contact_info(self):
 

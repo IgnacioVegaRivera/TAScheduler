@@ -96,6 +96,7 @@
     </div>
 </div>
 <button popovertarget="createUser">Add User</button>
+<p style="text-align: center">{{ message }}</p>
 <h2 class="container">Users:</h2>
 <div class="userContainer">
     {% for user in users %}
@@ -109,7 +110,14 @@
                         No Courses.
                     {% endfor %}
                 {% endif %}
-                {% if user.role != "Instructor" %}
+                {% if user.role == "TA" %}
+                    {% for lab in user.labs.all %}
+                        {{ lab.name }}
+                    {% empty %}
+                        No Labs.
+                    {% endfor %}
+                {% endif %}
+                {% if user.role == "Admin" %}
                     No Courses.
                 {% endif %}
                 <br/>

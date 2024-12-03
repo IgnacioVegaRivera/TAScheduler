@@ -78,7 +78,7 @@ class ConfigureUserPage(View):
             email = request.POST['email']
             phone = request.POST['phone_number']
             role = request.POST['role']
-            return self.editUserHelper(request, username, firstname, lastname, phone, email, role)
+            return self.editUserHelper(request, username, firstname, lastname, phone, email, role, users)
         else:
             return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES, "users": users,
                                         'message': "Something went wrong when fetching the form, please try again"})
@@ -108,10 +108,16 @@ class ConfigureUserPage(View):
                 'message': "The user \"" + name + "\" has been created"})
 
     #Helper class to save/edit the user
-    def editUserHelper(self,request, username, firstname, lastname, phone, email, role):
+    def editUserHelper(self,request, username, firstname, lastname, phone, email, role, users):
         user = EditUser.edit_user(request, username, firstname, lastname, phone, email, role)
-        user.save()
-        return redirect("configure_user")
+        if user is None:
+            return render(request, "configureUser.html",
+                          {"roles": User.ROLE_CHOICES, "users": users,
+                           "message": "Something went wrong when updating the user"})
+        else:
+            return render(request, "configureUser.html",
+                          {"roles": User.ROLE_CHOICES, "users": users,
+                           "message": "The user has been successfully updated"})
 
 class UserDirectoryPage(View):
     def get(self, request):
