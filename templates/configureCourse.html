@@ -139,6 +139,14 @@
                                     {% endfor %}
                                 </div>
                             </div>
+                            {% for lab in labs %}
+                                {% if lab.course.name == course.name %}
+                                    <div>
+                                        <label class="form-label required">Lab Name</label>
+                                        <input type="text" name="lab" class="form-control" value="{{ lab }}">
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Save</button>

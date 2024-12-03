@@ -4,7 +4,11 @@ from abc import ABC
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 import re
-from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateLabInterface, EditUserInterface, CreateUserInterface, EditCourseInterface
+
+from django.template.context_processors import static
+
+from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateLabInterface, EditUserInterface, \
+    CreateUserInterface, EditCourseInterface, EditLabInterface
 
 from djangoProject1.models import Course, User, Lab
 
@@ -152,12 +156,23 @@ class EditCourse(EditCourseInterface):
     @staticmethod
     def edit_course(course_name, request):
         course = Course.objects.get(name=course_name)
+        if course_name == None or course_name == "":
+            return None
 
         course.name = request.POST.get("name", course.name)
         course.save()
+
 
         selected_instructors = request.POST.getlist("instructor[]")
         instructors = User.objects.filter(id__in=selected_instructors)
         course.instructors.set(instructors)
 
         return course
+
+class EditLab(EditLabInterface):
+    @staticmethod
+    def edit_lab(lab_name, ta_name, request):
+        pass
+
+
+
