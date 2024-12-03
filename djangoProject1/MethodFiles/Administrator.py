@@ -54,6 +54,7 @@ class CreateUser(CreateUserInterface):
                     address=user_address, role=user_role)
         user.save()
         return user
+
 class CreateCourse(CreateCourseInterface):
     @staticmethod
     def create_course(name, instructor):
@@ -110,29 +111,39 @@ class EditUser(EditUserInterface, ABC):
     def edit_user(request, username, newFirstname, newLastname, newPhone, newEmail, newRole):
         user = User.objects.get(username=username)
 
-        if not isinstance(user, User) or not isinstance(newFirstname, str) or newFirstname.strip() or not newFirstname == "":
+        #check for first name
+        if (not isinstance(user, User) or not isinstance(newFirstname, str) or
+                not newFirstname.strip() or newFirstname == "" or not newFirstname.isalpha()):
             return None
 
-        if not isinstance(user, User) or not isinstance(newLastname, str) or newLastname.strip() or not newLastname == "":
+        #check for last name
+        if (not isinstance(user, User) or not isinstance(newLastname, str)
+                or not newLastname.strip() or newLastname == "" or not newLastname.isalpha()):
             return None
 
-        if not isinstance(user, User) or not isinstance(newEmail, str) or not len(newEmail) > 0:
+        #check for email
+        if (not isinstance(user, User) or not isinstance(newEmail, str) or not len(newEmail) > 0
+                or newEmail.find('@') == -1 or newEmail.find('.') == -1):
             return None
 
-        if not isinstance(user, User) or not isinstance(newPhone, str) or not newPhone.isdigit() or len(newPhone) > 10:
+        #check for phone number
+        if not isinstance(user, User) or not isinstance(newPhone, str) or not newPhone.isdigit() or len(newPhone) != 10:
             return None
 
         valid_roles = {"TA", "Instructor", "Admin"}  # Add other valid roles as needed
         if not isinstance(user, User) or not isinstance(newRole, str) or newRole not in valid_roles:
             return None
 
+        #changes all of the necessary values to their new ones
         user.first_name = request.POST.get('first_name', user.first_name)
         user.last_name = request.POST.get("last_name", user.last_name)
         user.role = request.POST.get("role", user.role)
         user.email = request.POST.get("email", user.email)
         user.phone_number = request.POST.get("phone_number", user.phone_number)
-        #Saves user
 
+        #Saves user
+        user.save()
+        user.refresh_from_db()
         return user
 
 
