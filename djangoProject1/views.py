@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 
-from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser, CreateLab, EditUser, EditCourse
+from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser, CreateLab, EditUser, EditCourse, EditLab
 from djangoProject1.MethodFiles.GeneralMethods import GetUser, CheckPermission
 from djangoProject1.models import User, Course, Lab
 
@@ -188,13 +188,16 @@ class ConfigureCoursePage(View):
         instructors = User.objects.filter(role="Instructor")
         tas = User.objects.filter(role="TA")
         labs = Lab.objects.all()
+        lab_id = request.POST.get('lab_id')
 
         if form == "create_course":
             return self.add_course_helper(courses, instructors, tas, labs,  request)
         elif form == "create_lab":
             return self.add_lab_helper(courses, instructors, tas, labs,  request)
         elif form == "edit_course":
-            return self.edit_course_helper(course_name, labs, tas, request)
+            return self.edit_course_helper(course_name, request)
+        elif form == "edit_lab":
+            return self.edit_lab_helper(lab_id, request)
         else:
             return render(request, "configureCourse.html",{"instructors": instructors, "tas": tas,
                 'courses':courses, 'message': "Something went wrong when fetching the form, please try again."})
@@ -255,8 +258,10 @@ class ConfigureCoursePage(View):
             return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas,
                 'courses': courses, 'labs':labs, 'message': "The lab \"" + lname + "\" has been created"})
 
-    def edit_course_helper(self, course_name,labs, tas, request):
-        lab_name = request.POST['lab_name']
-        ta_name = request.POST['ta']
+    def edit_course_helper(self, course_name,request):
         EditCourse.edit_course(course_name, request)
+        return redirect('configure_course')
+
+    def edit_lab_helper(self,lab_id, request):
+        EditLab.edit_lab(lab_id, request)
         return redirect('configure_course')
