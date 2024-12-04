@@ -15,12 +15,13 @@ from djangoProject1.models import Course, User, Lab
 
 class CreateUser(CreateUserInterface):
     @staticmethod
-    def create_user(user_name, user_email, user_password, user_first_name, user_last_name, user_phone_number, user_address, user_role):
-        #Check if the username already exists and if it is valid
+    def create_user(user_name, user_email, user_password, user_first_name, user_last_name, user_phone_number,
+                    user_address, user_role):
+        # Check if the username already exists and if it is valid
         if User.objects.filter(username=user_name).exists() or user_name == '':
             return None
 
-        #check for valid role
+        # check for valid role
         valid_role = False
         for role in User.ROLE_CHOICES:
             if role[0] == user_role or role[1] == user_role:
@@ -29,27 +30,27 @@ class CreateUser(CreateUserInterface):
         if not valid_role:
             return None
 
-        #First name should only have alphabetical characters
+        # First name should only have alphabetical characters
         if not user_first_name.isalpha() or user_first_name == '':
             return None
 
-        #Last name should only have alphabetical characters
+        # Last name should only have alphabetical characters
         if not user_last_name.isalpha() or user_last_name == '':
             return None
 
-        #Phone can only have digits and must be between 10 and 15 digits
+        # Phone can only have digits and must be between 10 and 15 digits
         if not re.match(r'^\d{10}$', user_phone_number):
             return None
 
-        #Address cannot be empty
+        # Address cannot be empty
         if not user_address:
             return None
 
-        #email cannot be empty
+        # email cannot be empty
         if user_email == '':
             return None
 
-        #password should not be empty
+        # password should not be empty
         if user_password == '':
             return None
 
@@ -59,32 +60,33 @@ class CreateUser(CreateUserInterface):
         user.save()
         return user
 
+
 class CreateCourse(CreateCourseInterface):
     @staticmethod
     def create_course(name, instructor):
-        #if name or instructor are the wrong type return None
+        # if name or instructor are the wrong type return None
         if not isinstance(instructor, User) or not isinstance(name, str):
             return None
 
-        #if any of the inputs are none then return None
+        # if any of the inputs are none then return None
         if name == None or name == "" or instructor == None:
             return None
 
-        #if the role isn't instructor then we can't assign to a course so we return None
+        # if the role isn't instructor then we can't assign to a course so we return None
         if instructor.role != "Instructor":
             return None
 
-        #if the course already exists then return None
+        # if the course already exists then return None
         if Course.objects.filter(name=name).exists():
             return None
 
-
-        #if everything is fine then we can create the course no problem
+        # if everything is fine then we can create the course no problem
         course = Course(name=name)
         course.save()
         course.instructors.add(instructor)
 
         return course
+
 
 class CreateLab(CreateLabInterface):
     @staticmethod
@@ -110,27 +112,28 @@ class CreateLab(CreateLabInterface):
 
         return lab
 
+
 class EditUser(EditUserInterface, ABC):
     @staticmethod
     def edit_user(request, username, newFirstname, newLastname, newPhone, newEmail, newRole):
         user = User.objects.get(username=username)
 
-        #check for first name
+        # check for first name
         if (not isinstance(user, User) or not isinstance(newFirstname, str) or
                 not newFirstname.strip() or newFirstname == "" or not newFirstname.isalpha()):
             return None
 
-        #check for last name
+        # check for last name
         if (not isinstance(user, User) or not isinstance(newLastname, str)
                 or not newLastname.strip() or newLastname == "" or not newLastname.isalpha()):
             return None
 
-        #check for email
+        # check for email
         if (not isinstance(user, User) or not isinstance(newEmail, str) or not len(newEmail) > 0
                 or newEmail.find('@') == -1 or newEmail.find('.') == -1):
             return None
 
-        #check for phone number
+        # check for phone number
         if not isinstance(user, User) or not isinstance(newPhone, str) or not newPhone.isdigit() or len(newPhone) != 10:
             return None
 
@@ -138,7 +141,7 @@ class EditUser(EditUserInterface, ABC):
         if not isinstance(user, User) or not isinstance(newRole, str) or newRole not in valid_roles:
             return None
 
-        #if the user is an admin then they shouldn't have any courses or labs
+        # if the user is an admin then they shouldn't have any courses or labs
         if newRole == "Admin":
             removeInstructor = Course.objects.filter(instructors=user)
             removeTa = Lab.objects.filter(ta=user)
@@ -149,7 +152,7 @@ class EditUser(EditUserInterface, ABC):
                 lab.ta = None
                 lab.save()
 
-        #if the user is an Instructor then they shouldnt have any labs
+        # if the user is an Instructor then they shouldnt have any labs
         if newRole == "Instructor":
             removeTa = Lab.objects.filter(ta=user)
             for lab in removeTa:
@@ -162,18 +165,17 @@ class EditUser(EditUserInterface, ABC):
             for course in removeInstructor:
                 course.instructors.remove(user)
 
-        #changes all of the necessary values to their new ones
+        # changes all of the necessary values to their new ones
         user.first_name = request.POST.get('first_name', user.first_name)
         user.last_name = request.POST.get("last_name", user.last_name)
         user.role = request.POST.get("role", user.role)
         user.email = request.POST.get("email", user.email)
         user.phone_number = request.POST.get("phone_number", user.phone_number)
 
-        #Saves user
+        # Saves user
         user.save()
         user.refresh_from_db()
         return user
-
 
 
 class EditCourse(EditCourseInterface):
@@ -183,16 +185,18 @@ class EditCourse(EditCourseInterface):
         if course_name == None or course_name == "":
             return None
 
-
-        course.name = request.POST.get("name", course.name)
-        course.save()
-
+        #course.name = request.POST.get("name", course.name)
+        new_course = request.POST.get("name", "")
+        if new_course:
+            course.name = new_course
 
         selected_instructors = request.POST.getlist("instructor[]")
         instructors = User.objects.filter(id__in=selected_instructors)
         course.instructors.set(instructors)
 
+        course.save()
         return course
+
 
 class EditLab(EditLabInterface):
     @staticmethod
@@ -201,16 +205,19 @@ class EditLab(EditLabInterface):
         if lab_id == None or lab_id == "":
             return None
 
-        lab.name = request.POST.get("name", lab.name)
+        # Update Lab name
+        lab.name = request.POST.get("lab", lab.name)
+        if lab.name == None or lab.name == "":
+            return None
         lab.save()
 
-        selected_tas = request.POST.getlist("ta[]")
-        tas = Lab.objects.filter(id__in=selected_tas)
-        lab.ta.set(tas)
+        # Update TAs
+        selected_ta = request.POST.get("ta")
+        if selected_ta:
+            ta = User.objects.filter(id=selected_ta, role="TA").first()
+            lab.ta = ta
+        else:
+            lab.ta = None
 
+        lab.save()
         return lab
-
-
-
-
-
