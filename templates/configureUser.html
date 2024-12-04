@@ -107,18 +107,18 @@
                     {% for course in user.courses.all %}
                         {{ course.name }}<br/>
                     {% empty %}
-                        No Courses.
+                        No Courses.<br/>
                     {% endfor %}
                 {% endif %}
                 {% if user.role == "TA" %}
                     {% for lab in user.labs.all %}
                         {{ lab.name }}<br/>
                     {% empty %}
-                        No Labs.
+                        No Labs.<br/>
                     {% endfor %}
                 {% endif %}
                 {% if user.role == "Admin" %}
-                    No Courses.
+                    No Courses.<br/>
                 {% endif %}
                 <br/>
                 {{ user.email }}<br/>{{ user.phone_number }}</p>

@@ -138,6 +138,30 @@ class EditUser(EditUserInterface, ABC):
         if not isinstance(user, User) or not isinstance(newRole, str) or newRole not in valid_roles:
             return None
 
+        #if the user is an admin then they shouldn't have any courses or labs
+        if newRole == "Admin":
+            removeInstructor = Course.objects.filter(instructors=user)
+            removeTa = Lab.objects.filter(ta=user)
+            for course in removeInstructor:
+                course.instructors.remove(user)
+
+            for lab in removeTa:
+                lab.ta = None
+                lab.save()
+
+        #if the user is an Instructor then they shouldnt have any labs
+        if newRole == "Instructor":
+            removeTa = Lab.objects.filter(ta=user)
+            for lab in removeTa:
+                lab.ta = None
+                lab.save()
+
+        # if the user is an Instructor then they shouldnt have any courses
+        if newRole == "TA":
+            removeInstructor = Course.objects.filter(instructors=user)
+            for course in removeInstructor:
+                course.instructors.remove(user)
+
         #changes all of the necessary values to their new ones
         user.first_name = request.POST.get('first_name', user.first_name)
         user.last_name = request.POST.get("last_name", user.last_name)

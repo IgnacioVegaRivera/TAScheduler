@@ -31,13 +31,13 @@
                 {% elif user.role == "TA" %}
                     <!-- Display courses where the user is a TA -->
                     {% for lab in user.labs.all %}
-                        {{ lab.course.name }} (Lab: {{ lab.name }})
+                        {{ lab.course.name }} (Lab: {{ lab.name }})<br/>
                     {% empty %}
                         <li>No labs assigned.</li>
                     {% endfor %}
                 {% endif %}
                 {% if user.role != "Instructor" %}
-                    Not a Instructor
+                    Not an Instructor
                 {% endif %}
                 <br/>
                 {{ user.email }}<br/>{{ user.phone_number }}</p>

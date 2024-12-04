@@ -107,6 +107,8 @@
             <p><b>Instructors</b><br/>
                 {% for instructor in course.instructors.all %}
                     {{ instructor }}<br/>
+                {% empty %}
+                    No Instructor Assigned<br/>
                 {% endfor %}
             <div class="edit-course-modal" popover id="editCourseModal {{ course.id }}">
                 <h2>Edit Course info:</h2>
@@ -147,10 +149,15 @@
             </div>
             <button popovertarget="editCourseModal {{ course.id }}">Edit Course</button>
             <br/><br/>
+
             <b>TAs and Labs</b><br/>
             {% for lab in labs %}
                 {% if lab.course.name == course.name %}
-                    {{ lab.ta }}<br/>
+                    {% if lab.ta %}
+                        {{ lab.ta }}<br/>
+                    {% else %}
+                        No TA Assigned<br/>
+                    {% endif %}
                     {{ lab }}<br/>
                     <div class="edit-lab-modal" popover id="editLabModal {{ lab.id }}">
                         <h2>Edit Lab info:</h2>

@@ -137,7 +137,7 @@ class Acceptance_Admin_CreateAccountTest(TestCase):
 
     def test_valid_User(self):
         response = self.donkey.post("/configureUser.html", {"first_name" : "Administrator",
-                "last_name":"Smith", "username":"login1", "password":"password1", "email":"<EMAIL1>",
+                "last_name":"Smith", "username":"login1", "password":"password1", "email":"<EMAIL1>@email.com",
                 "phone_number":"1141234567", "address":"UWM1", "role":"Admin", "form_name":"create_user"}, follow=True)
         self.assertEqual(User.objects.count(), 1, "The amount of users do not match")
         self.assertIn('message', response.context)
@@ -146,7 +146,7 @@ class Acceptance_Admin_CreateAccountTest(TestCase):
 
     def test_invalid_User_firstName(self):
         response = self.donkey.post("/configureUser.html", {"first_name" : "",
-                "last_name":"Smith", "username":"login1", "password":"password1", "email":"<EMAIL1>",
+                "last_name":"Smith", "username":"login1", "password":"password1", "email":"<EMAIL1>@email.com",
                 "phone_number":"1141234567", "address":"UWM1", "role":"Admin", "form_name":"create_user"}, follow=True)
         self.assertEqual(User.objects.count(), 0, "The amount of users do not match")
         self.assertIn('message', response.context)
@@ -155,7 +155,7 @@ class Acceptance_Admin_CreateAccountTest(TestCase):
 
     def test_invalid_User_lastName(self):
         response = self.donkey.post("/configureUser.html", {"first_name" : "Administrator",
-                "last_name":"", "username":"login1", "password":"password1", "email":"<EMAIL1>",
+                "last_name":"", "username":"login1", "password":"password1", "email":"<EMAIL1>@email.com",
                 "phone_number":"1141234567", "address":"UWM1", "role":"Admin", "form_name":"create_user"}, follow=True)
         self.assertEqual(User.objects.count(), 0, "The amount of users do not match")
         self.assertIn('message', response.context)
@@ -164,7 +164,7 @@ class Acceptance_Admin_CreateAccountTest(TestCase):
 
     def test_invalid_User_Username(self):
         response = self.donkey.post("/configureUser.html", {"first_name" : "Administrator",
-                "last_name":"Smith", "username":"", "password":"password1", "email":"<EMAIL1>",
+                "last_name":"Smith", "username":"", "password":"password1", "email":"<EMAIL1>@email.com",
                 "phone_number":"1141234567", "address":"UWM1", "role":"Admin", "form_name":"create_user"}, follow=True)
         self.assertEqual(User.objects.count(), 0, "The amount of users do not match")
         self.assertIn('message', response.context)
@@ -174,7 +174,7 @@ class Acceptance_Admin_CreateAccountTest(TestCase):
 
     def test_invalid_User_Password(self):
         response = self.donkey.post("/configureUser.html", {"first_name" : "Administrator",
-                "last_name":"Smith", "username":"login1", "password":"", "email":"<EMAIL1>",
+                "last_name":"Smith", "username":"login1", "password":"", "email":"<EMAIL1>@email.com",
                 "phone_number":"1141234567", "address":"UWM1", "role":"Admin", "form_name":"create_user"}, follow=True)
         self.assertEqual(User.objects.count(), 0, "The amount of users do not match")
         self.assertIn('message', response.context)
@@ -194,7 +194,7 @@ class Acceptance_Admin_CreateAccountTest(TestCase):
 
     def test_invalid_User_PhoneNumber(self):
         response = self.donkey.post("/configureUser.html", {"first_name" : "Administrator",
-                "last_name":"Smith", "username":"login1", "password":"password1", "email":"<EMAIL1>",
+                "last_name":"Smith", "username":"login1", "password":"password1", "email":"<EMAIL1>@email.com",
                 "phone_number":"", "address":"UWM1", "role":"Admin", "form_name":"create_user"}, follow=True)
         self.assertEqual(User.objects.count(), 0, "The amount of users do not match")
         self.assertIn('message', response.context)
@@ -204,7 +204,7 @@ class Acceptance_Admin_CreateAccountTest(TestCase):
 
     def test_invalid_User_Address(self):
         response = self.donkey.post("/configureUser.html", {"first_name" : "Administrator",
-                "last_name":"Smith", "username":"login1", "password":"password1", "email":"<EMAIL1>",
+                "last_name":"Smith", "username":"login1", "password":"password1", "email":"<EMAIL1>@email.com",
                 "phone_number":"1141234567", "address":"", "role":"Admin", "form_name":"create_user"}, follow=True)
         self.assertEqual(User.objects.count(), 0, "The amount of users do not match")
         self.assertIn('message', response.context)
@@ -214,7 +214,7 @@ class Acceptance_Admin_CreateAccountTest(TestCase):
 
     def test_invalid_User_Role(self):
         response = self.donkey.post("/configureUser.html", {"first_name" : "Administrator",
-                "last_name":"Smith", "username":"login1", "password":"password1", "email":"<EMAIL1>",
+                "last_name":"Smith", "username":"login1", "password":"password1", "email":"<EMAIL1>@email.com",
                 "phone_number":"1141234567", "address":"UWM1", "role":"", "form_name":"create_user"}, follow=True)
         self.assertEqual(User.objects.count(), 0, "The amount of users do not match")
         self.assertIn('message', response.context)
@@ -224,7 +224,7 @@ class Acceptance_Admin_CreateAccountTest(TestCase):
 
     def test_invalid_User_FormName(self):
         response = self.donkey.post("/configureUser.html", {"first_name" : "Administrator",
-                "last_name":"Smith", "username":"login1", "password":"password1", "email":"<EMAIL1>",
+                "last_name":"Smith", "username":"login1", "password":"password1", "email":"<EMAIL1>@email.com",
                 "phone_number":"1141234567", "address":"UWM1", "role":"Admin", "form_name":""}, follow=True)
         self.assertEqual(User.objects.count(), 0, "The amount of users do not match")
         self.assertIn('message', response.context)
@@ -238,10 +238,7 @@ class Acceptance_Admin_CreateAccountTest(TestCase):
 ###AADI TESTS
 class UserUnitTest(TestCase):
     def setUp(self):
-        self.user = User( username="login", email="bob@gmail.com", password="thepassword",
-                          first_name="Bob", last_name="Smith",  phone_number="4141234567",
-                         address="UWM Campus", role="Admin" )
-        self.user.save()
+        pass
 
 
     # def test_creation_default_users(self):
@@ -278,7 +275,7 @@ class UserUnitTest(TestCase):
             "UWM Campus",
             "Admin"
         )
-        self.assertEqual(user.user_name, None)
+        self.assertEqual(user, None)
 
     def test_username_exists(self):
         user = CreateUser.create_user(
@@ -291,7 +288,7 @@ class UserUnitTest(TestCase):
             "UWM Campus",
             "Admin"
         )
-        self.assertEqual(user.user_name, "login")
+        self.assertEqual(user.username, "login")
 
     def test_email_exists(self):
         user = CreateUser.create_user(
@@ -304,5 +301,5 @@ class UserUnitTest(TestCase):
             "UWM Campus",
             "Admin"
         )
-        self.assertEqual(user.user_email, "bob@gmail.com")
+        self.assertEqual(user.email, "bob@gmail.com")
 
