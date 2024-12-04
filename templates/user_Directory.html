@@ -6,8 +6,9 @@
     <link rel="stylesheet" href="/static/style.css"/>
 </head>
 <body style="background-color: rgb(217,217,217)">
-<h1>User Directory</h1>
-<br/><a href="home.html">TA Scheduler</a>
+<a href="home.html">
+    <img src="/static/Logo2.jpeg" alt="TA Scheduler Logo" style="height: 75px; width: auto;">
+</a>
 <div class="navbar">
     <a href="admin_Home.html" style="padding: 110px">Admin Home</a>
     <a class="active" href="user_Directory.html" style="padding: 110px">User Directory</a>
@@ -24,21 +25,20 @@
             {% endif %}
                 {% if user.role == "Instructor" %}
                     {% for course in user.courses.all %}
-                        {{ course.name }}
+                        {{ course.name }}<br/>
                     {% empty %}
-                        No courses assigned.
+                        No courses assigned.<br/>
                     {% endfor %}
                 {% elif user.role == "TA" %}
                     <!-- Display courses where the user is a TA -->
                     {% for lab in user.labs.all %}
-                        {{ lab.course.name }} (Lab: {{ lab.name }})
+                        {{ lab.course.name }} (Lab: {{ lab.name }})<br/>
                     {% empty %}
                         <li>No labs assigned.</li>
                     {% endfor %}
                 {% elif user.role == "Admin" %}
-                    No assignments.
+                    No assignments.<br/>
                 {% endif %}
-                <br/>
                 {{ user.email }}<br/>{{ user.phone_number }}</p>
         </div>
     {% endfor %}
