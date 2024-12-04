@@ -197,7 +197,7 @@ class ConfigureCoursePage(View):
         elif form == "edit_course":
             return self.edit_course_helper(course_name, request)
         elif form == "edit_lab":
-            return self.edit_lab_helper(lab_id, request)
+            return self.edit_lab_helper(lab_id, tas, labs, instructors, courses, request)
         else:
             return render(request, "configureCourse.html",{"instructors": instructors, "tas": tas,
                 'courses':courses, 'message': "Something went wrong when fetching the form, please try again."})
@@ -259,9 +259,25 @@ class ConfigureCoursePage(View):
                 'courses': courses, 'labs':labs, 'message': "The lab \"" + lname + "\" has been created"})
 
     def edit_course_helper(self, course_name,request):
-        EditCourse.edit_course(course_name, request)
+        updated_course = EditCourse.edit_course(course_name, request)
+        if updated_course:
+            message = f"Course '{updated_course.name}' was updated successfully."
+        else:
+            message = "Failed to update course. Please check your inputs and try again."
+
         return redirect('configure_course')
 
-    def edit_lab_helper(self,lab_id, request):
-        EditLab.edit_lab(lab_id, request)
-        return redirect('configure_course')
+    def edit_lab_helper(self,lab_id, tas, labs, instructors, courses, request):
+        updated_lab = EditLab.edit_lab(lab_id, request)
+        if updated_lab:
+            message = f"Lab '{updated_lab.name}' updated successfully."
+        else:
+            message = "Failed to update lab. Please check your inputs and try again."
+
+        return render(request, "configureCourse.html", {
+            "instructors": instructors,
+            "courses": courses,
+            "tas": tas,
+            "labs":labs,
+            "message": message
+        })

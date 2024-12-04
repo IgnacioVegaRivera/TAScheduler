@@ -117,6 +117,7 @@
                         <div class="modal-dialog">
                             {% csrf_token %}
                             <input type="hidden" name="form_name" value="edit_course">
+                            <input type="hidden" name="course_name" value="{{ course.name }}">
                             <div>
                                 <label class="form-label required">Course Name</label>
                                 <input type="text" name="name" class="form-control" value="{{ course.name }}">
@@ -166,23 +167,22 @@
                                 <div class="modal-dialog">
                                     {% csrf_token %}
                                     <input type="hidden" name="form_name" value="edit_lab">
-                                    {% for lab in labs %}
-                                        {% if lab.course.name == course.name %}
-                                            <div>
-                                                <label class="form-label required">Lab Name</label>
-                                                <input type="text" name="lab" class="form-control" value="{{ lab }}">
-                                            </div>
-                                        {% endif %}
-                                    {% endfor %}
+                                    <input type="hidden" name="lab_id" value="{{ lab.id }}">
+                                    {% if lab.course.name == course.name %}
+                                        <div>
+                                            <label class="form-label required">Lab Name</label>
+                                            <input type="text" name="lab" class="form-control" value="{{ lab.name }}">
+                                        </div>
+                                    {% endif %}
                                     <div>
                                         <label class="form-label required">TAs</label>
-                                        <div class="ta-checkboxes">
+                                        <div class="ta-radio">
                                             {% for ta in tas %}
                                                 <div>
-                                                    <input type="checkbox"
-                                                           name="ta[]"
+                                                    <input type="radio"
+                                                           name="ta"
                                                            value="{{ ta.id }}"
-                                                           {% if ta in lab.ta.all %}checked{% endif %}>
+                                                           {% if lab.ta and lab.ta.id == ta.id %}checked{% endif %}>
                                                     <label>{{ ta }}</label>
                                                 </div>
                                             {% endfor %}
