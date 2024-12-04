@@ -105,14 +105,14 @@
             <p>{{ user.role }} <br/>
                 {% if user.role == "Instructor" %}
                     {% for course in user.courses.all %}
-                        {{ course.name }}
+                        {{ course.name }}<br/>
                     {% empty %}
                         No Courses.
                     {% endfor %}
                 {% endif %}
                 {% if user.role == "TA" %}
                     {% for lab in user.labs.all %}
-                        {{ lab.name }}
+                        {{ lab.name }}<br/>
                     {% empty %}
                         No Labs.
                     {% endfor %}
@@ -171,6 +171,7 @@
                 </div>
             </div>
             <button popovertarget="editModal {{ user.id }}">Edit</button>
+            <br/><br/>
         </div>
     {% endfor %}
 </div>
