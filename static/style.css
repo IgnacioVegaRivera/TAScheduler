@@ -113,8 +113,21 @@ Configure Courses page css:
     margin-bottom: 5px;
 }
 
+.ta-checkboxes {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+.ta-checkboxes div{
+    margin-bottom: 5px;
+}
 
 .edit-course-modal {
+    width: 350px;
+    height: 350px;
+}
+
+.edit-lab-modal {
     width: 350px;
     height: 350px;
 }

@@ -159,6 +159,7 @@ class EditCourse(EditCourseInterface):
         if course_name == None or course_name == "":
             return None
 
+
         course.name = request.POST.get("name", course.name)
         course.save()
 
@@ -171,8 +172,21 @@ class EditCourse(EditCourseInterface):
 
 class EditLab(EditLabInterface):
     @staticmethod
-    def edit_lab(lab_name, ta_name, request):
-        pass
+    def edit_lab(lab_id, request):
+        lab = Lab.objects.get(id=lab_id)
+        if lab_id == None or lab_id == "":
+            return None
+
+        lab.name = request.POST.get("name", lab.name)
+        lab.save()
+
+        selected_tas = request.POST.getlist("ta[]")
+        tas = Lab.objects.filter(id__in=selected_tas)
+        lab.ta.set(tas)
+
+        return lab
+
+
 
 
 

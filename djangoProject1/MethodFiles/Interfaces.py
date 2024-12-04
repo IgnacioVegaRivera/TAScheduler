@@ -32,7 +32,7 @@ class EditCourseInterface(abc.ABC):
 
 class EditLabInterface(abc.ABC):
     @abc.abstractmethod
-    def edit_lab(self, lab):
+    def edit_lab(self, lab_id):
         pass
 
 class CreateUserInterface(abc.ABC):
