@@ -26,18 +26,17 @@
                     {% for course in user.courses.all %}
                         {{ course.name }}
                     {% empty %}
-                        No Courses.
+                        No courses assigned.
                     {% endfor %}
                 {% elif user.role == "TA" %}
                     <!-- Display courses where the user is a TA -->
                     {% for lab in user.labs.all %}
-                        {{ lab.course.name }} (Lab: {{ lab.name }})<br/>
+                        {{ lab.course.name }} (Lab: {{ lab.name }})
                     {% empty %}
                         <li>No labs assigned.</li>
                     {% endfor %}
-                {% endif %}
-                {% if user.role != "Instructor" %}
-                    Not an Instructor
+                {% elif user.role == "Admin" %}
+                    No assignments.
                 {% endif %}
                 <br/>
                 {{ user.email }}<br/>{{ user.phone_number }}</p>
