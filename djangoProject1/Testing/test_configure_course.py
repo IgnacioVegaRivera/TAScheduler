@@ -1,6 +1,5 @@
 from django.test import TestCase, Client
 
-from djangoProject1.MethodFiles import Instructor
 from djangoProject1.models import User, Course, Lab
 
 class TestConfigureCourseUnit(TestCase):
