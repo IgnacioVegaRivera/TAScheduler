@@ -180,13 +180,12 @@ class EditUser(EditUserInterface, ABC):
 
 class EditCourse(EditCourseInterface):
     @staticmethod
-    def edit_course(course_name, request):
-        course = Course.objects.get(name=course_name)
-        if course_name == None or course_name == "":
+    def edit_course(course_id, request):
+        course = Course.objects.get(id=course_id)
+        if course_id == None or course_id == "":
             return None
 
-        #course.name = request.POST.get("name", course.name)
-        new_course = request.POST.get("name", "")
+        new_course = request.POST.get("name", course.name)
         if new_course:
             course.name = new_course
 
@@ -218,6 +217,14 @@ class EditLab(EditLabInterface):
             lab.ta = ta
         else:
             lab.ta = None
+
+        # Update Courses, (be able to change  what course that lab is assigned
+        selected_course = request.POST.get("course")
+        if selected_course:
+            course = Course.objects.filter(name=selected_course).first()
+            lab.course = course
+        else:
+            lab.course = None
 
         lab.save()
         return lab

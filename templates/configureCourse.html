@@ -119,7 +119,7 @@
                         <div class="modal-dialog">
                             {% csrf_token %}
                             <input type="hidden" name="form_name" value="edit_course">
-                            <input type="hidden" name="course_name" value="{{ course.name }}">
+                            <input type="hidden" name="course_id" value="{{ course.id }}">
                             <div>
                                 <label class="form-label required">Course Name</label>
                                 <input type="text" name="name" class="form-control" value="{{ course.name }}">
@@ -186,6 +186,21 @@
                                                            value="{{ ta.id }}"
                                                            {% if lab.ta and lab.ta.id == ta.id %}checked{% endif %}>
                                                     <label>{{ ta }}</label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <hr width="100%" size="2">
+                                    <div>
+                                        <label class="form-label required">Courses</label>
+                                        <div class="course-radio">
+                                            {% for course in courses %}
+                                                <div>
+                                                    <input type="radio"
+                                                           name="course"
+                                                           value="{{ lab.course }}"
+                                                           {% if lab.course and lab.course.id == course.id %}checked{% endif %}>
+                                                    <label>{{ course }}</label>
                                                 </div>
                                             {% endfor %}
                                         </div>

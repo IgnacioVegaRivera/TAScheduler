@@ -183,6 +183,7 @@ class ConfigureCoursePage(View):
         #this is to filter based on which form is being accessed
         form = request.POST.get('form_name')
         course_name = request.POST.get('name')
+        course_id = request.POST.get('course_id')
         courses = Course.objects.all()
         #get the list of the instructors so that we can show it
         instructors = User.objects.filter(role="Instructor")
@@ -195,7 +196,7 @@ class ConfigureCoursePage(View):
         elif form == "create_lab":
             return self.add_lab_helper(courses, instructors, tas, labs,  request)
         elif form == "edit_course":
-            return self.edit_course_helper(course_name, request)
+            return self.edit_course_helper(course_id, request)
         elif form == "edit_lab":
             return self.edit_lab_helper(lab_id, tas, labs, instructors, courses, request)
         else:
@@ -258,8 +259,8 @@ class ConfigureCoursePage(View):
             return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas,
                 'courses': courses, 'labs':labs, 'message': "The lab \"" + lname + "\" has been created"})
 
-    def edit_course_helper(self, course_name,request):
-        updated_course = EditCourse.edit_course(course_name, request)
+    def edit_course_helper(self, course_id,request):
+        updated_course = EditCourse.edit_course(course_id, request)
         if updated_course:
             message = f"Course '{updated_course.name}' was updated successfully."
         else:
