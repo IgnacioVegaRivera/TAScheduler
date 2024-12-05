@@ -222,6 +222,7 @@ class EditLab(EditLabInterface):
         selected_course = request.POST.get("course")
         if selected_course != None and selected_course != "":
             course = Course.objects.filter(name=selected_course).first()
+
             lab.course = course
         else:
             return None

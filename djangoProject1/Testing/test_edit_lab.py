@@ -110,6 +110,7 @@ class test_unit_edit_lab(TestCase):
         self.assertEqual(self.temp_lab.course.name,"CS361" ,"This is an invalid course")
 
     def test_unit_EditLabTA(self):
+
         response = self.client.post('/configureCourse.html', {'lab_id': self.temp_lab.id,
                                                          'course_id': self.temp_course.id,
                                                          'form_name': "edit_lab",
@@ -226,6 +227,7 @@ class test_acceptance_lab_edit(TestCase):
         self.assertEqual(response.context['message'], "Failed to update lab. Please check your inputs and try again.")
 
     def test_acceptance_lab_EditLabTA(self):
+
         response = self.client.post('/configureCourse.html', {'lab_id': self.temp_lab.id,
                                                          'course_id': self.temp_course.id,
                                                          'form_name': "edit_lab",
