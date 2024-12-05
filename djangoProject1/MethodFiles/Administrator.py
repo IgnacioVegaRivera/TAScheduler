@@ -219,9 +219,9 @@ class EditLab(EditLabInterface):
             lab.ta = None
 
         # Update Courses, (be able to change  what course that lab is assigned
-        selected_course = request.POST.get("course")
-        if selected_course:
-            course = Course.objects.filter(name=selected_course).first()
+        selected_course_id = request.POST.get("course")
+        if selected_course_id:
+            course = Course.objects.filter(id=selected_course_id).first()
             lab.course = course
         else:
             lab.course = None

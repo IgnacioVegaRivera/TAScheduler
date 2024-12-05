@@ -22,7 +22,7 @@ class CheckPermissionInterface(abc.ABC):
 
 class EditUserInterface(abc.ABC):
     @abc.abstractmethod
-    def edit_user(self, username, firstname, lastname, phone, email, role, users):
+    def edit_user(self, username, newFirstname, newLastname, newPhone, newEmail, newRole):
         pass
 
 class EditCourseInterface(abc.ABC):
