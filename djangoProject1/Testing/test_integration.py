@@ -207,9 +207,48 @@ class IntegrationTests(TestCase):
         self.assertContains(response, "Edit Lab")
 
     #integration tests still needed to write
-    #all the filter tests for course directory
-    #test for the unimplemented methods (edit course and edit lab)
+
+    # all the filter tests for course directory
+    def test_create_courses_and_filter(self):
+        pass
+
+    def test_create_labs_and_filter(self):
+        pass
+
+    def test_change_course_assignments_and_filter(self):
+        pass
+
+    def test_change_lab_assignments_and_filter(self):
+        pass
+
+    def test_change_user_role_and_filter(self):
+        pass
+
+    def test_filter_display_add_course_and_filter_again(self):
+        pass
+
     #edit user and then their view in user directory
-    #admin created then they are changed from admin so they can no longer access the admin home
+
+    def test_edited_user_display_in_user_directory(self):
+        pass
+
+    def test_edited_user_name_display_in_course_directory(self):
+        pass
+
+    # admin created then they are changed from admin so they can no longer access the admin home
+    def test_create_admin_change_role_and_access_admin_home(self):
+        pass
+
+    # test for the unimplemented methods (edit course and edit lab)
+    def test_create_course_edit_course_and_filter(self):
+        pass
+
+    def test_create_lab_and_course_edit_course_labs_and_filter(self):
+        pass
+
+    def test_create_lab_edit_lab_and_filter(self):
+        pass
+
+
 
     #more that I might be missing?
