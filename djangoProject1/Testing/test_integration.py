@@ -210,16 +210,121 @@ class IntegrationTests(TestCase):
 
     # all the filter tests for course directory
     def test_create_courses_and_filter(self):
-        pass
+
+        # create users
+        response = self.donkey.post("/configureUser.html", {"first_name": "Instruct",
+                                    "last_name": "Joe", "username": "login1",
+                                    "password": "password1",
+                                    "email": "EMAIL1@email.com", "phone_number": "1141234567",
+                                    "address": "UWM1",
+                                    "role": "Instructor", "form_name": "create_user"},follow=True)
+        response = self.donkey.post("/configureUser.html", {"first_name": "Ructor",
+                                    "last_name": "Jack", "username": "login2",
+                                    "password": "password2",
+                                    "email": "EMAIL2@email.com", "phone_number": "4141234567",
+                                    "address": "UWM2",
+                                    "role": "Instructor", "form_name": "create_user"},follow=True)
+        self.assertEqual(User.objects.count(), 2, "The amount of users do not match")
+
+        # add the user we created to a course that we create
+        user1 = User.objects.get(username='login1')
+        response = self.donkey.post("/configureCourse.html", {"form_name": "create_course",
+                                    "instructors": User.objects.filter(role="Instructor"),
+                                    "instructor": user1, "course_name": "new_course1"})
+
+        user2 = User.objects.get(username='login2')
+        response = self.donkey.post("/configureCourse.html", {"form_name": "create_course",
+                                    "instructors": User.objects.filter(role="Instructor"),
+                                    "instructor": user2, "course_name": "new_course2"})
+        self.assertEqual(Course.objects.count(), 2, "The amount of courses do not match")
+
+
+        #login as one of the instructors
+        response = self.donkey.post("/", {"username":"login1", "password":"password1"}, follow=True)
+        response = self.donkey.get("/course_Directory.html")
+        self.assertContains(response, "new_course1")
+        self.assertContains(response, "Instruct Joe (Instructor)")
+        self.assertContains(response, "No labs available.")
+        self.assertContains(response, "new_course2")
+        self.assertContains(response, "Ructor Jack (Instructor)")
+
+        #apply the filter and check if it changes properly
+        response = self.donkey.get("/course_Directory.html?filter=assigned")
+        self.assertContains(response, "new_course1")
+        self.assertContains(response, "Instruct Joe (Instructor)")
+        self.assertContains(response, "No labs available.")
+        self.assertNotContains(response, "new_course2")
+        self.assertNotContains(response, "Ructor Jack (Instructor)")
+
 
     def test_create_labs_and_filter(self):
-        pass
+        # create users, 1 Instructor, 2 TAs
+        response = self.donkey.post("/configureUser.html", {"first_name": "Instruct",
+                                    "last_name": "Joe", "username": "login1",
+                                    "password": "password1",
+                                    "email": "EMAIL1@email.com", "phone_number": "1141234567",
+                                    "address": "UWM1",
+                                    "role": "Instructor", "form_name": "create_user"},
+                                    follow=True)
+        response = self.donkey.post("/configureUser.html", {"first_name": "T",
+                                    "last_name": "Jack", "username": "login2",
+                                    "password": "password2",
+                                    "email": "EMAIL2@email.com", "phone_number": "4141234567",
+                                    "address": "UWM2",
+                                    "role": "TA", "form_name": "create_user"},follow=True)
 
-    def test_change_course_assignments_and_filter(self):
-        pass
+        response = self.donkey.post("/configureUser.html", {"first_name": "A",
+                                    "last_name": "Kash", "username": "login3",
+                                    "password": "password3",
+                                    "email": "EMAIL3@email.com", "phone_number": "7141234567",
+                                    "address": "UWM3",
+                                    "role": "TA", "form_name": "create_user"}, follow=True)
 
-    def test_change_lab_assignments_and_filter(self):
-        pass
+        self.assertEqual(User.objects.count(), 3, "The amount of users do not match")
+
+        # add the user we created to a course that we create
+        user1 = User.objects.get(username='login1')
+        response = self.donkey.post("/configureCourse.html", {"form_name": "create_course",
+                                                              "instructors": User.objects.filter(role="Instructor"),
+                                                              "instructor": user1, "course_name": "new_course1"})
+
+        response = self.donkey.post("/configureCourse.html", {"form_name": "create_course",
+                                                              "instructors": User.objects.filter(role="Instructor"),
+                                                              "instructor": user1, "course_name": "new_course2"})
+        self.assertEqual(Course.objects.count(), 2, "The amount of courses do not match")
+
+        # add the tas and courses to new labs we create
+        course1 = Course.objects.get(name="new_course1")
+        user2 = User.objects.get(username='login2')
+        response = self.donkey.post("/configureCourse.html",
+                                    {"tas": User.objects.filter(role="TA"), "ta": user2,
+                                    "lab_name": "new_lab1", "course": course1, "form_name": "create_lab"},
+                                    follow=True)
+
+        course2 = Course.objects.get(name="new_course2")
+        user3 = User.objects.get(username='login3')
+        response = self.donkey.post("/configureCourse.html",
+                                    {"tas": User.objects.filter(role="TA"), "ta": user3,
+                                     "lab_name": "new_lab2", "course": course2, "form_name": "create_lab"},
+                                    follow=True)
+        self.assertEqual(Lab.objects.count(), 2, "The amount of labs do not match")
+
+        # login as ta then filter
+        response = self.donkey.post("/", {"username": "login2", "password": "password2"}, follow=True)
+        response = self.donkey.get("/course_Directory.html")
+        self.assertContains(response, "new_course1")
+        self.assertContains(response, "Instruct Joe (Instructor)")
+        self.assertContains(response, "Lab: new_lab1")
+        self.assertContains(response, "new_course2")
+        self.assertContains(response, "Lab: new_lab2")
+
+        # apply filter
+        response = self.donkey.get("/course_Directory.html?filter=assigned")
+        self.assertContains(response, "new_course1")
+        self.assertContains(response, "Instruct Joe (Instructor)")
+        self.assertContains(response, "Lab: new_lab1")
+        self.assertNotContains(response, "new_course2")
+        self.assertNotContains(response, "Lab: new_lab2")
 
     def test_change_user_role_and_filter(self):
         pass
@@ -240,6 +345,12 @@ class IntegrationTests(TestCase):
         pass
 
     # test for the unimplemented methods (edit course and edit lab)
+    def test_change_course_instructor_assignments_and_filter(self):
+        pass
+
+    def test_change_lab_ta_assignments_and_filter(self):
+        pass
+
     def test_create_course_edit_course_and_filter(self):
         pass
 
@@ -248,7 +359,3 @@ class IntegrationTests(TestCase):
 
     def test_create_lab_edit_lab_and_filter(self):
         pass
-
-
-
-    #more that I might be missing?
