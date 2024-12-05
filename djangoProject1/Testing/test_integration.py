@@ -38,16 +38,10 @@ class IntegrationTests(TestCase):
 
         #edit that user we created and check that it was edited properly
         user = User.objects.get(username='login1')
-        response = self.client.post('/configureUser.html', {'id': user.id, 'first_name': 'Jane',
+        response = self.donkey.post('/configureUser.html', {'id': user.id, 'first_name': 'Jane',
                                     "form_name": "edit_user", 'last_name': 'Doe', 'email': 'johndoe@example.com',
                                     'username': 'login1','phone_number': '1234567890', 'role': 'Instructor'})
         user.refresh_from_db()
-        self.assertEqual(user.first_name, "Jane")
-        self.assertEqual(user.last_name, "Doe")
-        self.assertEqual(user.email, "johndoe@example.com")
-        self.assertEqual(user.phone_number, "1234567890")
-        self.assertEqual(user.role, "Instructor")
-        self.assertEqual(User.objects.count(), 1)
         self.assertIn('message', response.context)
         self.assertEqual(response.context['message'], 'The user has been successfully updated')
 
@@ -327,22 +321,217 @@ class IntegrationTests(TestCase):
         self.assertNotContains(response, "Lab: new_lab2")
 
     def test_change_user_role_and_filter(self):
-        pass
+        response = self.donkey.post("/configureUser.html", {"first_name": "Instruct",
+                                    "last_name": "Joe", "username": "login1",
+                                    "password": "password1",
+                                    "email": "EMAIL1@email.com", "phone_number": "1141234567",
+                                    "address": "UWM1",
+                                    "role": "Instructor", "form_name": "create_user"},
+                                    follow=True)
+        response = self.donkey.post("/configureUser.html", {"first_name": "Ructor",
+                                    "last_name": "Jack", "username": "login2",
+                                    "password": "password2",
+                                    "email": "EMAIL2@email.com", "phone_number": "4141234567",
+                                    "address": "UWM2",
+                                    "role": "Instructor", "form_name": "create_user"},
+                                    follow=True)
+        self.assertEqual(User.objects.count(), 2, "The amount of users do not match")
+
+        # add the user we created to a course that we create
+        user1 = User.objects.get(username='login1')
+        response = self.donkey.post("/configureCourse.html", {"form_name": "create_course",
+                                  "instructors": User.objects.filter(role="Instructor"),
+                                  "instructor": user1, "course_name": "new_course1"})
+
+        user2 = User.objects.get(username='login2')
+        response = self.donkey.post("/configureCourse.html", {"form_name": "create_course",
+                                  "instructors": User.objects.filter(role="Instructor"),
+                                  "instructor": user2, "course_name": "new_course2"})
+        self.assertEqual(Course.objects.count(), 2, "The amount of courses do not match")
+
+        #change the user's role
+        response = self.donkey.post('/configureUser.html',
+                                    {'id': user1.id, 'first_name': 'Instruct',
+                                     "form_name": "edit_user",'last_name': 'Joe',
+                                     "email": "EMAIL1@email.com", "phone_number": "1141234567",
+                                     "address": "UWM1","role": "Admin",'username': 'login1'})
+        user1.refresh_from_db()
+
+        #login to see after role change
+        response = self.donkey.post("/", {"username": "login1", "password": "password1"}, follow=True)
+        response = self.donkey.get("/course_Directory.html")
+        self.assertContains(response, "new_course1")
+        self.assertContains(response, "No instructors assigned.")
+        self.assertContains(response, "No labs available.")
+        self.assertContains(response, "new_course2")
+        self.assertContains(response, "Ructor Jack (Instructor)")
+
+        # apply filter
+        response = self.donkey.get("/course_Directory.html?filter=assigned")
+        self.assertContains(response, "new_course1")
+        self.assertContains(response, "No instructors assigned.")
+        self.assertContains(response, "No labs available.")
+        self.assertContains(response, "new_course2")
+        self.assertContains(response, "Ructor Jack (Instructor)")
+
+
+
 
     def test_filter_display_add_course_and_filter_again(self):
-        pass
+        response = self.donkey.post("/configureUser.html", {"first_name": "Instruct",
+                                    "last_name": "Joe", "username": "login1",
+                                    "password": "password1",
+                                    "email": "EMAIL1@email.com", "phone_number": "1141234567",
+                                    "address": "UWM1",
+                                    "role": "Instructor", "form_name": "create_user"},
+                                    follow=True)
+
+        user1 = User.objects.get(username='login1')
+        response = self.donkey.post("/configureCourse.html", {"form_name": "create_course",
+                                    "instructors": User.objects.filter(role="Instructor"),
+                                    "instructor": user1, "course_name": "new_course1"})
+
+        # login as one of the instructors to check view
+        response = self.donkey.post("/", {"username": "login1", "password": "password1"}, follow=True)
+        response = self.donkey.get("/course_Directory.html")
+        self.assertContains(response, "new_course1")
+        self.assertContains(response, "Instruct Joe (Instructor)")
+        self.assertContains(response, "No labs available.")
+
+        # apply the filter and check if it changes properly
+        response = self.donkey.get("/course_Directory.html?filter=assigned")
+        self.assertContains(response, "new_course1")
+        self.assertContains(response, "Instruct Joe (Instructor)")
+        self.assertContains(response, "No labs available.")
+
+        response = self.donkey.post("/configureUser.html", {"first_name": "Ructor",
+                                    "last_name": "Jack", "username": "login2",
+                                    "password": "password2",
+                                    "email": "EMAIL2@email.com", "phone_number": "4141234567",
+                                    "address": "UWM2",
+                                    "role": "Instructor", "form_name": "create_user"},
+                                    follow=True)
+        user2 = User.objects.get(username='login2')
+        response = self.donkey.post("/configureCourse.html", {"form_name": "create_course",
+                                                              "instructors": User.objects.filter(role="Instructor"),
+                                                              "instructor": user2, "course_name": "new_course2"})
+
+        # login as one of the instructors
+        response = self.donkey.post("/", {"username": "login1", "password": "password1"}, follow=True)
+        response = self.donkey.get("/course_Directory.html")
+        self.assertContains(response, "new_course1")
+        self.assertContains(response, "Instruct Joe (Instructor)")
+        self.assertContains(response, "No labs available.")
+        self.assertContains(response, "new_course2")
+        self.assertContains(response, "Ructor Jack (Instructor)")
+
+        # apply the filter and check if it changes properly
+        response = self.donkey.get("/course_Directory.html?filter=assigned")
+        self.assertContains(response, "new_course1")
+        self.assertContains(response, "Instruct Joe (Instructor)")
+        self.assertContains(response, "No labs available.")
+        self.assertNotContains(response, "new_course2")
+        self.assertNotContains(response, "Ructor Jack (Instructor)")
 
     #edit user and then their view in user directory
 
     def test_edited_user_display_in_user_directory(self):
-        pass
+        # create the user
+        response = self.donkey.post("/configureUser.html", {"first_name": "Administrator",
+                                    "last_name": "Smith", "username": "login1",
+                                    "password": "password1",
+                                    "email": "EMAIL1@email.com", "phone_number": "1141234567",
+                                    "address": "UWM1",
+                                    "role": "TA", "form_name": "create_user"}, follow=True)
+        self.assertEqual(User.objects.count(), 1, "The amount of users do not match")
+        self.assertIn('message', response.context)
+        self.assertEqual(response.context['message'], "The user \"Administrator Smith\" has been created")
+
+        # edit that user we created and check that it was edited properly
+        user = User.objects.get(username='login1')
+        response = self.donkey.post('/configureUser.html', {'id': user.id, 'first_name': 'Jane',
+                                    "form_name": "edit_user", 'last_name': 'Doe',
+                                    'email': 'johndoe@example.com',
+                                    'username': 'login1', 'phone_number': '1234567890',
+                                    'role': 'Instructor'})
+        user.refresh_from_db()
+        self.assertIn('message', response.context)
+        self.assertEqual(response.context['message'], 'The user has been successfully updated')
+
+        # everything shows up user directory properly
+        response = self.donkey.post("/", {"username": "login1", "password": "password1"}, follow=True)
+        response = self.donkey.get("/user_Directory.html")
+        self.assertContains(response, "Jane Doe")
+        self.assertContains(response, "Instructor")
+        self.assertContains(response, "No courses assigned.")
+        self.assertContains(response, "johndoe@example.com")
+        self.assertContains(response, "1234567890")
 
     def test_edited_user_name_display_in_course_directory(self):
-        pass
+        # create the instructor
+        response = self.donkey.post("/configureUser.html", {"first_name": "Instructor",
+                                    "last_name": "Smith", "username": "login1",
+                                    "password": "password1",
+                                    "email": "EMAIL1@email.com", "phone_number": "1141234567",
+                                    "address": "UWM1",
+                                    "role": "Instructor", "form_name": "create_user"}, follow=True)
+        self.assertEqual(User.objects.count(), 1, "The amount of users do not match")
+        self.assertIn('message', response.context)
+        self.assertEqual(response.context['message'], "The user \"Instructor Smith\" has been created")
+
+        #create a course for the instructor
+        user = User.objects.get(username='login1')
+        response = self.donkey.post("/configureCourse.html", {"form_name": "create_course",
+                                    "instructors": User.objects.filter(role="Instructor"),
+                                    "instructor": user, "course_name": "new_course"})
+        self.assertEqual(Course.objects.count(), 1, "The amount of courses do not match")
+        self.assertIn('message', response.context)
+        self.assertEqual(response.context['message'], "The course \"new_course\" has been created")
+
+        # edit that users name and check how it shows up in the course directory
+        user = User.objects.get(username='login1')
+        response = self.donkey.post('/configureUser.html', {'id': user.id, 'first_name': 'Jane',
+                                    "form_name": "edit_user", 'last_name': 'Doe',
+                                    'email': 'EMAIL1@email.com', 'phone_number': '1141234567',
+                                    'username': 'login1',
+                                    'role': 'Instructor'})
+        user.refresh_from_db()
+        self.assertIn('message', response.context)
+        self.assertEqual(response.context['message'], 'The user has been successfully updated')
+
+        # check how they show up in the course directory
+        response = self.donkey.post("/", {"username": "login1", "password": "password1"}, follow=True)
+        response = self.donkey.get("/course_Directory.html")
+        self.assertContains(response, "new_course")
+        self.assertContains(response, "Jane Doe (Instructor)")
+        self.assertContains(response, "No labs available.")
+
+
 
     # admin created then they are changed from admin so they can no longer access the admin home
     def test_create_admin_change_role_and_access_admin_home(self):
-        pass
+        response = self.donkey.post("/configureUser.html", {"first_name": "Administrator",
+                                    "last_name": "Smith", "username": "login1",
+                                    "password": "password1",
+                                    "email": "EMAIL1@email.com", "phone_number": "1141234567",
+                                    "address": "UWM1",
+                                    "role": "Admin", "form_name": "create_user"},
+                                    follow=True)
+
+        user = User.objects.get(username='login1')
+        response = self.donkey.post('/configureUser.html', {'id': user.id, 'first_name': 'Administrator',
+                                                            "form_name": "edit_user", 'last_name': 'Smith',
+                                                            'email': 'EMAIL1@email.com',
+                                                            'username': 'login1', 'phone_number': '1141234567',
+                                                            'role': 'Instructor'})
+        user.refresh_from_db()
+
+        response = self.donkey.post("/", {"username": "login1", "password": "password1"}, follow=True)
+        response = self.donkey.get("/admin_Home.html")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("message", response.context)
+        self.assertEqual(response.context["message"], "You cannot access this page.")
+        self.assertTemplateUsed(response, "home.html")
 
     # test for the unimplemented methods (edit course and edit lab)
     def test_change_course_instructor_assignments_and_filter(self):
