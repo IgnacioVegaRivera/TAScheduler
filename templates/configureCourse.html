@@ -198,9 +198,9 @@
                                                 <div>
                                                     <input type="radio"
                                                            name="course"
-                                                           value="{{ lab.course }}"
+                                                           value="{{ course.id }}"
                                                            {% if lab.course and lab.course.id == course.id %}checked{% endif %}>
-                                                    <label>{{ course }}</label>
+                                                    <label>{{ course.name }}</label>
                                                 </div>
                                             {% endfor %}
                                         </div>
