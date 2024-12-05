@@ -27,7 +27,7 @@ class EditUserInterface(abc.ABC):
 
 class EditCourseInterface(abc.ABC):
     @abc.abstractmethod
-    def edit_course(self, course_name):
+    def edit_course(self, courses):
         pass
 
 class EditLabInterface(abc.ABC):

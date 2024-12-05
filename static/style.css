@@ -1,3 +1,4 @@
+
 /*
     Configure Users Style:
 */
@@ -110,15 +111,6 @@ Configure Courses page css:
 }
 
 .instructor-checkboxes div {
-    margin-bottom: 5px;
-}
-
-.ta-checkboxes {
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
-}
-.ta-checkboxes div{
     margin-bottom: 5px;
 }
 
