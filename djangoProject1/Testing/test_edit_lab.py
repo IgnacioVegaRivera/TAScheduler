@@ -8,7 +8,7 @@ class test_unit_edit_lab(TestCase):
         self.temp_user = User(first_name="Jason",
                          last_name="Rock",
                          username="login1",
-                         passwword="password1",
+                         password="password1",
                          email="<jason@gmail.com>",
                          phone_number="4141234567",
                          address="UWM Campus",
@@ -17,7 +17,7 @@ class test_unit_edit_lab(TestCase):
         self.temp_user_TA = User(first_name="Ryan",
                          last_name="Reynolds",
                          username="login2",
-                         passwword="password2",
+                         password="password2",
                          email="<ja@gmail.com>",
                          phone_number="3141234567",
                          address="UWM Campus",
@@ -25,7 +25,7 @@ class test_unit_edit_lab(TestCase):
         self.temp_user_TA2 = User(first_name="Blake",
                          last_name="Shelton",
                          username="login3",
-                         passwword="password4",
+                         password="password4",
                          email="<blake@gmail.com>",
                          phone_number="9141234567",
                          address="UWM Street",
@@ -48,6 +48,7 @@ class test_unit_edit_lab(TestCase):
 
     def test_unit_EditLabName(self):
         response = self.client.post('/configureCourse', {'id': self.temp_lab.id,
+                                                         "form_name":"edit_lab",
                                                          'lab_name': "Lab002",
                                                          "course":self.temp_course,
                                                          'ta': self.temp_user_TA})
@@ -56,6 +57,7 @@ class test_unit_edit_lab(TestCase):
 
     def test_unit_EditLabNameInvalid(self):
         response = self.client.post('/configureCourse', {'id': self.temp_lab.id,
+                                                         "form_name": "edit_lab",
                                                          'lab_name': "123",
                                                          "course": self.temp_course,
                                                          'ta': self.temp_user_TA})
@@ -64,6 +66,7 @@ class test_unit_edit_lab(TestCase):
 
     def test_unit_EditLabNameBlank(self):
         response = self.client.post('/configureCourse', {'id': self.temp_lab.id,
+                                                         "form_name": "edit_lab",
                                                          'lab_name': "",
                                                          "course": self.temp_course,
                                                          'ta': self.temp_user_TA})
@@ -72,6 +75,7 @@ class test_unit_edit_lab(TestCase):
 
     def test_unit_EditLabCourses(self):
         response = self.client.post('/configureCourse', {'id': self.temp_lab.id,
+                                                         "form_name": "edit_lab",
                                                          'lab_name': "Lab001",
                                                          "course":self.temp_course2,
                                                          'ta': self.temp_user_TA})
@@ -80,6 +84,7 @@ class test_unit_edit_lab(TestCase):
 
     def test_unit_EditLabCoursesInvalid(self):
         response = self.client.post('/configureCourse', {'id': self.temp_lab.id,
+                                                         "form_name": "edit_lab",
                                                          'lab_name': "Lab001",
                                                          "course": self.temp_course3,
                                                          'ta': self.temp_user_TA})
@@ -88,6 +93,7 @@ class test_unit_edit_lab(TestCase):
 
     def test_unit_EditLabTA(self):
         response = self.client.post('/configureCourse', {'id': self.temp_lab.id,
+                                                         "form_name": "edit_lab",
                                                          'lab_name': "Lab001",
                                                          "course":self.temp_course,
                                                          'ta': self.temp_user_TA2})
@@ -102,7 +108,7 @@ class test_acceptance_lab_edit(TestCase):
         self.temp_user = User(first_name="Jason",
                               last_name="Rock",
                               username="login1",
-                              passwword="password1",
+                              password="password1",
                               email="<jason@gmail.com>",
                               phone_number="4141234567",
                               address="UWM Campus",
@@ -111,7 +117,7 @@ class test_acceptance_lab_edit(TestCase):
         self.temp_user_TA = User(first_name="Ryan",
                                  last_name="Reynolds",
                                  username="login2",
-                                 passwword="password2",
+                                 password="password2",
                                  email="<ja@gmail.com>",
                                  phone_number="3141234567",
                                  address="UWM Campus",
@@ -119,7 +125,7 @@ class test_acceptance_lab_edit(TestCase):
         self.temp_user_TA2 = User(first_name="Blake",
                                   last_name="Shelton",
                                   username="login3",
-                                  passwword="password4",
+                                  password="password4",
                                   email="<blake@gmail.com>",
                                   phone_number="9141234567",
                                   address="UWM Street",
@@ -140,6 +146,7 @@ class test_acceptance_lab_edit(TestCase):
 
     def test_acceptance_lab_EditName(self):
         response = self.client.post('/configureCourse', {'id': self.temp_lab.id,
+                                                         "form_name": "edit_lab",
                                                          'lab_name': "Lab002",
                                                          "course":self.temp_course,
                                                          'ta': self.temp_user_TA})
@@ -150,6 +157,7 @@ class test_acceptance_lab_edit(TestCase):
 
     def test_acceptance_lab_EditNameInvalid(self):
         response = self.client.post('/configureCourse', {'id': self.temp_lab.id,
+                                                         "form_name": "edit_lab",
                                                          'lab_name': "123",
                                                          "course": self.temp_course,
                                                          'ta': self.temp_user_TA})
@@ -160,6 +168,7 @@ class test_acceptance_lab_edit(TestCase):
 
     def test_acceptance_lab_EditCourse(self):
         response = self.client.post('/configureCourse', {'id': self.temp_lab.id,
+                                                         "form_name": "edit_lab",
                                                          'lab_name': "Lab001",
                                                          "course": self.temp_course2,
                                                          'ta': self.temp_user_TA})
@@ -170,6 +179,7 @@ class test_acceptance_lab_edit(TestCase):
 
     def test_acceptance_lab_EditCourseInvalid(self):
         response = self.client.post('/configureCourse', {'id': self.temp_lab.id,
+                                                         "form_name": "edit_lab",
                                                          'lab_name': "Lab001",
                                                          "course": self.temp_course3,
                                                          'ta': self.temp_user_TA})
@@ -180,6 +190,7 @@ class test_acceptance_lab_edit(TestCase):
 
     def test_acceptance_lab_EditLabTA(self):
         response = self.client.post('/configureCourse', {'id': self.temp_lab.id,
+                                                         "form_name": "edit_lab",
                                                          'lab_name': "Lab001",
                                                          "course": self.temp_course,
                                                          'ta': self.temp_user_TA2})
