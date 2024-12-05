@@ -205,26 +205,27 @@ class EditLab(EditLabInterface):
             return None
 
         # Update Lab name
-        lab.name = request.POST.get("lab", lab.name)
-        if lab.name == None or lab.name == "":
+        name = request.POST.get("lab")
+        if name == None or name == "":
             return None
-        lab.save()
 
         # Update TAs
         selected_ta = request.POST.get("ta")
         if selected_ta:
-            ta = User.objects.filter(id=selected_ta, role="TA").first()
+            parts = selected_ta.split()
+            ta = User.objects.filter(first_name=parts[0], last_name=parts[1], role="TA").first()
             lab.ta = ta
         else:
-            lab.ta = None
+            return None
 
         # Update Courses, (be able to change  what course that lab is assigned
-        selected_course_id = request.POST.get("course")
-        if selected_course_id:
-            course = Course.objects.filter(id=selected_course_id).first()
+        selected_course = request.POST.get("course")
+        if selected_course != None and selected_course != "":
+            course = Course.objects.filter(name=selected_course).first()
+
             lab.course = course
         else:
-            lab.course = None
-
+            return None
+        lab.name = request.POST.get("lab", lab.name)
         lab.save()
         return lab

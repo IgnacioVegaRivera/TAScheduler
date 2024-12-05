@@ -270,7 +270,7 @@ class ConfigureCoursePage(View):
 
     def edit_lab_helper(self,lab_id, tas, labs, instructors, courses, request):
         updated_lab = EditLab.edit_lab(lab_id, request)
-        if updated_lab:
+        if updated_lab is not None:
             message = f"Lab '{updated_lab.name}' updated successfully."
         else:
             message = "Failed to update lab. Please check your inputs and try again."
