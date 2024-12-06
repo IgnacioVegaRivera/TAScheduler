@@ -11,12 +11,12 @@
     <img src="/static/Logo.jpeg" alt="TA Scheduler Logo" style="height: 75px; width: auto;">
 </a>
 <div class="navbar">
-        <a class="active" href="configureUser.html" style="padding: 150px">Configure Users</a>
-        <a href="configureCourse.html" style="padding: 150px">Configure Courses</a>
-        <a href="/" style="padding: 150px">Log Out</a>
-{#        <a href="">Databases</a>#}
-{#        <a class="active" href="admin_Home.html">Admin Home</a>#}
-    </div>
+    <a class="active" href="configureUser.html" style="padding: 150px">Configure Users</a>
+    <a href="configureCourse.html" style="padding: 150px">Configure Courses</a>
+    <a href="/" style="padding: 150px">Log Out</a>
+    {#        <a href="">Databases</a>#}
+    {#        <a class="active" href="admin_Home.html">Admin Home</a>#}
+</div>
 
 <div class="addUserModal">
     <div class="create-user" popover id="createUser">
@@ -98,8 +98,6 @@
     </div>
 </div>
 <button popovertarget="createUser">Add User</button>
-<p style="text-align: center">{{ message }}</p>
-<h2 class="container">Users:</h2>
 <div class="userContainer">
     {% for user in users %}
         <div class="userBox">
@@ -128,7 +126,7 @@
                 <h2>Edit user info:</h2>
                 <div class="modal-header" id="myModal {{ user.id }}">
                     <form method="POST" action="{% url 'configure_user' %}">
-                       {% csrf_token %}
+                        {% csrf_token %}
                         <input type="hidden" name="form_name" value="edit_user">
                         <input type="hidden" name="username" value="{{ user.username }}">
                         <div class="modal-dialog">
