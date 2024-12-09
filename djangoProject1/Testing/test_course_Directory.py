@@ -95,7 +95,7 @@ class TestCourseDirectoryAcceptance(TestCase):
 
     def test_admin_view_all_courses(self):
         self.login_as("admin")
-        response = self.client.get("/course_Directory.html")
+        response = self.client.get("/course_directory.html")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Course 1")
         self.assertContains(response, "Course 2")
@@ -103,7 +103,7 @@ class TestCourseDirectoryAcceptance(TestCase):
 
     def test_instructor_view_all_courses(self):
         self.login_as("instructor")
-        response = self.client.get("/course_Directory.html")
+        response = self.client.get("/course_directory.html")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Course 1")
         self.assertContains(response, "Course 2")
@@ -111,21 +111,21 @@ class TestCourseDirectoryAcceptance(TestCase):
 
     def test_instructor_filter_assigned_courses(self):
         self.login_as("instructor")
-        response = self.client.get("/course_Directory.html?filter=assigned")
+        response = self.client.get("/course_directory.html?filter=assigned")
         self.assertContains(response, "Course 1")
         self.assertContains(response, "Course 2")
         self.assertNotContains(response, "Course 3")
 
     def test_ta_view_all_courses(self):
         self.login_as("ta")
-        response = self.client.get("/course_Directory.html")
+        response = self.client.get("/course_directory.html")
         self.assertContains(response, "Course 1")
         self.assertContains(response, "Course 2")
         self.assertContains(response, "Course 3")
 
     def test_ta_filter_assigned_courses(self):
         self.login_as("ta")
-        response = self.client.get("/course_Directory.html?filter=assigned")
+        response = self.client.get("/course_directory.html?filter=assigned")
         self.assertContains(response, "Course 1")
         self.assertContains(response, "Course 3")
         self.assertNotContains(response, "Course 2")
@@ -133,10 +133,10 @@ class TestCourseDirectoryAcceptance(TestCase):
     def test_course_with_no_labs(self):
         self.course4 = Course.objects.create(name="Course 4")
         self.login_as("admin")
-        response = self.client.get("/course_Directory.html")
+        response = self.client.get("/course_directory.html")
         self.assertContains(response, "Course 4")
 
     def test_lab_with_no_ta(self):
         self.login_as("admin")
-        response = self.client.get("/course_Directory.html")
+        response = self.client.get("/course_directory.html")
         self.assertContains(response, "Lab 2")

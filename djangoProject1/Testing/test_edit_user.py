@@ -23,7 +23,7 @@ class EditUserUnitTest(TestCase):
         self.mock_user.save()
 
     def test_EditFirstName(self):
-        response = self.client.post('/configureUser.html', {'id': self.mock_user.id, 'first_name': 'Jane',
+        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'Jane',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'johndoe@example.com',
@@ -34,7 +34,7 @@ class EditUserUnitTest(TestCase):
         self.assertEqual(self.mock_user.first_name, "Jane")
 
     def test_EditFirstNameBlankEntry(self):
-        response = self.client.post('/configureUser.html', {'id': self.mock_user.id, 'first_name': '',
+        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': '',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'johndoe@example.com',
@@ -45,7 +45,7 @@ class EditUserUnitTest(TestCase):
         self.assertEqual(self.mock_user.first_name, "John")
 
     def test_EditFirstNameInvalidEntry(self):
-        response = self.client.post('/configureUser.html', {'id': self.mock_user.id, 'first_name': '123',
+        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': '123',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'johndoe@example.com',
@@ -56,7 +56,7 @@ class EditUserUnitTest(TestCase):
         self.assertEqual(self.mock_user.first_name, "John")
 
     def test_EditLastName(self):
-        response = self.client.post('/configureUser.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Smith',
                                                             'email': 'johndoe@example.com',
@@ -67,7 +67,7 @@ class EditUserUnitTest(TestCase):
         self.assertEqual(self.mock_user.last_name, "Smith")
 
     def test_EditLastNameInvalidEntry(self):
-        response = self.client.post('/configureUser.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': '456',
                                                             'email': 'johndoe@example.com',
@@ -78,7 +78,7 @@ class EditUserUnitTest(TestCase):
         self.assertEqual(self.mock_user.last_name, "Doe")
 
     def test_EditLastNameBlankEntry(self):
-        response = self.client.post('/configureUser.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': '',
                                                             'email': 'johndoe@example.com',
@@ -89,7 +89,7 @@ class EditUserUnitTest(TestCase):
         self.assertEqual(self.mock_user.last_name, "Doe")
 
     def test_EditEmail(self):
-        response = self.client.post('/configureUser.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmith@example.com',
@@ -100,7 +100,7 @@ class EditUserUnitTest(TestCase):
         self.assertEqual(self.mock_user.email, "janesmith@example.com")
 
     def test_EditEmailBlankEntry(self):
-        response = self.client.post('/configureUser.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': '',
@@ -111,7 +111,7 @@ class EditUserUnitTest(TestCase):
         self.assertEqual(self.mock_user.email, "johndoe@example.com")
 
     def test_EditEmailNoAt(self):
-        response = self.client.post('/configureUser.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmithexample.com',
@@ -122,7 +122,7 @@ class EditUserUnitTest(TestCase):
         self.assertEqual(self.mock_user.email, "johndoe@example.com")
 
     def test_EditEmailNoPeriod(self):
-        response = self.client.post('/configureUser.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmith@examplecom',
@@ -133,7 +133,7 @@ class EditUserUnitTest(TestCase):
         self.assertEqual(self.mock_user.email, "johndoe@example.com")
 
     def test_EditPhone(self):
-        response = self.client.post('/configureUser.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmith@example.com',
@@ -144,7 +144,7 @@ class EditUserUnitTest(TestCase):
         self.assertEqual(self.mock_user.phone_number, "1234567899")
 
     def test_EditPhoneInvalidEntry(self):
-        response = self.client.post('/configureUser.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmith@example.com',
@@ -155,7 +155,7 @@ class EditUserUnitTest(TestCase):
         self.assertEqual(self.mock_user.phone_number, "1234567890")
 
     def test_EditPhoneTooShort(self):
-        response = self.client.post('/configureUser.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmith@example.com',
@@ -166,7 +166,7 @@ class EditUserUnitTest(TestCase):
         self.assertEqual(self.mock_user.phone_number, "1234567890")
 
     def test_EditPhoneTooLong(self):
-        response = self.client.post('/configureUser.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmith@example.com',
@@ -177,7 +177,7 @@ class EditUserUnitTest(TestCase):
         self.assertEqual(self.mock_user.phone_number, "1234567890")
 
     def test_EditRole(self):
-        response = self.client.post('/configureUser.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmith@example.com',
@@ -188,7 +188,7 @@ class EditUserUnitTest(TestCase):
         self.assertEqual(self.mock_user.role, "TA")
 
     def test_EditRoleInvalidEntry(self):
-        response = self.client.post('/configureUser.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmith@example.com',
@@ -215,7 +215,7 @@ class EditUserAcceptanceTest(TestCase):
         self.user.save()
 
     def test_EditFirstName(self):
-        response = self.client.post('/configureUser.html', {'id': self.user.id, 'first_name': 'Jane',
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'Jane',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'johndoe@example.com',
@@ -230,7 +230,7 @@ class EditUserAcceptanceTest(TestCase):
 
 
     def test_EditFirstNameInvalidEntry(self):
-        response = self.client.post('/configureUser.html',
+        response = self.client.post('/configure_user.html',
                                     {'id': self.user.id, 'first_name': '',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
@@ -245,7 +245,7 @@ class EditUserAcceptanceTest(TestCase):
         self.assertEqual(response.context['message'], 'Something went wrong when updating the user')
 
     def test_EditLastName(self):
-        response = self.client.post('/configureUser.html',
+        response = self.client.post('/configure_user.html',
                                     {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Smith',
@@ -260,7 +260,7 @@ class EditUserAcceptanceTest(TestCase):
         self.assertEqual(response.context['message'], 'The user has been successfully updated')
 
     def test_EditLastNameInvalidEntry(self):
-        response = self.client.post('/configureUser.html',
+        response = self.client.post('/configure_user.html',
                                     {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': '',
@@ -275,7 +275,7 @@ class EditUserAcceptanceTest(TestCase):
         self.assertEqual(response.context['message'], 'Something went wrong when updating the user')
 
     def test_EditEmail(self):
-        response = self.client.post('/configureUser.html',
+        response = self.client.post('/configure_user.html',
                                     {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
@@ -290,7 +290,7 @@ class EditUserAcceptanceTest(TestCase):
         self.assertEqual(response.context['message'], 'The user has been successfully updated')
 
     def test_EditEmailInvalidEntry(self):
-        response = self.client.post('/configureUser.html',
+        response = self.client.post('/configure_user.html',
                                     {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
@@ -305,7 +305,7 @@ class EditUserAcceptanceTest(TestCase):
         self.assertEqual(response.context['message'], 'Something went wrong when updating the user')
 
     def test_EditPhone(self):
-        response = self.client.post('/configureUser.html',
+        response = self.client.post('/configure_user.html',
                                     {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
@@ -320,7 +320,7 @@ class EditUserAcceptanceTest(TestCase):
         self.assertEqual(response.context['message'], 'The user has been successfully updated')
 
     def test_EditPhoneInvalidEntry(self):
-        response = self.client.post('/configureUser.html',
+        response = self.client.post('/configure_user.html',
                                     {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
@@ -335,7 +335,7 @@ class EditUserAcceptanceTest(TestCase):
         self.assertEqual(response.context['message'], 'Something went wrong when updating the user')
 
     def test_EditRole(self):
-        response = self.client.post('/configureUser.html',
+        response = self.client.post('/configure_user.html',
                                     {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
@@ -350,7 +350,7 @@ class EditUserAcceptanceTest(TestCase):
         self.assertEqual(response.context['message'], 'The user has been successfully updated')
 
     def test_EditRoleInvalidEntry(self):
-        response = self.client.post('/configureUser.html',
+        response = self.client.post('/configure_user.html',
                                     {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
