@@ -33,7 +33,7 @@ class LoginPage(View):
 
         #If we have an invalid username then print this message on the login page
         else:
-            message = "User does not exist"
+            message = "Username or Password is incorrect"
             return render(request, "login.html", {'message': message})
 
 
