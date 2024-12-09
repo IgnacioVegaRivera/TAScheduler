@@ -10,7 +10,7 @@ from django.template.context_processors import static
 from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateLabInterface, EditUserInterface, \
     CreateUserInterface, EditCourseInterface, EditLabInterface
 
-from djangoProject1.models import Course, User, Lab
+from djangoProject1.models import Course, User
 
 
 class CreateUser(CreateUserInterface):

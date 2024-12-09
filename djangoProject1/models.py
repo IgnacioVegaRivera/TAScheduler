@@ -49,8 +49,9 @@ class Section(models.Model):
     day = models.CharField(max_length=20, choices=DAYS_OF_WEEK, blank=True, null=True)  #day of the week
     time = models.TimeField(blank=True, null=True)  #specific time of day
     location = models.CharField(max_length=100, blank=True, null=True) #location
-    users = models.ManyToManyField(User, limit_choices_to={'role__in': ['TA', 'Instructor']}, related_name='sections', blank=True)
+    user = models.ForeignKey(User, null=True, blank=True, limit_choices_to={'role__in': ['TA', 'Instructor']}, on_delete=models.SET_NULL, related_name='sections')
     # only TAs and Instructors can be added to a section
+    # one ta/instructor per section
     # ONLY USERS IN course.users WILL BE CORRECTLY SAVED TO THE SECTION
     # # Only when using the save() method, which does NOT get called when directly editing the database. It IS called when using forms
 
@@ -58,8 +59,8 @@ class Section(models.Model):
         return f"{self.name} ({self.course.name})"
 
     def save(self, *args, **kwargs):
-        # Ensure users in a section are part of the course's users.
-        super().save(*args, **kwargs)  # save the section itself first
-        for user in self.users.all():
-            if user not in self.course.users.all():
-                self.users.remove(user)  # remove users not in course.users
+        # ensure users in a section are part of the course's users.
+        # if not, remove the user (set to None).
+        if self.user and self.user not in self.course.users.all():
+            self.user = None  # remove the invalid user assignment
+        super().save(*args, **kwargs)

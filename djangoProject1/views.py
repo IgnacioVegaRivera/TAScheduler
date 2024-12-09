@@ -3,7 +3,7 @@ from django.views import View
 
 from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser, CreateLab, EditUser, EditCourse, EditLab
 from djangoProject1.MethodFiles.GeneralMethods import GetUser, CheckPermission
-from djangoProject1.models import User, Course, Lab
+from djangoProject1.models import User, Course
 
 class LoginPage(View):
     def get(self, request):
