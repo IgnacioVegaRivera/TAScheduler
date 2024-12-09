@@ -16,7 +16,7 @@
 
 }
 
-.navbar a:hover {
+.navbar a:hover  {
     background-color: black;
     color: white;
 }
@@ -61,6 +61,13 @@
     content: "*";
     color: red;
 }
+
+summary {
+  background-color: #530e0e;
+  padding: 10px;
+  cursor: pointer;
+}
+
 
 /*
     Display Courses style:
