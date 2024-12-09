@@ -27,6 +27,7 @@ class User(models.Model): # basic for now
     email = models.EmailField(default="default@example.com")  #unique email address (cant run unless blank by default
     phone_number = models.CharField(max_length=10, blank=True, null=True)  #optional phone number (can make required later)
     address = models.TextField(blank=True, null=True)  #optional home address (can make required later)
+    skills = models.TextField(blank=True, null=True)  #apparently we need skills? okay here's an open text field for it
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='TA')  #role of the user (TA, Instructor, Admin)
 
     def __str__(self):
@@ -35,9 +36,8 @@ class User(models.Model): # basic for now
 class Course(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) #unique id
     name = models.CharField(max_length=100, default="Default Course Name") #course name
-    #instructors = models.ManyToManyField(User, limit_choices_to={'role': 'Instructor'}, related_name='courses', blank=True)
-    #only instructors can be a part of a course
-    #can access courses via 'courses'
+    users = models.ManyToManyField(User, limit_choices_to={'role__in': ['TA', 'Instructor']}, related_name='courses', blank=True)
+    # only instructors and TAs can be assigned to a course
 
     def __str__(self):
         return self.name
@@ -49,21 +49,18 @@ class Section(models.Model):
     day = models.CharField(max_length=20, choices=DAYS_OF_WEEK, blank=True, null=True)  #day of the week
     time = models.TimeField(blank=True, null=True)  #specific time of day
     location = models.CharField(max_length=100, blank=True, null=True) #location
-    instructor = models.ForeignKey(User, null=True, blank=True, limit_choices_to={'role': 'Instructor'}, on_delete=models.SET_NULL, related_name='sections')
-    #instructors only, isn't required bc rock said ta's shouldn't be required for labs so I assume it's the same here
+    user = models.ForeignKey(User, null=True, blank=True, limit_choices_to={'role__in': ['TA', 'Instructor']}, on_delete=models.SET_NULL, related_name='sections')
+    # only TAs and Instructors can be added to a section
+    # one ta/instructor per section
+    # ONLY USERS IN course.users WILL BE CORRECTLY SAVED TO THE SECTION
+    # # Only when using the save() method, which does NOT get called when directly editing the database. It IS called when using forms
 
     def __str__(self):
         return f"{self.name} ({self.course.name})"
 
-class Lab(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) #unique id
-    name = models.CharField(max_length=100, default="Default Lab Name") #lab name
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='labs')  #link to the course, ForeignKey is basically one-to-many relationship
-    day = models.CharField(max_length=20, choices=DAYS_OF_WEEK, blank=True, null=True)  #day of the week
-    time = models.TimeField(blank=True, null=True)  #specific time of day
-    location = models.CharField(max_length=100, blank=True, null=True) #room location
-    ta = models.ForeignKey(User, null=True, blank=True, limit_choices_to={'role': 'TA'}, on_delete=models.SET_NULL, related_name='labs')
-    #foreign keys are kinda weird, must specifically declare that a TA isn't required when making a lab (makes it easier to instantiate a lab for now)
-
-    def __str__(self):
-        return f"{self.name} ({self.course.name})"
+    def save(self, *args, **kwargs):
+        # ensure users in a section are part of the course's users.
+        # if not, remove the user (set to None).
+        if self.user and self.user not in self.course.users.all():
+            self.user = None  # remove the invalid user assignment
+        super().save(*args, **kwargs)
