@@ -114,5 +114,5 @@ class TestLoginAcceptance(TestCase):
         self.assertIn("message", response.context)
 
         # is the message equal to "bad password"
-        self.assertEqual(response.context["message"], "User does not exist")
+        self.assertEqual(response.context["message"], "Username or Password is incorrect")
 

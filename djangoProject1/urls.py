@@ -23,11 +23,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LoginPage.as_view()),
     path('home.html',HomePage.as_view()),
-    path('user_Directory.html', UserDirectoryPage.as_view()),
+    path('user_directory.html', UserDirectoryPage.as_view()),
 
-    path('course_Directory.html', CourseDirectoryPage.as_view()),
-    path('configureUser.html', ConfigureUserPage.as_view(), name='configure_user'),
-    path('configureCourse.html', ConfigureCoursePage.as_view(), name='configure_course'),
-    path('admin_Home.html', AdminHomePage.as_view())
+    path('course_directory.html', CourseDirectoryPage.as_view()),
+    path('configure_user.html', ConfigureUserPage.as_view(), name='configure_user'),
+    path('configure_course.html', ConfigureCoursePage.as_view(), name='configure_course'),
+    path('admin_home.html', AdminHomePage.as_view())
 
 ]

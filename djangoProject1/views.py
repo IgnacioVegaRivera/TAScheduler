@@ -33,7 +33,7 @@ class LoginPage(View):
 
         #If we have an invalid username then print this message on the login page
         else:
-            message = "User does not exist"
+            message = "Username or Password is incorrect"
             return render(request, "login.html", {'message': message})
 
 
@@ -48,8 +48,8 @@ class ConfigureUserPage(View):
             return redirect('/')
 
 
-        return render(request, "configureUser.html",
-                          {"roles": User.ROLE_CHOICES, "users": users})
+        return render(request, "configure_user.html",
+                      {"roles": User.ROLE_CHOICES, "users": users})
 
     def post(self, request):
         #filter to see which form is being accessed:
@@ -80,7 +80,7 @@ class ConfigureUserPage(View):
             role = request.POST['role']
             return self.editUserHelper(request, username, firstname, lastname, phone, email, role, users)
         else:
-            return render(request, "configureUser.html", {"roles": User.ROLE_CHOICES, "users": users,
+            return render(request, "configure_user.html", {"roles": User.ROLE_CHOICES, "users": users,
                                         'message': "Something went wrong when fetching the form, please try again"})
 
     #helper class to enable the addition of user
@@ -97,12 +97,12 @@ class ConfigureUserPage(View):
         all_users = User.objects.all()
 
         if user is None:
-            return render(request, "configureUser.html", {
+            return render(request, "configure_user.html", {
                 "roles": User.ROLE_CHOICES,
                 "users": all_users,
                 'message': "Something went wrong when creating the user \"" + name + "\""})
         else:
-            return render(request, "configureUser.html", {
+            return render(request, "configure_user.html", {
                 "roles": User.ROLE_CHOICES,
                 "users": all_users,
                 'message': "The user \"" + name + "\" has been created"})
@@ -111,11 +111,11 @@ class ConfigureUserPage(View):
     def editUserHelper(self,request, username, firstname, lastname, phone, email, role, users):
         user = EditUser.edit_user(request, username, firstname, lastname, phone, email, role)
         if user is None:
-            return render(request, "configureUser.html",
+            return render(request, "configure_user.html",
                           {"roles": User.ROLE_CHOICES, "users": users,
                            "message": "Something went wrong when updating the user"})
         else:
-            return render(request, "configureUser.html",
+            return render(request, "configure_user.html",
                           {"roles": User.ROLE_CHOICES, "users": users,
                            "message": "The user has been successfully updated"})
 
@@ -123,7 +123,7 @@ class UserDirectoryPage(View):
     def get(self, request):
         users = User.objects.all()
         courses = Course.objects.all()
-        return render(request, "user_Directory.html", {"users": users, "courses": courses})
+        return render(request, "user_directory.html", {"users": users, "courses": courses})
 
     def post(self, request):
         return redirect('/home/')
@@ -151,11 +151,11 @@ class CourseDirectoryPage(View):
                 # Get courses assigned to the instructor
                 courses = user.courses.all()
 
-        return render(request, "course_Directory.html", {'courses': courses, 'user': user, 'filter_assigned': filter_assigned})
+        return render(request, "course_directory.html", {'courses': courses, 'user': user, 'filter_assigned': filter_assigned})
 
     def post(self, request):
         courses = Course.objects.all()
-        return render(request, "course_Directory.html", {'courses': courses})
+        return render(request, "course_directory.html", {'courses': courses})
 
 class HomePage(View):
     def get(self, request):
@@ -166,7 +166,7 @@ class AdminHomePage(View):
         user = GetUser.get_user(request)
         can_access = CheckPermission.check_admin(user)
         if can_access:
-            return render(request, "admin_Home.html", {})
+            return render(request, "admin_home.html", {})
         else:
             return render(request, "home.html", {'message':"You cannot access this page."})
 
@@ -177,7 +177,7 @@ class ConfigureCoursePage(View):
         instructors = User.objects.filter(role="Instructor")
         tas = User.objects.filter(role="TA")
         labs = Lab.objects.all()
-        return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas, "courses": courses, 'labs':labs})
+        return render(request, "configure_course.html", {"instructors": instructors, "tas": tas, "courses": courses, 'labs':labs})
 
     def post(self, request):
         #this is to filter based on which form is being accessed
@@ -200,7 +200,7 @@ class ConfigureCoursePage(View):
         elif form == "edit_lab":
             return self.edit_lab_helper(lab_id, tas, labs, instructors, courses, request)
         else:
-            return render(request, "configureCourse.html",{"instructors": instructors, "tas": tas,
+            return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
                 'courses':courses, 'message': "Something went wrong when fetching the form, please try again."})
 
 
@@ -223,10 +223,10 @@ class ConfigureCoursePage(View):
         #will return None if the creation failed, will return a course and save it to the database if it succeeded
         course = CreateCourse.create_course(cname, instructor)
         if course is None:
-            return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas,
+            return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
                 'courses': courses, 'labs':labs, 'message': "Something went wrong when creating the course \"" + cname + "\""})
         else:
-            return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas,
+            return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
                 'courses': courses, 'labs':labs, 'message': "The course \"" + cname + "\" has been created"})
 
 
@@ -253,10 +253,10 @@ class ConfigureCoursePage(View):
         # will return None if the creation failed, will return a lab and save it to the database if it succeeded
         lab = CreateLab.create_lab(lname, course, ta)
         if lab is None:
-            return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas,
+            return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
                 'courses': courses, 'labs':labs, 'message': "Something went wrong when creating the lab \"" + lname + "\""})
         else:
-            return render(request, "configureCourse.html", {"instructors": instructors, "tas": tas,
+            return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
                 'courses': courses, 'labs':labs, 'message': "The lab \"" + lname + "\" has been created"})
 
     def edit_course_helper(self, course_id,request):
@@ -275,7 +275,7 @@ class ConfigureCoursePage(View):
         else:
             message = "Failed to update lab. Please check your inputs and try again."
 
-        return render(request, "configureCourse.html", {
+        return render(request, "configure_course.html", {
             "instructors": instructors,
             "courses": courses,
             "tas": tas,

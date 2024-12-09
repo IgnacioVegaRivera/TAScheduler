@@ -60,7 +60,7 @@ class test_unit_edit_lab(TestCase):
 
 
     def test_unit_EditLabName(self):
-        response = self.client.post('/configureCourse.html', {'lab_id': self.temp_lab.id,
+        response = self.client.post('/configure_course.html', {'lab_id': self.temp_lab.id,
                                                          'form_name' : "edit_lab",
                                                          'lab': "Lab002",
                                                          "course":self.temp_course.id,
@@ -87,7 +87,7 @@ class test_unit_edit_lab(TestCase):
         self.assertEqual(self.temp_lab.name, "Lab001", "The lab name was changed to blank")
 
     def test_unit_EditLabCourses(self):
-        response = self.client.post('/configureCourse.html', {'lab_id': self.temp_lab.id,
+        response = self.client.post('/configure_course.html', {'lab_id': self.temp_lab.id,
                                                          'form_name': "edit_lab",
                                                          'lab': "Lab001",
                                                          "course":self.temp_course2.id,
@@ -97,7 +97,7 @@ class test_unit_edit_lab(TestCase):
 
     def test_unit_EditLabTA(self):
 
-        response = self.client.post('/configureCourse.html', {'lab_id': self.temp_lab.id,
+        response = self.client.post('/configure_course.html', {'lab_id': self.temp_lab.id,
                                                          'form_name': "edit_lab",
                                                          'lab': "Lab001",
                                                          "course":self.temp_course.id,
@@ -162,7 +162,7 @@ class test_acceptance_lab_edit(TestCase):
 
 
     def test_acceptance_lab_EditName(self):
-        response = self.client.post('/configureCourse.html', {'lab_id': self.temp_lab.id,
+        response = self.client.post('/configure_course.html', {'lab_id': self.temp_lab.id,
                                                          'form_name': "edit_lab",
                                                          'lab': "Lab002",
                                                          "course":self.temp_course.id,
@@ -175,7 +175,7 @@ class test_acceptance_lab_edit(TestCase):
 
     def test_acceptance_lab_EditNameInvalid(self):
 
-        response = self.client.post('/configureCourse.html', {'lab_id': self.temp_lab.id,
+        response = self.client.post('/configure_course.html', {'lab_id': self.temp_lab.id,
                                                          'form_name': "edit_lab",
                                                          'lab': "",
                                                          "course": self.temp_course.id,
@@ -186,7 +186,7 @@ class test_acceptance_lab_edit(TestCase):
         self.assertEqual(response.context['message'], "Failed to update lab. Please check your inputs and try again.")
 
     def test_acceptance_lab_EditCourse(self):
-        response = self.client.post('/configureCourse.html', {'lab_id': self.temp_lab.id,
+        response = self.client.post('/configure_course.html', {'lab_id': self.temp_lab.id,
                                                          'form_name': "edit_lab",
                                                          'lab': "Lab001",
                                                          "course": self.temp_course2.id,
@@ -198,7 +198,7 @@ class test_acceptance_lab_edit(TestCase):
 
     def test_acceptance_lab_EditLabTA(self):
 
-        response = self.client.post('/configureCourse.html', {'lab_id': self.temp_lab.id,
+        response = self.client.post('/configure_course.html', {'lab_id': self.temp_lab.id,
                                                          'form_name': "edit_lab",
                                                          'lab': "Lab001",
                                                          "course": self.temp_course.id,

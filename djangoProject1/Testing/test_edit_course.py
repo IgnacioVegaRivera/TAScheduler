@@ -32,7 +32,7 @@ class test_unit_edit_course(TestCase):
 
 
     def test_unit_editCourseName(self):
-        response = self.client.post('/configureCourse.html', {'course_id': self.temp_course.id,
+        response = self.client.post('/configure_course.html', {'course_id': self.temp_course.id,
                                                          'form_name': 'edit_course',
                                                          'name':"CS431",
                                                          'instructor[]': [self.temp_user.id]})
@@ -58,7 +58,7 @@ class test_unit_edit_course(TestCase):
 
 
     def test_unit_editInstructorName(self):
-        response = self.client.post('/configureCourse.html', {'course_id': self.temp_course.id,
+        response = self.client.post('/configure_course.html', {'course_id': self.temp_course.id,
                                                          'form_name': 'edit_course',
                                                          'name':"CS361",
                                                          'instructor[]': [self.temp_user2.id]})
@@ -67,7 +67,7 @@ class test_unit_edit_course(TestCase):
         self.assertEqual(self.temp_course.instructors.first(), self.temp_user2,"Not the correct changed instructor(s)")
 
     def test_unit_editCourseNameInvalid(self):
-        response = self.client.post('/configureCourse.html', {'course_id': self.temp_course.id,
+        response = self.client.post('/configure_course.html', {'course_id': self.temp_course.id,
                                                          'form_name': 'edit_course',
                                                          'name':"",
                                                          'instructor[]': [self.temp_user2.id]})
@@ -102,7 +102,7 @@ class test_acceptance_edit_course(TestCase):
         self.temp_course.instructors.add(self.temp_user)
 
     def test_acceptance_editCourseInstructor(self):
-        response = self.client.post('/configureCourse.html', {'course_id': self.temp_course.id,
+        response = self.client.post('/configure_course.html', {'course_id': self.temp_course.id,
                                                         'form_name': 'edit_course',
                                                          'course':"CS361",
                                                          'instructor[]': [self.temp_user2.id]})
@@ -112,7 +112,7 @@ class test_acceptance_edit_course(TestCase):
         self.assertEqual(Course.objects.count(), 1)
 
     def test_acceptance_editCourseNameInvalid(self):
-        response = self.client.post('/configureCourse.html', {'course_id': self.temp_course.id,
+        response = self.client.post('/configure_course.html', {'course_id': self.temp_course.id,
                                                          'form_name': 'edit_course',
                                                          'name': "",
                                                          'instructor[]': [self.temp_user2.id]})
