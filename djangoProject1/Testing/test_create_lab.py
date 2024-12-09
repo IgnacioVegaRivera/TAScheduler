@@ -73,7 +73,7 @@ class CreateLabAcceptanceTest(TestCase):
         self.invalidcourse.save()
 
     def test_valid_lab(self):
-        response = self.donkey.post("/configureCourse.html",
+        response = self.donkey.post("/configure_course.html",
             {"tas": User.objects.filter(role="TA"), "ta": self.valid,
             "lab_name": "lab name", "course":self.validcourse, "form_name": "create_lab"}, follow=True)
         self.assertEqual(Lab.objects.count(), 1)
@@ -81,7 +81,7 @@ class CreateLabAcceptanceTest(TestCase):
         self.assertEqual(response.context["message"], "The lab \"lab name\" has been created")
 
     def test_invalid_role(self):
-        response = self.donkey.post("/configureCourse.html",
+        response = self.donkey.post("/configure_course.html",
             {"tas": User.objects.filter(role="TA"), "ta": self.instructor,
             "lab_name": "lab name", "course": self.validcourse, "form_name": "create_lab"}, follow=True)
         self.assertEqual(Lab.objects.count(), 0)
@@ -89,7 +89,7 @@ class CreateLabAcceptanceTest(TestCase):
         self.assertEqual(response.context["message"], "Something went wrong when creating the lab \"lab name\"")
 
     def test_invalid_name(self):
-        response = self.donkey.post("/configureCourse.html",
+        response = self.donkey.post("/configure_course.html",
             {"tas": User.objects.filter(role="TA"), "ta": self.valid,
             "lab_name": "", "course": self.validcourse, "form_name": "create_lab"}, follow=True)
         self.assertEqual(Lab.objects.count(), 0)
@@ -97,7 +97,7 @@ class CreateLabAcceptanceTest(TestCase):
         self.assertEqual(response.context["message"], "Something went wrong when creating the lab \"\"")
 
     def test_invalid_course(self):
-        response = self.donkey.post("/configureCourse.html",
+        response = self.donkey.post("/configure_course.html",
             {"tas": User.objects.filter(role="TA"), "ta": self.valid,
             "lab_name": "lab name", "course": self.invalidcourse, "form_name": "create_lab"}, follow=True)
         self.assertEqual(Lab.objects.count(), 0)
@@ -105,7 +105,7 @@ class CreateLabAcceptanceTest(TestCase):
         self.assertEqual(response.context["message"], "Something went wrong when creating the lab \"lab name\"")
 
     def test_no_ta_selected(self):
-        response = self.donkey.post("/configureCourse.html",
+        response = self.donkey.post("/configure_course.html",
             {"tas": User.objects.filter(role="TA"), "ta": "",
             "lab_name": "lab name", "course": self.validcourse, "form_name": "create_lab"}, follow=True)
         self.assertEqual(Lab.objects.count(), 0)
@@ -113,7 +113,7 @@ class CreateLabAcceptanceTest(TestCase):
         self.assertEqual(response.context["message"], "Something went wrong when creating the lab \"lab name\"")
 
     def test_no_course_selected(self):
-        response = self.donkey.post("/configureCourse.html",
+        response = self.donkey.post("/configure_course.html",
             {"tas": User.objects.filter(role="TA"), "ta": self.valid,
             "lab_name": "lab name", "course": "", "form_name": "create_lab"}, follow=True)
         self.assertEqual(Lab.objects.count(), 0)
@@ -121,7 +121,7 @@ class CreateLabAcceptanceTest(TestCase):
         self.assertEqual(response.context["message"], "Something went wrong when creating the lab \"lab name\"")
 
     def test_invalid_form(self):
-        response = self.donkey.post("/configureCourse.html",
+        response = self.donkey.post("/configure_course.html",
             {"tas": User.objects.filter(role="TA"), "ta": self.valid,
             "lab_name": "lab name", "course": self.validcourse, "form_name": "fake_form"}, follow=True)
         self.assertEqual(Lab.objects.count(), 0)

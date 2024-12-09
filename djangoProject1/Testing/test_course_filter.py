@@ -73,36 +73,36 @@ class TestCourseFilterAcceptance(TestCase):
 
     def test_ta_view_assigned_courses(self):
         self.client.post("/", {"username": "ta_user", "password": "password"}, follow=True)
-        response = self.client.get("/course_Directory.html")
+        response = self.client.get("/course_directory.html")
         self.assertContains(response, "Course 1")
         self.assertContains(response, "Course 2")
         self.assertContains(response, "Course 3")
 
-        response = self.client.get("/course_Directory.html?filter=assigned")
+        response = self.client.get("/course_directory.html?filter=assigned")
         self.assertContains(response, "Course 1")
         self.assertContains(response, "Course 3")
         self.assertNotContains(response, "Course 2")
 
     def test_instructor_view_assigned_courses(self):
         self.client.post("/", {"username": "instructor_user", "password": "password"}, follow=True)
-        response = self.client.get("/course_Directory.html")
+        response = self.client.get("/course_directory.html")
         self.assertContains(response, "Course 1")
         self.assertContains(response, "Course 2")
         self.assertContains(response, "Course 3")
 
-        response = self.client.get("/course_Directory.html?filter=assigned")
+        response = self.client.get("/course_directory.html?filter=assigned")
         self.assertContains(response, "Course 2")
         self.assertNotContains(response, "Course 1")
         self.assertNotContains(response, "Course 3")
 
     def test_admin_view_all_courses(self):
         self.client.post("/", {"username": "admin_user", "password": "password"}, follow=True)
-        response = self.client.get("/course_Directory.html")
+        response = self.client.get("/course_directory.html")
         self.assertContains(response, "Course 1")
         self.assertContains(response, "Course 2")
         self.assertContains(response, "Course 3")
 
-        response = self.client.get("/course_Directory.html?filter=assigned")
+        response = self.client.get("/course_directory.html?filter=assigned")
         self.assertContains(response, "Course 1")
         self.assertContains(response, "Course 2")
         self.assertContains(response, "Course 3")

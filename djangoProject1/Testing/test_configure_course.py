@@ -181,7 +181,7 @@ class TestConfigureCourseAcceptance(TestCase):
 
     def test_course1_shows(self):
         self.course1()
-        response = self.donkey.get("/configureCourse.html")
+        response = self.donkey.get("/configure_course.html")
         self.assertContains(response, "Course 1")
         self.assertContains(response, "Ructor User (Instructor)")
         self.assertContains(response, "Inst User (Instructor)")
@@ -191,7 +191,7 @@ class TestConfigureCourseAcceptance(TestCase):
 
     def test_course2_shows(self):
         self.course2()
-        response = self.donkey.get("/configureCourse.html")
+        response = self.donkey.get("/configure_course.html")
         self.assertContains(response, "Course 2")
         self.assertContains(response, "Ructor User (Instructor)")
         self.assertContains(response, "Lab 2")
@@ -200,7 +200,7 @@ class TestConfigureCourseAcceptance(TestCase):
 
     def test_course3_shows(self):
         self.course3()
-        response = self.donkey.get("/configureCourse.html")
+        response = self.donkey.get("/configure_course.html")
         self.assertContains(response, "Course 3")
         self.assertContains(response, "Inst User (Instructor)")
         self.assertContains(response, "Lab 3")
@@ -211,7 +211,7 @@ class TestConfigureCourseAcceptance(TestCase):
 
     def test_course4_shows(self):
         self.course4()
-        response = self.donkey.get("/configureCourse.html")
+        response = self.donkey.get("/configure_course.html")
         self.assertContains(response, "Course 4")
         self.assertContains(response, "Ructor User (Instructor)")
         self.assertNotContains(response, "(Teaching Assistant)") #no lab so no teaching assistant shows up

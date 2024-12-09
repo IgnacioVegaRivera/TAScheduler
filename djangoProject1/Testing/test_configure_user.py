@@ -165,7 +165,7 @@ class TestConfigureUserAcceptanceTest(TestCase):
 
     def test_admin_user_shows(self):
         self.admin_login()
-        response = self.donkey.get("/configureUser.html")
+        response = self.donkey.get("/configure_user.html")
         self.assertContains(response, "Ad Min")
         self.assertContains(response, "Admin")
         self.assertContains(response, "No Courses.")
@@ -176,7 +176,7 @@ class TestConfigureUserAcceptanceTest(TestCase):
     def test_instructor_user1_shows(self):
         self.admin_login()
         self.instructor_user1()
-        response = self.donkey.get("/configureUser.html")
+        response = self.donkey.get("/configure_user.html")
         self.assertContains(response, "Inst")
         self.assertContains(response, "Ructor")
         self.assertContains(response, "Instructor")
@@ -189,7 +189,7 @@ class TestConfigureUserAcceptanceTest(TestCase):
     def test_instructor_user2_shows(self):
         self.admin_login()
         self.instructor_user2()
-        response = self.donkey.get("/configureUser.html")
+        response = self.donkey.get("/configure_user.html")
         self.assertContains(response, "Inst")
         self.assertContains(response, "Ructor")
         self.assertContains(response, "Instructor")
@@ -200,7 +200,7 @@ class TestConfigureUserAcceptanceTest(TestCase):
     def test_instructor_user3_shows(self):
         self.admin_login()
         self.instructor_user3()
-        response = self.donkey.get("/configureUser.html")
+        response = self.donkey.get("/configure_user.html")
         self.assertContains(response, "Inst")
         self.assertContains(response, "Ructor")
         self.assertContains(response, "Instructor")
@@ -212,7 +212,7 @@ class TestConfigureUserAcceptanceTest(TestCase):
     def test_ta_user1_shows(self):
         self.admin_login()
         self.ta_user1()
-        response = self.donkey.get("/configureUser.html")
+        response = self.donkey.get("/configure_user.html")
         self.assertContains(response, "T")
         self.assertContains(response, "A")
         self.assertContains(response, "TA")
@@ -223,7 +223,7 @@ class TestConfigureUserAcceptanceTest(TestCase):
     def test_ta_user2_shows(self):
         self.admin_login()
         self.ta_user2()
-        response = self.donkey.get("/configureUser.html")
+        response = self.donkey.get("/configure_user.html")
         self.assertContains(response, "T")
         self.assertContains(response, "A")
         self.assertContains(response, "TA")
@@ -234,7 +234,7 @@ class TestConfigureUserAcceptanceTest(TestCase):
     def test_ta_user3_shows(self):
         self.admin_login()
         self.ta_user3()
-        response = self.donkey.get("/configureUser.html")
+        response = self.donkey.get("/configure_user.html")
         self.assertContains(response, "T")
         self.assertContains(response, "A")
         self.assertContains(response, "TA")
