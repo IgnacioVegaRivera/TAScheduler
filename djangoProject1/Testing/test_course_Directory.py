@@ -14,8 +14,8 @@ class TestCourseDirectoryUnit(TestCase):
         self.course3 = Course.objects.create(name="Course 3")
 
         # Assign instructors to courses
-        self.course1.instructors.add(self.instructor)
-        self.course2.instructors.add(self.instructor)
+        self.course1.users.add(self.instructor)
+        self.course2.users.add(self.instructor)
 
         # Create labs and assign TAs
         self.lab1 = Section.objects.create(name="Lab 1", course=self.course1, ta=self.ta)
