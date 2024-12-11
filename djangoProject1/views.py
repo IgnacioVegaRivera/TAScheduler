@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 
-from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser, CreateLab, EditUser, EditCourse, EditLab
+from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser, CreateSection, EditUser, EditCourse, EditLab
 from djangoProject1.MethodFiles.GeneralMethods import GetUser, CheckPermission
 from djangoProject1.models import User, Course
 
@@ -251,7 +251,8 @@ class ConfigureCoursePage(View):
         lname = request.POST['lab_name']
 
         # will return None if the creation failed, will return a lab and save it to the database if it succeeded
-        lab = CreateLab.create_lab(lname, course, ta)
+        # lab = CreateLab.create_lab(lname, course, ta)
+        lab = None
         if lab is None:
             return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
                 'courses': courses, 'labs':labs, 'message': "Something went wrong when creating the lab \"" + lname + "\""})
