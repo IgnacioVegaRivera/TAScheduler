@@ -55,19 +55,19 @@
 <button popovertarget="createCourse">Add Course</button>
 
 <br>
-<div class="addLabModal">
-    <div class="create-lab" popover id="createLab">
-        <div class="createNewLabModalHeader">
-            <h2>Add new Lab</h2>
+<div class="addSectionModal">
+    <div class="create-section" popover id="createSection">
+        <div class="createNewSectionModalHeader">
+            <h2>Add new Section</h2>
         </div>
         <div class="modal-header" id="myModal">
             <div class="modal-dialog">
                 <form action=" " method="post">
                     {% csrf_token %}
-                    <input type="hidden" name="form_name" value="create_lab">
+                    <input type="hidden" name="form_name" value="create_section">
                     <div>
-                        <label class="form-label required">Lab Name</label>
-                        <input type="text" class="form-control" name="lab_name">
+                        <label class="form-label required">Section Name</label>
+                        <input type="text" class="form-control" name="section_name">
                     </div>
                     <div>
                         Course:
@@ -78,6 +78,7 @@
                             {% endfor %}
                         </select>
                     </div>
+                    {% comment %}
                     <div>
                         TA:
                         <select name="ta">
@@ -87,18 +88,33 @@
                             {% endfor %}
                         </select>
                     </div>
+                    {% endcomment %}
+                    <div>
+                        <label class="form-label required">Days:</label>
+                        <div class="day-checkboxes">
+                            {% for day in days %}
+                                <div>
+                                    <input type="checkbox"
+                                           name="day"
+                                           value="{{ day }}"
+                                           {% if day in sections.day%}checked{% endif %}>
+                                    <label>{{ day }}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
                     <input type="submit">
                 </form>
             </div>
             <div class="modal-footer">
-                <button popovertarget="createLab" popovertargetaction="hide">
+                <button popovertarget="createSection" popovertargetaction="hide">
                     Cancel
                 </button>
             </div>
         </div>
     </div>
 </div>
-<button popovertarget="createLab">Add Lab</button>
+<button popovertarget="createSection">Add Section</button>
 <p style="text-align: center">{{ message }}</p>
 
 <div class="userContainer">
