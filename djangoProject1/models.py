@@ -1,4 +1,5 @@
 from django.db import models
+from multiselectfield import MultiSelectField
 import uuid
 
 # Predefined choices for days of the week
@@ -46,7 +47,7 @@ class Section(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) #unique id
     name = models.CharField(max_length=100, default="Default Section Name") #section name
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='sections') #link to course
-    day = models.CharField(max_length=20, choices=DAYS_OF_WEEK, blank=True, null=True)  #day of the week
+    days = MultiSelectField(choices=DAYS_OF_WEEK, blank=True, null=True)  #day of the week
     time = models.TimeField(blank=True, null=True)  #specific time of day
     location = models.CharField(max_length=100, blank=True, null=True) #location
     user = models.ForeignKey(User, null=True, blank=True, limit_choices_to={'role__in': ['TA', 'Instructor']}, on_delete=models.SET_NULL, related_name='sections')
