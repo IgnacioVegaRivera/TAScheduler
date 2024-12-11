@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from djangoProject1.models import User, Course, Lab
+from djangoProject1.models import User, Course, Section
 
 
 class IntegrationTests(TestCase):
@@ -110,7 +110,7 @@ class IntegrationTests(TestCase):
         response = self.donkey.post("/configure_course.html", {"form_name": "create_lab",
                                                               "tas": User.objects.filter(role="TA"),
                                                               "ta": ta, "course":course ,"lab_name": "lab"})
-        self.assertEqual(Lab.objects.count(), 1, "The amount of labs do not match")
+        self.assertEqual(Section.objects.count(), 1, "The amount of labs do not match")
         self.assertIn('message', response.context)
         self.assertEqual(response.context["message"], "The lab \"lab\" has been created")
         self.assertContains(response, "TAs and Labs")
@@ -186,7 +186,7 @@ class IntegrationTests(TestCase):
         response = self.donkey.post("/configure_course.html", {"form_name": "create_lab",
                                                               "tas": User.objects.filter(role="TA"),
                                                               "ta": ta, "course": course, "lab_name": "lab"})
-        self.assertEqual(Lab.objects.count(), 1, "The amount of labs do not match")
+        self.assertEqual(Section.objects.count(), 1, "The amount of labs do not match")
 
         response = self.donkey.post("/configure_user.html", {"first_name": "TA",
                                     "last_name": "Jake", "username": "login2",
@@ -301,7 +301,7 @@ class IntegrationTests(TestCase):
                                     {"tas": User.objects.filter(role="TA"), "ta": user3,
                                      "lab_name": "new_lab2", "course": course2, "form_name": "create_lab"},
                                     follow=True)
-        self.assertEqual(Lab.objects.count(), 2, "The amount of labs do not match")
+        self.assertEqual(Section.objects.count(), 2, "The amount of labs do not match")
 
         # login as ta then filter
         response = self.donkey.post("/", {"username": "login2", "password": "password2"}, follow=True)
