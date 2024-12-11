@@ -5,14 +5,14 @@ from djangoProject1.models import User, Course, Section
 class TestConfigureCourseUnit(TestCase):
     def setUp(self):
         #create instructors
-        self.inst = User.objects.create(username="inst", role="Instructor", first_name="Inst", last_name="User")
-        self.ructor = User.objects.create(username="ructor", role="Instructor", first_name="Ructor", last_name="User")
+        self.inst = User.objects.create(username="inst", role="Instructor", first_name="Inst", last_name="User", skills="Good at teaching at concepts")
+        self.ructor = User.objects.create(username="ructor", role="Instructor", first_name="Ructor", last_name="User", skills="Good at teaching coding")
         self.ructor.save()
         self.inst.save()
 
         #create tas
-        self.t = User.objects.create(username="t", role="TA", first_name="T", last_name="User")
-        self.a = User.objects.create(username="a", role="TA", first_name="A", last_name="User")
+        self.t = User.objects.create(username="t", role="TA", first_name="T", last_name="User", skills="proficient in java")
+        self.a = User.objects.create(username="a", role="TA", first_name="A", last_name="User", skills="proficient in python ")
         self.t.save()
         self.a.save()
 
@@ -25,19 +25,29 @@ class TestConfigureCourseUnit(TestCase):
         self.course3.save()
 
         # Assign instructors to courses
-        self.course1.instructors.add(self.ructor)
-        self.course1.instructors.add(self.inst)
-        self.course2.instructors.add(self.ructor)
-        self.course3.instructors.add(self.inst)
+        self.course1.users.add(self.ructor)
+        self.course1.users.add(self.inst)
+        self.course2.users.add(self.ructor)
+        self.course3.users.add(self.inst)
+        # self.course1.instructors.add(self.ructor)
+        # self.course1.instructors.add(self.inst)
+        # self.course2.instructors.add(self.ructor)
+        # self.course3.instructors.add(self.inst)
 
 
         # Create labs and assign TAs
-        self.lab1 = Section.objects.create(name="Lab 1", course=self.course1, ta=self.t)
-        self.lab2 = Section.objects.create(name="Lab 2", course=self.course2, ta=self.a)
-        self.lab3 = Section.objects.create(name="Lab 3", course=self.course2, ta=self.a)
+        self.lab1 = Section.objects.create(name="Lab 1", course=self.course1, user=self.t)
+        self.lab2 = Section.objects.create(name="Lab 2", course=self.course2, user=self.a)
+        self.lab3 = Section.objects.create(name="Lab 3", course=self.course2, user=self.a)
         self.lab1.save()
         self.lab2.save()
         self.lab3.save()
+        # self.lab1 = Section.objects.create(name="Lab 1", course=self.course1, ta=self.t)
+        # self.lab2 = Section.objects.create(name="Lab 2", course=self.course2, ta=self.a)
+        # self.lab3 = Section.objects.create(name="Lab 3", course=self.course2, ta=self.a)
+        # self.lab1.save()
+        # self.lab2.save()
+        # self.lab3.save()
 
 
     def test_course_list(self):
@@ -67,30 +77,30 @@ class TestConfigureCourseUnit(TestCase):
         self.assertIn(self.a, tas)
 
     def test_inst_courses(self):
-        courses = Course.objects.filter(instructors=self.inst)
+        courses = Course.objects.filter(users=self.inst)
         self.assertEqual(courses.count(), 2)
         self.assertIn(self.course1, courses)
         self.assertIn(self.course3, courses)
 
     def test_ructor_courses(self):
-        courses = Course.objects.filter(instructors=self.ructor)
+        courses = Course.objects.filter(users=self.ructor)
         self.assertEqual(courses.count(), 2)
         self.assertIn(self.course1, courses)
         self.assertIn(self.course2, courses)
 
     def test_inst_ructor_courses(self):
-        courses = Course.objects.filter(instructors=self.inst).filter(instructors=self.ructor)
+        courses = Course.objects.filter(users=self.inst).filter(users=self.ructor)
         self.assertEqual(courses.count(), 1)
         self.assertIn(self.course1, courses)
-        self.assertEqual(self.course1.instructors.count(), 2)
+        self.assertEqual(self.course1.users.count(), 2)
 
     def test_t_labs(self):
-        labs = Section.objects.filter(ta=self.t)
+        labs = Section.objects.filter(user=self.t)
         self.assertEqual(labs.count(), 1)
         self.assertIn(self.lab1, labs)
 
     def test_a_labs(self):
-        labs = Section.objects.filter(ta=self.a)
+        labs = Section.objects.filter(user=self.a)
         self.assertEqual(labs.count(), 2)
         self.assertIn(self.lab2, labs)
         self.assertIn(self.lab3, labs)

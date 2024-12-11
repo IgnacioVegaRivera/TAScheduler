@@ -13,7 +13,7 @@ class CreateCourseUnitTest(TestCase):
     def test_create_course(self):
         course = CreateCourse.create_course("name", self.user)
         self.assertEqual(course.name,"name")
-        self.assertEqual(course.instructors.first(), self.user)
+        self.assertEqual(course.users.first(), self.user)
 
     #if anything is wrong then we want to set course to none and don't save it to the database
     def test_no_name(self):
@@ -40,7 +40,7 @@ class CreateCourseUnitTest(TestCase):
     def test_course_already_exists(self):
         course = CreateCourse.create_course("name", self.user)
         self.assertEqual(course.name, "name")
-        self.assertEqual(course.instructors.first(), self.user)
+        self.assertEqual(course.users.first(), self.user)
 
         course2 = CreateCourse.create_course("name", self.user)
         self.assertEqual(course2, None)

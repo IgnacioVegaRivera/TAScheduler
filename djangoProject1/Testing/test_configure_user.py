@@ -5,11 +5,11 @@ class TestConfigureUserUnit(TestCase):
     def setUp(self):
         #create some users
         self.admin = User.objects.create(first_name='Ad', last_name='Min', username='admin',
-                                         email='admin@uwm.edu', phone_number="1234567890", role='Admin')
+                                         email='admin@uwm.edu', phone_number="1234567890", role='Admin', skills='Admin skills')
         self.instructor = User.objects.create(first_name='Inst', last_name='Ructor', username='instructor',
-                                         email='instructor@uwm.edu', phone_number="0123456789", role='Instructor')
+                                         email='instructor@uwm.edu', phone_number="0123456789", role='Instructor',skills='Good at teaching')
         self.ta = User.objects.create(first_name='T', last_name='A', username='ta',
-                                         email='ta@uwm.edu', phone_number="9876543210", role='TA')
+                                         email='ta@uwm.edu', phone_number="9876543210", role='TA', skills='Proficient in java')
         self.admin.save()
         self.instructor.save()
         self.ta.save()
@@ -17,9 +17,9 @@ class TestConfigureUserUnit(TestCase):
         #create some courses/labs
         self.course = Course.objects.create(name="Course 1")
         self.course.save()
-        self.course.instructors.add(self.instructor)
+        self.course.users.add(self.instructor)
 
-        self.lab = Section.objects.create(name="Lab 1", course=self.course, ta=self.ta)
+        self.lab = Section.objects.create(name="Lab 1", course=self.course, user=self.ta)
         self.lab.save()
 
     def test_user_list(self):
@@ -62,8 +62,8 @@ class TestConfigureUserUnit(TestCase):
         self.assertEqual(self.admin.phone_number, '1234567890')
 
     def test_admin_courses(self):
-        courses = Course.objects.filter(instructors=self.admin)
-        labs = Section.objects.filter(ta=self.admin)
+        courses = Course.objects.filter(users=self.admin)
+        labs = Section.objects.filter(user=self.admin)
         self.assertEqual(courses.count(), 0)
         self.assertEqual(labs.count(), 0)
 
@@ -75,8 +75,8 @@ class TestConfigureUserUnit(TestCase):
         self.assertEqual(self.instructor.phone_number, '0123456789')
 
     def test_instructor_courses(self):
-        courses = Course.objects.filter(instructors=self.instructor)
-        labs = Section.objects.filter(ta=self.instructor)
+        courses = Course.objects.filter(users=self.instructor)
+        labs = Section.objects.filter(user=self.instructor)
         self.assertEqual(courses.count(), 1)
         self.assertEqual(labs.count(), 0)
         self.assertIn(self.course, courses)
@@ -89,8 +89,8 @@ class TestConfigureUserUnit(TestCase):
         self.assertEqual(self.ta.phone_number, '9876543210')
 
     def test_ta_courses(self):
-        courses = Course.objects.filter(instructors=self.ta)
-        labs = Section.objects.filter(ta=self.ta)
+        courses = Course.objects.filter(users=self.ta)
+        labs = Section.objects.filter(user=self.ta)
         self.assertEqual(courses.count(), 0)
         self.assertEqual(labs.count(), 1)
         self.assertIn(self.lab, labs)
