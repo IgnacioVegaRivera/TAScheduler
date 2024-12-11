@@ -17,9 +17,9 @@ class TestUserDirectoryUnit(TestCase):
         self.courseThree = Course.objects.create(name="Course3")
 
         # Create labs and assign TAs
-        self.labOne = Section.objects.create(name="Lab 1", course=self.courseOne, day="M", time="3:00", location="EMS", user=self.taOne)
-        self.labTwo = Section.objects.create(name="Lab 2", course=self.courseTwo, day="W", time="12:00", location="Kenwood", user=None)  # Unassigned lab
-        self.labThree = Section.objects.create(name="Lab 3", course=self.courseThree, day="TR", time="2:30", location="Physics", user=self.taOne)
+        self.labOne = Section.objects.create(name="Lab 1", course=self.courseOne, days="Monday", time="3:00", location="EMS", user=self.taOne)
+        self.labTwo = Section.objects.create(name="Lab 2", course=self.courseTwo, days="Wednesday", time="12:00", location="Kenwood", user=None)  # Unassigned lab
+        self.labThree = Section.objects.create(name="Lab 3", course=self.courseThree, days="Thursday", time="2:30", location="Physics", user=self.taOne)
 
         # Assign instructors to courses
         self.courseOne.users.add(self.instructorOne)
