@@ -64,7 +64,7 @@
             <div class="modal-dialog">
                 <form action=" " method="post">
                     {% csrf_token %}
-                    <input type="hidden" name="form_name" value="create_lab">
+                    <input type="hidden" name="form_name" value="create_section">
                     <div>
                         <label class="form-label required">Section Name</label>
                         <input type="text" class="form-control" name="section_name">
@@ -96,7 +96,7 @@
                                 <div>
                                     <input type="checkbox"
                                            name="day"
-                                           value="{{ instructor }}"
+                                           value="{{ day }}"
                                            {% if day in sections.day%}checked{% endif %}>
                                     <label>{{ day }}</label>
                                 </div>

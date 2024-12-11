@@ -194,8 +194,8 @@ class ConfigureCoursePage(View):
 
         if form == "create_course":
             return self.add_course_helper(courses, instructors, tas, sections,  request)
-        elif form == "create_lab":
-            return self.add_lab_helper(courses, instructors, tas, sections,  request)
+        elif form == "create_section":
+            return self.add_section_helper(courses, instructors, tas, sections,  request)
         elif form == "edit_course":
             return self.edit_course_helper(course_id, request)
         elif form == "edit_lab":
