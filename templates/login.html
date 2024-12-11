@@ -1,10 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <style>
-    table{
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f4f4f4;
+    }
+
+    table {
         margin: auto
     }
-    td{
+
+    td {
         text-align: center
     }
 </style>
@@ -12,10 +22,10 @@
     <meta charset="UTF-8">
     <title>TA Scheduler Login Page</title>
 </head>
-<body style="text-align: center">
-    <br><br><br><br><br><br><br><br><br><br><br><br>
-    <div style=" display: flex; justify-content: center">
-        <h1 style="background-color: #54d38e; width:400px; height: 50px; border: 2px solid black;
+<body>
+<div class="loginContainer">
+    <div>
+        <h1 style="line-height: 50px; display: flex; justify-content: center; background-color: #54d38e; width:400px; height: 50px; border: 2px solid black;
         margin: 0; padding: 0">Login</h1>
     </div>
     <div style="display: flex; justify-content: center">
@@ -25,20 +35,21 @@
             {% csrf_token %}
             <table>
                 <tr>
-                    <td style="font-size: 20px">Username: </td>
+                    <td style="font-size: 20px">Username:</td>
                     <td><input style="font-size: 20px" type="text" name="username"></td>
                 </tr>
                 <tr>
-                    <td style="font-size: 20px">Password: </td>
+                    <td style="font-size: 20px">Password:</td>
                     <td><input style="font-size: 20px" type="password" name="password"></td>
                 </tr>
             </table>
-            <input type="submit">
+            <div class="buttonAlignment">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
             <br><br>
             {{ message }}
         </form>
-        </div>
-        <br>
     </div>
+</div>
 </body>
 </html>

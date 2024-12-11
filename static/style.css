@@ -1,3 +1,9 @@
+/*
+    Login Screen:
+ */
+.buttonAlignment {
+    align-items: center;
+}
 
 /*
     Configure Users Style:
@@ -10,15 +16,16 @@
 
 .navbar a {
     padding: 10px;
-    color: white;
+    color: midnightblue;
     text-align: center;
     font-size: 17px;
-
+    text-decoration: none;
 }
 
-.navbar a:hover  {
+.navbar a:hover {
     background-color: black;
     color: white;
+    border-bottom: 2px black;
 }
 
 .navbar a.active {
@@ -30,7 +37,6 @@
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-
 }
 
 .userBox {
@@ -63,9 +69,9 @@
 }
 
 summary {
-  background-color: #530e0e;
-  padding: 10px;
-  cursor: pointer;
+    background-color: #530e0e;
+    padding: 10px;
+    cursor: pointer;
 }
 
 
@@ -118,6 +124,15 @@ Configure Courses page css:
 }
 
 .instructor-checkboxes div {
+    margin-bottom: 5px;
+}
+
+.day-checkboxes {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+.day-checkboxes div {
     margin-bottom: 5px;
 }
 
