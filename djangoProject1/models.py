@@ -12,7 +12,7 @@ DAYS_OF_WEEK = [
     ('Saturday', 'Saturday'),
     ('Sunday', 'Sunday'),
 ]
-
+#
 class User(models.Model): # basic for now
     ROLE_CHOICES = [
         ('TA', 'Teaching Assistant'),
