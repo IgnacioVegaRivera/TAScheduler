@@ -10,7 +10,7 @@ from django.template.context_processors import static
 from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateSectionInterface, EditUserInterface, \
     CreateUserInterface, EditCourseInterface, EditLabInterface
 
-from djangoProject1.models import Course, User
+from djangoProject1.models import Course, User, Section
 
 
 class CreateUser(CreateUserInterface):
@@ -92,7 +92,7 @@ class CreateSection(CreateSectionInterface):
 
     # need to update this eventually to reflect the changes from labs to sections, old implementation commented out
     @staticmethod
-    def create_section(section_name, course, user, day, time, location):
+    def create_section(request, section_name, course, user, day, time, location):
         # if not isinstance(ta, User) or not isinstance(lab_name, str) or not isinstance(course, Course):
         #     return None
         #
