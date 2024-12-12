@@ -80,6 +80,10 @@ class ConfigureUserPage(View):
             phone = request.POST['phone_number']
             role = request.POST['role']
             return self.editUserHelper(request, username, firstname, lastname, phone, email, role, users)
+        elif form == "remove_user":
+            user_id = request.POST['user_id']
+            return render(request, "configure_user.html", {"roles": User.ROLE_CHOICES, "users": users,
+                                                           'message': "Something went wrong when fetching the form, please try again"})
         else:
             return render(request, "configure_user.html", {"roles": User.ROLE_CHOICES, "users": users,
                                         'message': "Something went wrong when fetching the form, please try again"})
