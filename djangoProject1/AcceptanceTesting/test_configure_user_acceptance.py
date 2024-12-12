@@ -24,7 +24,7 @@ class TestConfigureUserAcceptanceTest(TestCase):
         self.instructor.save()
         self.course = Course.objects.create(name="Course 1")
         self.course.save()
-        self.course.instructors.add(self.instructor)
+        self.course.users.add(self.instructor)
 
     #instructor with more than 1 course
     def instructor_user3(self):
@@ -33,10 +33,10 @@ class TestConfigureUserAcceptanceTest(TestCase):
         self.instructor.save()
         self.course1 = Course.objects.create(name="Course 1")
         self.course1.save()
-        self.course1.instructors.add(self.instructor)
+        self.course1.users.add(self.instructor)
         self.course2 = Course.objects.create(name="Course 2")
         self.course2.save()
-        self.course2.instructors.add(self.instructor)
+        self.course2.users.add(self.instructor)
 
     def ta_user1(self):
         self.ta = User.objects.create(first_name='T', last_name='A', username='ta',
@@ -50,7 +50,7 @@ class TestConfigureUserAcceptanceTest(TestCase):
 
         self.instructor_user2()
 
-        self.lab = Section.objects.create(name="Lab 1", course=self.course, ta=self.ta)
+        self.lab = Section.objects.create(name="Lab 1", course=self.course, user=self.ta)
         self.lab.save()
 
     def ta_user3(self):
@@ -60,10 +60,10 @@ class TestConfigureUserAcceptanceTest(TestCase):
 
         self.instructor_user2()
 
-        self.lab1 = Section.objects.create(name="Lab 1", course=self.course, ta=self.ta)
+        self.lab1 = Section.objects.create(name="Lab 1", course=self.course, user=self.ta)
         self.lab1.save()
 
-        self.lab2 = Section.objects.create(name="Lab 2", course=self.course, ta=self.ta)
+        self.lab2 = Section.objects.create(name="Lab 2", course=self.course, user=self.ta)
         self.lab2.save()
 
     def admin_login(self):

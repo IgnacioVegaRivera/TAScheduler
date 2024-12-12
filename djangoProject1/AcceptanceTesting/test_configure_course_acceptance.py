@@ -19,10 +19,10 @@ class TestConfigureCourseAcceptance(TestCase):
         self.course1 = Course.objects.create(name="Course 1")
         self.course1.save()
 
-        self.course1.instructors.add(self.ructor)
-        self.course1.instructors.add(self.inst)
+        self.course1.users.add(self.ructor)
+        self.course1.users.add(self.inst)
 
-        self.lab1 = Section.objects.create(name="Lab 1", course=self.course1, ta=self.t)
+        self.lab1 = Section.objects.create(name="Lab 1", course=self.course1, user=self.t)
         self.lab1.save()
 
     #course with 1 instructor and 1 lab
@@ -36,9 +36,9 @@ class TestConfigureCourseAcceptance(TestCase):
         self.a = User.objects.create(username="a", role="TA", first_name="A", last_name="User")
         self.a.save()
 
-        self.course2.instructors.add(self.ructor)
+        self.course2.users.add(self.ructor)
 
-        self.lab2 = Section.objects.create(name="Lab 2", course=self.course2, ta=self.a)
+        self.lab2 = Section.objects.create(name="Lab 2", course=self.course2, user=self.a)
         self.lab2.save()
 
     #course with 2 labs
@@ -54,10 +54,10 @@ class TestConfigureCourseAcceptance(TestCase):
         self.a = User.objects.create(username="a", role="TA", first_name="A", last_name="User")
         self.a.save()
 
-        self.course3.instructors.add(self.inst)
+        self.course3.users.add(self.inst)
 
-        self.lab3 = Section.objects.create(name="Lab 3", course=self.course3, ta=self.a)
-        self.lab4 = Section.objects.create(name="Lab 4", course=self.course3, ta=self.t)
+        self.lab3 = Section.objects.create(name="Lab 3", course=self.course3, user=self.a)
+        self.lab4 = Section.objects.create(name="Lab 4", course=self.course3, user=self.t)
         self.lab3.save()
         self.lab4.save()
 
@@ -68,7 +68,7 @@ class TestConfigureCourseAcceptance(TestCase):
 
         self.ructor = User.objects.create(username="ructor", role="Instructor", first_name="Ructor", last_name="User")
         self.ructor.save()
-        self.course4.instructors.add(self.ructor)
+        self.course4.users.add(self.ructor)
 
     def test_course1_shows(self):
         self.course1()
