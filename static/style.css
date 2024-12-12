@@ -2,12 +2,15 @@
     Login Screen:
  */
 .buttonAlignment {
+    display: flex;
+    justify-content: center;
     align-items: center;
 }
 
 /*
     Configure Users Style:
 */
+
 
 .navbar {
     background-color: #54d38e;
@@ -132,6 +135,7 @@ Configure Courses page css:
     flex-direction: column;
     margin-top: 10px;
 }
+
 .day-checkboxes div {
     margin-bottom: 5px;
 }

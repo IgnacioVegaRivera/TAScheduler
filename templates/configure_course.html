@@ -66,7 +66,7 @@
                     {% csrf_token %}
                     <input type="hidden" name="form_name" value="create_section">
                     <div>
-                        <label class="form-label required">Section Name</label>
+                        <label class="form-label required">Section Name:</label>
                         <input type="text" class="form-control" name="section_name">
                     </div>
                     <div>
@@ -95,13 +95,21 @@
                             {% for day in days %}
                                 <div>
                                     <input type="checkbox"
-                                           name="day"
+                                           name="days"
                                            value="{{ day }}"
-                                           {% if day in sections.day%}checked{% endif %}>
+                                           {% if section.days and day in sections.days %}checked{% endif %}>
                                     <label>{{ day }}</label>
                                 </div>
                             {% endfor %}
                         </div>
+                    </div>
+                    <div>
+                        Time:
+                        <input name="section_time" type="time"/>
+                    </div>
+                    <div>
+                        <label class="form-label required">Location:</label>
+                        <input type="text" class="form-control" name="section_location">
                     </div>
                     <input type="submit">
                 </form>
