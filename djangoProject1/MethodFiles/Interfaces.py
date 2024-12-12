@@ -7,7 +7,7 @@ class CreateCourseInterface(abc.ABC):
 
 class CreateSectionInterface(abc.ABC):
     @abc.abstractmethod
-    def create_section(self, section_name, course, user, day, time, location):
+    def create_section(self, section_name, course, user, days, time, location):
         pass
 
 class CheckPermissionInterface(abc.ABC):

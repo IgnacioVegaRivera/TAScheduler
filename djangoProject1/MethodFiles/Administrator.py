@@ -92,7 +92,7 @@ class CreateSection(CreateSectionInterface):
 
     # need to update this eventually to reflect the changes from labs to sections, old implementation commented out
     @staticmethod
-    def create_section(section_name, course, user, day, time, location):
+    def create_section(section_name, course, user, days, time, location):
         # if not isinstance(ta, User) or not isinstance(lab_name, str) or not isinstance(course, Course):
         #     return None
         #
