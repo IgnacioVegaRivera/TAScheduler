@@ -158,6 +158,10 @@ class CourseDirectoryPage(View):
         courses = Course.objects.all()
         return render(request, "course_directory.html", {'courses': courses})
 
+class ProfilePage(View):
+    def get(self, request):
+        return render(request, "profile_page.html", {})
+
 class HomePage(View):
     def get(self, request):
         return render(request, "home.html", {})
