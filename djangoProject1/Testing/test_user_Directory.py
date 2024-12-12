@@ -26,21 +26,7 @@ class TestUserDirectoryUnit(TestCase):
         self.courseTwo.users.add(self.instructorOne)
         # leave courseThree empty for testing
 
-    def test_admin_view_all_users(self):
-        users = User.objects.all()
-        self.assertEqual(users.count(), 3)
-        self.assertIn(self.adminOne, users)
-        self.assertIn(self.instructorOne, users)
-        self.assertIn(self.taOne, users)
-
-    def test_instructor_view_all_users(self):
-        users = User.objects.all()
-        self.assertEqual(users.count(), 3)
-        self.assertIn(self.adminOne, users)
-        self.assertIn(self.instructorOne, users)
-        self.assertIn(self.taOne, users)
-
-    def test_ta_view_all_users(self):
+    def test_view_all_users(self):
         users = User.objects.all()
         self.assertEqual(users.count(), 3)
         self.assertIn(self.adminOne, users)

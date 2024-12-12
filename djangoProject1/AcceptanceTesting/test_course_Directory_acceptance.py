@@ -17,13 +17,20 @@ class TestCourseDirectoryAcceptance(TestCase):
         self.course3 = Course.objects.create(name="Course 3")
 
         # Assign instructors to courses
-        self.course1.instructors.add(self.instructor)
-        self.course2.instructors.add(self.instructor)
+        self.course1.users.add(self.instructor)
+        self.course2.users.add(self.instructor)
 
         # Create labs and assign TAs
-        self.lab1 = Section.objects.create(name="Lab 1", course=self.course1, ta=self.ta)
-        self.lab2 = Section.objects.create(name="Lab 2", course=self.course2, ta=None)
-        self.lab3 = Section.objects.create(name="Lab 3", course=self.course3, ta=self.ta)
+        # self.lab1 = Section.objects.create(name="Lab 1", course=self.course1, ta=self.ta)
+        # self.lab2 = Section.objects.create(name="Lab 2", course=self.course2, ta=None)
+        # self.lab3 = Section.objects.create(name="Lab 3", course=self.course3, ta=self.ta)
+        # Create labs and assign TAs
+        self.lab1 = Section.objects.create(name="Lab 1", course=self.course1, days="Monday", time="3:00",
+                                           location="EMS", user=self.ta)
+        self.lab2 = Section.objects.create(name="Lab 2", course=self.course2, days="Wednesday", time="12:00",
+                                           location="Kenwood", user=None)  # Unassigned lab
+        self.lab3 = Section.objects.create(name="Lab 3", course=self.course3, days="Thursday", time="2:30",
+                                           location="Physics", user=self.ta)
 
     def login_as(self, username):
         self.client.post("/", {"username": username, "password": "password"})
