@@ -35,6 +35,11 @@ class TestCourseDirectoryAcceptance(TestCase):
         self.course2.users.add(self.instructor1)
         # leave courseThree empty for testing
 
+        # save the users created
+        self.admin1.save()
+        self.instructor1.save()
+        self.ta1.save()
+
     def login_as(self, username):
         self.client.post("/", {"username": username, "password": "password"})
 
@@ -43,25 +48,25 @@ class TestCourseDirectoryAcceptance(TestCase):
         self.login_as("admin")
         response = self.client.get("/user_directory.html")
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Ad1")
-        self.assertContains(response, "Instruct1")
-        self.assertContains(response, "TA1")
+        self.assertContains(response, "Ad1 User")
+        self.assertContains(response, "Instruct1 User")
+        self.assertContains(response, "TA1 User")
 
     def test_instructor_view_all_users_acceptance(self):
         self.login_as("instructor")
         response = self.client.get("/user_directory.html")
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Ad1")
-        self.assertContains(response, "Instruct1")
-        self.assertContains(response, "TA1")
+        self.assertContains(response, "Ad1 User")
+        self.assertContains(response, "Instruct1 User")
+        self.assertContains(response, "TA1 User")
 
     def test_ta_view_all_users_acceptance(self):
         self.login_as("ta")
         response = self.client.get("/user_directory.html")
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Ad1")
-        self.assertContains(response, "Instruct1")
-        self.assertContains(response, "TA1")
+        self.assertContains(response, "Ad1 User")
+        self.assertContains(response, "Instruct1 User")
+        self.assertContains(response, "TA1 User")
 
     def test_admin_view_user_phone_number_acceptance(self):
         self.login_as("admin")

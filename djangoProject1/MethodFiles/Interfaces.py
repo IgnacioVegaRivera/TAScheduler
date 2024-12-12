@@ -44,3 +44,8 @@ class GetUserInterface(abc.ABC):
     @abc.abstractmethod
     def get_user(self, request):
         pass
+
+class RemoveUserInterface(abc.ABC):
+    @abc.abstractmethod
+    def remove_user(self,user_id, request):
+        pass

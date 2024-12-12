@@ -80,6 +80,10 @@ class ConfigureUserPage(View):
             phone = request.POST['phone_number']
             role = request.POST['role']
             return self.editUserHelper(request, username, firstname, lastname, phone, email, role, users)
+        elif form == "remove_user":
+            user_id = request.POST['user_id']
+            return render(request, "configure_user.html", {"roles": User.ROLE_CHOICES, "users": users,
+                                                           'message': "Something went wrong when fetching the form, please try again"})
         else:
             return render(request, "configure_user.html", {"roles": User.ROLE_CHOICES, "users": users,
                                         'message': "Something went wrong when fetching the form, please try again"})
@@ -157,6 +161,10 @@ class CourseDirectoryPage(View):
     def post(self, request):
         courses = Course.objects.all()
         return render(request, "course_directory.html", {'courses': courses})
+
+class ProfilePage(View):
+    def get(self, request):
+        return render(request, "profile_page.html", {})
 
 class HomePage(View):
     def get(self, request):
