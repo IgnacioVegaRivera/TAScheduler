@@ -24,23 +24,23 @@
             <p>{{ user.role }} <br/>
             {% if user.role == "Instructor" %}
             {% endif %}
-                {% if user.role == "Instructor" %}
+                <p><strong>Courses:</strong><br/>
+                {% if user.role == "Instructor" or user.role == "TA" %}
                     {% for course in user.courses.all %}
                         {{ course.name }}<br/>
                     {% empty %}
                         No courses assigned.<br/>
                     {% endfor %}
-                {% elif user.role == "TA" %}
-                    <!-- Display courses where the user is a TA -->
-                    {% for lab in user.labs.all %}
-                        {{ lab.course.name }} (Lab: {{ lab.name }})<br/>
-                    {% empty %}
-                        <li>No labs assigned.</li>
-                    {% endfor %}
-                {% elif user.role == "Admin" %}
+                {% else %}
                     No assignments.<br/>
                 {% endif %}
-                {{ user.email }}<br/>{{ user.phone_number }}</p>
+                </p>
+            <p><strong>Skills:</strong><br/>
+                <textarea readonly style="width: 100%; height: 60px; overflow-y: scroll; resize: none;"> {{ user.skills }}
+                </textarea>
+            </p>
+
+            <p>{{ user.email }}<br/>{{ user.phone_number }}</p>
         </div>
     {% endfor %}
 </div>

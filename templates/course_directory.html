@@ -33,23 +33,33 @@
     <ol class="centered-list">
         {% for course in courses %}
             <p class="p">
-                {{ course.name }} <br>
+                <strong>{{ course.name }}</strong> <br>
                 <ul>
-                    <!-- Display Instructors -->
-                    {% for instructor in course.instructors.all %}
-                        <li>{{ instructor.first_name }} {{ instructor.last_name }} ({{ instructor.get_role_display }})</li>
+                    <!-- Display Sections -->
+                    {% for section in course.sections.all %}
+                        <li><strong>Section: {{ section.name }}</strong></li>
+                        <li>
+                            Instructor/TA:
+                            {% if section.user %}
+                                {{ section.user.first_name }} {{ section.user.last_name }} ({{ section.user.get_role_display }})
+                            {% else %}
+                                No user assigned.
+                            {% endif %}
+                        </li>
+                        <li>
+                            Day(s): {{ section.days|join:", " }}
+                        </li>
+                        <li>
+                            Time: {% if section.time %}{{ section.time|date:"h:i A" }}
+                            {% else %}Not specified{% endif %}
+                        </li>
+                        <li>
+                            Location: {% if section.location %}{{ section.location }}
+                            {% else %}Not specified{% endif %}
+                        </li>
                     {% empty %}
-                        <li>No instructors assigned.</li>
+                        <li>No sections available for this course.</li>
                     {% endfor %}
-
-                    <!-- Display Labs -->
-                    <ul>
-                        {% for lab in course.labs.all %}
-                            <li>Lab: {{ lab.name }}</li>
-                        {% empty %}
-                            <li>No labs available.</li>
-                        {% endfor %}
-                    </ul>
                 </ul>
             </p>
         {% endfor %}
