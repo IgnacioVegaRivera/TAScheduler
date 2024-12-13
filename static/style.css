@@ -27,13 +27,13 @@
     color: black;
 }
 
-.userContainer {
+.boxContainer {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
 }
 
-.userBox {
+.whiteBox {
     width: 300px;
     height: auto;
     background-color: white;
@@ -110,18 +110,8 @@ summary {
 .p {
     font-size: 20px;
     margin: 10px 0;
-    border: 2px solid #54d38e
 }
 
-ul { /*Outer bullet*/
-    list-style-type: disc;
-    margin: 0;
-}
-
-ul ul { /*Inner bullet*/
-    margin: 0;
-    list-style-type: circle;
-}
 
 
 /*

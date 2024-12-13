@@ -142,10 +142,10 @@
 <button popovertarget="createSection">Add Section</button>
 <p style="text-align: center">{{ message }}</p>
 
-<div class="userContainer">
+<div class="boxContainer">
     {# displays in the order of course name, all instructors, and all labs and their respective ta #}
     {% for course in courses %}
-        <div class="userBox">
+        <div class="whiteBox">
             <h2>{{ course.name }}</h2>
             <p><b>Instructors</b><br/>
                 {% for instructor in course.instructors.all %}

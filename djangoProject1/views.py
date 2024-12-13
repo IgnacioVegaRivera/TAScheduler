@@ -131,7 +131,8 @@ class UserDirectoryPage(View):
     def get(self, request):
         users = User.objects.all()
         courses = Course.objects.all()
-        return render(request, "user_directory.html", {"users": users, "courses": courses})
+        sections = Section.objects.all()
+        return render(request, "user_directory.html", {"users": users, "courses": courses, "sections": sections})
 
     def post(self, request):
         return redirect('/home/')

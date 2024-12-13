@@ -9,7 +9,7 @@
 <a href="home.html">
     <img src="/static/Logo.jpeg" alt="TA Scheduler Logo" style="height: 75px; width: auto;">
 </a>
-<a href="profile_page.html" style="padding: 94%">Profile</a>
+<a href="profile_page.html" style="margin-left: 95%">Profile</a>
 <div class="navbar">
     <a href="admin_home.html" style="padding: 110px">Admin Home</a>
     <a class="active" href="user_directory.html" style="padding: 110px">User Directory</a>
@@ -17,19 +17,25 @@
     <a href="/" style="padding: 110px">Log Out</a>
 </div>
 <h2 class="container">Users:</h2>
-<div class="userContainer">
+<div class="boxContainer">
     {% for user in users %}
-        <div class="userBox">
+        <div class="whiteBox">
             <h2>{{ user.first_name }} {{ user.last_name }}</h2>
             <p>{{ user.role }} <br/>
             {% if user.role == "Instructor" %}
             {% endif %}
                 <p><strong>Courses:</strong><br/>
-                {% if user.role == "Instructor" or user.role == "TA" %}
+                {% if user.role == "Instructor" %}
                     {% for course in user.courses.all %}
                         {{ course.name }}<br/>
                     {% empty %}
                         No courses assigned.<br/>
+                    {% endfor %}
+                {% elif user.role == "TA" %}
+                    {% for section in user.sections.all %}
+                        {{ section.name }}<br/>
+                    {% empty %}
+                        No section assigned.<br/>
                     {% endfor %}
                 {% else %}
                     No assignments.<br/>
