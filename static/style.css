@@ -120,6 +120,13 @@ ul ul { /*Inner bullet*/
 Configure Courses page css:
 */
 
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+
 .instructor-checkboxes {
     display: flex;
     flex-direction: column;
