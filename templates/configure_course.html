@@ -73,7 +73,7 @@
                         </div>
                         <div>
                             <label class="form-label required">Course:</label>
-                            <select name="course">
+                            <select name="section_course">
                                 <option></option>
                                 {% for i in courses %}
                                     <option>{{ i.name }}</option>
@@ -90,7 +90,7 @@
                                 {% for day, day_label in days %}
                                     <div>
                                         <input type="checkbox"
-                                               name="days"
+                                               name="section_days"
                                                value="{{ day }}"
                                                {% if section.days and day in section.days %}checked{% endif %}>
                                         <label>{{ day_label }}</label>
@@ -115,9 +115,15 @@
                             <select name="section_user">
                                 <option></option>
                                 {% for user in users %}
+                                    {% if user.role == "Instructor" or user.role == "TA" %}
                                     <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}
-                                        ({{ user.role }})
+                                        ({{ user.role }}) (
+                                        {% for course in user.courses.all %}
+                                        {{ course }},
+                                        {% endfor %}
+                                        )
                                     </option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
