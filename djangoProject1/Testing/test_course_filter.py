@@ -4,105 +4,75 @@ from djangoProject1.models import User, Course, Section
 
 class TestCourseFilterUnit(TestCase):
     def setUp(self):
-        # Create users
-        self.ta = User.objects.create(username="ta_user", role="TA")
-        self.instructor = User.objects.create(username="instructor_user", role="Instructor")
-        self.admin = User.objects.create(username="admin_user", role="Admin")
+        # create users
+        self.ta = User.objects.create(username="ta_user", role="TA", first_name="TA", last_name="User")
+        self.instructor = User.objects.create(username="instructor_user", role="Instructor", first_name="Instructor", last_name="User")
+        self.admin = User.objects.create(username="admin_user", role="Admin", first_name="Admin", last_name="User")
 
-        # Create courses
+        # create courses
         self.course1 = Course.objects.create(name="Course 1")
         self.course2 = Course.objects.create(name="Course 2")
         self.course3 = Course.objects.create(name="Course 3")
 
-        # Assign instructor to course2
-        self.course2.instructors.add(self.instructor)
+        # assign users
+        self.course1.users.add(self.ta, self.instructor)
+        self.course2.users.add(self.instructor)
+        self.course3.users.add(self.ta)
 
-        # Create labs and assign to TA
-        self.lab1 = Section.objects.create(name="Lab 1", course=self.course1, ta=self.ta)
-        self.lab2 = Section.objects.create(name="Lab 2", course=self.course3, ta=self.ta)
+        # create sections
+        self.section1 = Section.objects.create(
+            name="Section 1", course=self.course1, user=self.ta,
+            days=["Monday"], time="09:00:00", location="Room 101"
+        )
+        self.section2 = Section.objects.create(
+            name="Section 2", course=self.course2, user=self.instructor,
+            days=["Wednesday"], time="10:00:00", location="Room 202"
+        )
+        self.section3 = Section.objects.create(
+            name="Section 3", course=self.course3, user=None,
+            days=["Friday"], time="14:00:00", location="Room 303"
+        )
 
     def test_filter_for_ta(self):
-        assigned_courses = Course.objects.filter(labs__ta=self.ta).distinct()
+        assigned_courses = Course.objects.filter(users=self.ta).distinct()
         self.assertEqual(assigned_courses.count(), 2)
         self.assertIn(self.course1, assigned_courses)
         self.assertIn(self.course3, assigned_courses)
         self.assertNotIn(self.course2, assigned_courses)
 
     def test_filter_for_instructor(self):
-        assigned_courses = self.instructor.courses.all()
-        self.assertEqual(assigned_courses.count(), 1)
+        assigned_courses = Course.objects.filter(users=self.instructor).distinct()
+        self.assertEqual(assigned_courses.count(), 2)
         self.assertIn(self.course2, assigned_courses)
-        self.assertNotIn(self.course1, assigned_courses)
+        self.assertIn(self.course1, assigned_courses)
         self.assertNotIn(self.course3, assigned_courses)
 
     def test_filter_for_admin(self):
         all_courses = Course.objects.all()
         self.assertEqual(all_courses.count(), 3)
+        self.assertIn(self.course1, all_courses)
+        self.assertIn(self.course2, all_courses)
+        self.assertIn(self.course3, all_courses)
 
     def test_ta_no_assignments(self):
         unassigned_ta = User.objects.create(username="unassigned_ta", role="TA")
-        assigned_courses = Course.objects.filter(labs__ta=unassigned_ta).distinct()
+        assigned_courses = Course.objects.filter(users=unassigned_ta).distinct()
         self.assertEqual(assigned_courses.count(), 0)
 
     def test_instructor_no_assignments(self):
         unassigned_instructor = User.objects.create(username="unassigned_instructor", role="Instructor")
-        assigned_courses = unassigned_instructor.courses.all()
+        assigned_courses = Course.objects.filter(users=unassigned_instructor).distinct()
         self.assertEqual(assigned_courses.count(), 0)
 
+    def test_course_with_no_sections(self):
+        course_no_sections = Course.objects.create(name="Course 4")
+        sections = Section.objects.filter(course=course_no_sections)
+        self.assertEqual(sections.count(), 0)
+        self.assertNotIn(self.ta, course_no_sections.users.all())
+        self.assertNotIn(self.instructor, course_no_sections.users.all())
 
-# class TestCourseFilterAcceptance(TestCase):
-#     def setUp(self):
-#         self.client = Client()
-#
-#         # Create users
-#         self.ta = User.objects.create(username="ta_user", password="password", role="TA")
-#         self.instructor = User.objects.create(username="instructor_user", password="password", role="Instructor")
-#         self.admin = User.objects.create(username="admin_user", password="password", role="Admin")
-#
-#         # Create courses
-#         self.course1 = Course.objects.create(name="Course 1")
-#         self.course2 = Course.objects.create(name="Course 2")
-#         self.course3 = Course.objects.create(name="Course 3")
-#
-#         # Assign instructor to course2
-#         self.course2.instructors.add(self.instructor)
-#
-#         # Create labs and assign to TA
-#         self.lab1 = Lab.objects.create(name="Lab 1", course=self.course1, ta=self.ta)
-#         self.lab2 = Lab.objects.create(name="Lab 2", course=self.course3, ta=self.ta)
-#
-#     def test_ta_view_assigned_courses(self):
-#         self.client.post("/", {"username": "ta_user", "password": "password"}, follow=True)
-#         response = self.client.get("/course_directory.html")
-#         self.assertContains(response, "Course 1")
-#         self.assertContains(response, "Course 2")
-#         self.assertContains(response, "Course 3")
-#
-#         response = self.client.get("/course_directory.html?filter=assigned")
-#         self.assertContains(response, "Course 1")
-#         self.assertContains(response, "Course 3")
-#         self.assertNotContains(response, "Course 2")
-#
-#     def test_instructor_view_assigned_courses(self):
-#         self.client.post("/", {"username": "instructor_user", "password": "password"}, follow=True)
-#         response = self.client.get("/course_directory.html")
-#         self.assertContains(response, "Course 1")
-#         self.assertContains(response, "Course 2")
-#         self.assertContains(response, "Course 3")
-#
-#         response = self.client.get("/course_directory.html?filter=assigned")
-#         self.assertContains(response, "Course 2")
-#         self.assertNotContains(response, "Course 1")
-#         self.assertNotContains(response, "Course 3")
-#
-#     def test_admin_view_all_courses(self):
-#         self.client.post("/", {"username": "admin_user", "password": "password"}, follow=True)
-#         response = self.client.get("/course_directory.html")
-#         self.assertContains(response, "Course 1")
-#         self.assertContains(response, "Course 2")
-#         self.assertContains(response, "Course 3")
-#
-#         response = self.client.get("/course_directory.html?filter=assigned")
-#         self.assertContains(response, "Course 1")
-#         self.assertContains(response, "Course 2")
-#         self.assertContains(response, "Course 3")
+    def test_course_with_no_users(self):
+        course_no_users = Course.objects.create(name="Course 4")
+        self.assertEqual(course_no_users.users.count(), 0)
+        self.assertNotIn(self.ta, course_no_users.users.all())
+        self.assertNotIn(self.instructor, course_no_users.users.all())
