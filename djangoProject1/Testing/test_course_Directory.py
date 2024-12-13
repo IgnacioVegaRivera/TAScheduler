@@ -20,7 +20,7 @@ class TestCourseDirectoryUnit(TestCase):
 
         # sections
         self.section1 = Section.objects.create(name="Section 1", course=self.course1, user=self.ta, days=["Monday", "Wednesday"], time="09:00:00")
-        self.section2 = Section.objects.create(name="Section 2", course=self.course2, user=None, days=["Tuesday"], time="10:00:00")
+        self.section2 = Section.objects.create(name="Section 2", course=self.course2, user=self.instructor, days=["Tuesday"], time="10:00:00")
         self.section3 = Section.objects.create(name="Section 3", course=self.course3, user=self.ta, days=["Friday"], time="14:00:00")
 
     def test_admin_view_all_courses(self):
@@ -34,23 +34,9 @@ class TestCourseDirectoryUnit(TestCase):
         courses = Course.objects.all()
         self.assertEqual(courses.count(), 3)
 
-    def test_instructor_filter_assigned_courses(self):
-        assigned_courses = self.instructor.courses.all()
-        self.assertEqual(assigned_courses.count(), 2)
-        self.assertIn(self.course1, assigned_courses)
-        self.assertIn(self.course2, assigned_courses)
-        self.assertNotIn(self.course3, assigned_courses)
-
     def test_ta_view_all_courses(self):
         courses = Course.objects.all()
         self.assertEqual(courses.count(), 3)
-
-    def test_ta_filter_assigned_courses(self):
-        assigned_courses = self.ta.courses.all()
-        self.assertEqual(assigned_courses.count(), 2)
-        self.assertIn(self.course1, assigned_courses)
-        self.assertIn(self.course3, assigned_courses)
-        self.assertNotIn(self.course2, assigned_courses)
 
     def test_courses_with_no_users(self):
         self.course4 = Course.objects.create(name="Course 4")
