@@ -3,7 +3,7 @@ from sys import set_coroutine_origin_tracking_depth
 from django.shortcuts import render, redirect
 from django.views import View
 
-from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser, CreateSection, EditUser, EditCourse, EditLab
+from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser, CreateSection, EditUser, EditCourse, EditSection
 from djangoProject1.MethodFiles.GeneralMethods import GetUser, CheckPermission
 from djangoProject1.models import User, Course, Section, DAYS_OF_WEEK
 from datetime import time
@@ -207,8 +207,8 @@ class ConfigureCoursePage(View):
             return self.add_section_helper(request, courses, instructors, tas, sections, users)
         elif form == "edit_course":
             return self.edit_course_helper(course_id, request)
-        elif form == "edit_lab":
-            return self.edit_lab_helper(None, tas, sections, instructors, courses, request)
+        elif form == "edit_section":
+            return self.edit_section_helper(request)
         else:
             return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
                 'courses':courses, 'message': "Something went wrong when fetching the form, please try again."})
@@ -293,17 +293,18 @@ class ConfigureCoursePage(View):
 
         return redirect('configure_course')
 
-    def edit_lab_helper(self,lab_id, tas, sections, instructors, courses, request):
-        updated_lab = EditLab.edit_lab(lab_id, request)
-        if updated_lab is not None:
-            message = f"Lab '{updated_lab.name}' updated successfully."
-        else:
-            message = "Failed to update lab. Please check your inputs and try again."
-
-        return render(request, "configure_course.html", {
-            "instructors": instructors,
-            "courses": courses,
-            "tas": tas,
-            "sections":sections,
-            "message": message
-        })
+    def edit_section_helper(self, request):
+        # updated_lab = EditLab.edit_lab(section_id,)
+        # if updated_lab is not None:
+        #     message = f"Lab '{updated_lab.name}' updated successfully."
+        # else:
+        #     message = "Failed to update lab. Please check your inputs and try again."
+        #
+        # return render(request, "configure_course.html", {
+        #     "instructors": instructors,
+        #     "courses": courses,
+        #     "tas": tas,
+        #     "sections":sections,
+        #     "message": message
+        # })
+        return None
