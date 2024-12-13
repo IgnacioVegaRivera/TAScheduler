@@ -138,26 +138,21 @@ class UserDirectoryPage(View):
 
 class CourseDirectoryPage(View):
     def get(self, request):
-        # Get the logged-in user
+        # pull logged-in user
         user = GetUser.get_user(request)
         if user is None:
             return redirect('/')  # Redirect to login if no user session exists
 
-        # Check for filtering in the query parameters
+        # check for filtering in the query parameters
         filter_assigned = request.GET.get('filter') == 'assigned'
 
-        # Default to all courses
+        # default to all courses
         courses = Course.objects.all()
 
-        # Apply filtering based on role
+        # apply filtering based on role
         if filter_assigned:
-            if user.role == 'TA':
-                # Get labs assigned to the TA and their parent courses
-                labs = Section.objects.filter(ta=user)
-                courses = Course.objects.filter(labs__in=labs).distinct()
-            elif user.role == 'Instructor':
-                # Get courses assigned to the instructor
-                courses = user.courses.all()
+            if user.role == 'TA' or user.role == 'Instructor':
+                courses = Course.objects.filter(users=user)
 
         return render(request, "course_directory.html", {'courses': courses, 'user': user, 'filter_assigned': filter_assigned})
 
