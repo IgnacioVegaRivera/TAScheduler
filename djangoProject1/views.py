@@ -186,7 +186,8 @@ class ConfigureCoursePage(View):
         instructors = User.objects.filter(role="Instructor")
         tas = User.objects.filter(role="TA")
         sections = Section.objects.all()
-        return render(request, "configure_course.html", {"instructors": instructors, "tas": tas, "courses": courses, 'sections':sections, 'days': DAYS_OF_WEEK})
+        users = User.objects.all()
+        return render(request, "configure_course.html", {"instructors": instructors, "tas": tas, "courses": courses, 'sections':sections, 'days': DAYS_OF_WEEK, 'users': users})
 
     def post(self, request):
         #this is to filter based on which form is being accessed
@@ -270,10 +271,9 @@ class ConfigureCoursePage(View):
         # # will return None if the creation failed, will return a lab and save it to the database if it succeeded
         # # lab = CreateLab.create_lab(lname, course, ta)
         # lab = None
-        section = CreateSection.create_section(request, section_name, section_course, section_user, section_day, section_time, section_location)
+        #section = CreateSection.create_section(request, section_name, section_course, section_user, section_day, section_time, section_location)
         section_id = request.POST.get('section_id')
         days_selected = request.POST.getlist('days')  # Get list of days from the form
-
         section = Section.objects.get(id=section_id)
         section.days = days_selected  # Assign the selected days to the section
         section.save()

@@ -33,7 +33,7 @@
                         <input type="text" class="form-control" name="course_name">
                     </div>
                     <div>
-                        Instructor:
+                        <label class="form-label required">Instructor:</label>
                         <select name="instructor">
                             <option></option>
                             {% for i in instructors %}
@@ -65,52 +65,63 @@
                 <form action=" " method="post">
                     {% csrf_token %}
                     <input type="hidden" name="form_name" value="create_section">
-                    <div>
-                        <label class="form-label required">Section Name:</label>
-                        <input type="text" class="form-control" name="section_name">
-                    </div>
-                    <div>
-                        Course:
-                        <select name="course">
-                            <option></option>
-                            {% for i in courses %}
-                                <option>{{ i.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    {% comment %}
-                    <div>
-                        TA:
-                        <select name="ta">
-                            <option></option>
-                            {% for i in tas %}
-                                <option>{{ i.first_name }} {{ i.last_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    {% endcomment %}
-                    <div>
-                        <label class="form-label required">Days:</label>
-                        <div class="day-checkboxes">
-                            {% for day in days %}
-                                <div>
-                                    <input type="checkbox"
-                                           name="days"
-                                           value="{{ day }}"
-                                           {% if section.days and day in sections.days %}checked{% endif %}>
-                                    <label>{{ day }}</label>
-                                </div>
-                            {% endfor %}
+                    <fieldset>
+                        <legend>Section Details</legend>
+                        <div>
+                            <label class="form-label required">Section Name:</label>
+                            <input type="text" class="form-control" name="section_name">
                         </div>
-                    </div>
-                    <div>
-                        Time:
-                        <input name="section_time" type="time"/>
-                    </div>
-                    <div>
-                        <label class="form-label required">Location:</label>
-                        <input type="text" class="form-control" name="section_location">
-                    </div>
+                        <div>
+                            <label class="form-label required">Course:</label>
+                            <select name="course">
+                                <option></option>
+                                {% for i in courses %}
+                                    <option>{{ i.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </fieldset>
+                <hr>
+                    <fieldset>
+                        <legend>Schedule</legend>
+                        <div>
+                            <label class="form-label required">Day(s):</label>
+                            <div class="day-checkboxes">
+                                {% for day, day_label in days %}
+                                    <div>
+                                        <input type="checkbox"
+                                               name="days"
+                                               value="{{ day }}"
+                                               {% if section.days and day in section.days %}checked{% endif %}>
+                                        <label>{{ day_label }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label required">Time:</label>
+                            <input type="time" class="form-control" name="section_time"/>
+                        </div>
+                    </fieldset>
+                    <hr>
+                <fieldset>
+                <legend>Location & Users</legend>
+                        <div>
+                            <label class="form-label required">Location:</label>
+                            <input type="text" class="form-control" name="section_location">
+                        </div>
+                        <div>
+                            <label class="form-label required">Assign User:</label>
+                            <select name="section_user">
+                                <option></option>
+                                {% for user in users %}
+                                    <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}
+                                        ({{ user.role }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </fieldset>
                     <input type="submit">
                 </form>
             </div>
