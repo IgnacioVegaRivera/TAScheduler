@@ -1,5 +1,6 @@
 # file for Admin methods
 from abc import ABC
+from datetime import time
 
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
@@ -10,7 +11,7 @@ from django.template.context_processors import static
 from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateSectionInterface, EditUserInterface, \
     CreateUserInterface, EditCourseInterface, EditLabInterface, RemoveUserInterface
 
-from djangoProject1.models import Course, User, Section
+from djangoProject1.models import Course, User, Section, DAYS_OF_WEEK
 
 
 class CreateUser(CreateUserInterface):
@@ -90,30 +91,96 @@ class CreateCourse(CreateCourseInterface):
 
 class CreateSection(CreateSectionInterface):
 
+    # this is a helper for creating sections, it's to clean up the create_section code
+    @staticmethod
+    def create_section_helper(section_name, course, user, days, scheduled_time, location):
+        # check each parameter is the correct type
+        if not isinstance(user, User) and user is not None:
+            return None
+
+        #check if the user exists they are of the right role
+        if user is not None:
+            user_courses = Course.objects.filter(users=user)
+            if course not in user_courses:
+                return None
+            if "Lecture" not in section_name:
+                if user.role == "Instructor":
+                    return None
+            else:
+                if user.role == "TA":
+                    return None
+
+        #check that the days are formatted properly
+        if not isinstance(days, list):
+            return None
+
+        for day in days:
+            found = False
+            for i in range(7):
+                if day == DAYS_OF_WEEK[i][0]:
+                    found = True
+                    break
+
+            if not found:
+                return None
+
+        #check that the time is formatted properly
+        if not isinstance(scheduled_time, time) and scheduled_time is not None:
+            return None
+
+        if not isinstance(location, str):
+            return None
+
+        # requires a building and a room number if a location is provided
+        if location != "":
+            digit = character = False
+            for char in location:
+                if char.isdigit():
+                    digit = True
+                if char.isalpha():
+                    character = True
+                if digit and character:
+                    break
+
+            if not digit or not character:
+                return None
+
+        # create the object
+        if Section.objects.filter(name=section_name,course=course, user=user, days=days, time=scheduled_time,
+                          location=location).exists():
+            return None
+        else:
+            section = Section(name=section_name, course=course, user=user, days=days, time=scheduled_time,
+                          location=location)
+            section.save()
+            return section
+
     # need to update this eventually to reflect the changes from labs to sections, old implementation commented out
     @staticmethod
-    def create_section(section_name, course, user, days, time, location):
-        # if not isinstance(ta, User) or not isinstance(lab_name, str) or not isinstance(course, Course):
-        #     return None
-        #
-        # # if any of the inputs are none then return None
-        # if lab_name == None or lab_name == "" or ta == None or course == None or course.instructors.first() == None:
-        #     return None
-        #
-        # # if the role isn't TA then we can't assign to a lab so we return None
-        # if ta.role != "TA":
-        #     return None
-        #
-        # # if a lab of the same name already exists then return None
-        # if Lab.objects.filter(name=lab_name).exists():
-        #     return None
-        #
-        # # if everything is fine then we can create the lab no problem
-        # lab = Lab(name=lab_name, course=course, ta=ta)
-        # lab.save()
-        #
-        # return lab
-        return None
+    def create_section(section_name, course, user, days, scheduled_time, location):
+        #every section needs a course
+        if course == None or not isinstance(course, Course):
+            return None
+
+        # determine the kind of section that is being created, also checks that only 1 of the 3 keywords is in the name
+        if not isinstance(section_name, str):
+            return None
+
+        if "Lab" not in section_name and "Discussion" not in section_name and "Lecture" not in section_name:
+            return None
+
+        if "Lab" in section_name:
+            #if either of the other 2 identifiers is in the name then invalid name
+            if "Discussion" in section_name or "Lecture" in section_name:
+                return None
+
+        elif "Discussion" in section_name:
+            #if lecture is in the name then invalid name
+            if "Lecture" in section_name:
+                return None
+
+        section = CreateSection.create_section_helper(section_name, course, user, days, scheduled_time, location)
+        return section
 
 
 class EditUser(EditUserInterface, ABC):
