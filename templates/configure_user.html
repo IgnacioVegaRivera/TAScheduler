@@ -11,12 +11,12 @@
     <img src="/static/Logo.jpeg" alt="TA Scheduler Logo" style="height: 75px; width: auto;">
 </a>
 <div class="navbar">
-        <a class="active" href="configure_user.html" style="padding: 150px">Configure Users</a>
-        <a href="configure_course.html" style="padding: 150px">Configure Courses</a>
-        <a href="/" style="padding: 150px">Log Out</a>
-{#        <a href="">Databases</a>#}
-{#        <a class="active" href="admin_home.html">Admin Home</a>#}
-    </div>
+    <a class="active" href="configure_user.html" style="padding: 150px">Configure Users</a>
+    <a href="configure_course.html" style="padding: 150px">Configure Courses</a>
+    <a href="/" style="padding: 150px">Log Out</a>
+    {#        <a href="">Databases</a>#}
+    {#        <a class="active" href="admin_home.html">Admin Home</a>#}
+</div>
 
 <div class="addUserModal">
     <div class="create-user" popover id="createUser">
@@ -28,71 +28,76 @@
                 <form action=" " method="post">
                     {% csrf_token %}
                     <input type="hidden" name="form_name" value="create_user">
-                    <div>
-                        <label class="form-label required">First Name</label>
-                        <input type="text" class="form-control" name="first_name">
-                    </div>
-                    <div>
-                        <label class="form-label required">Last Name</label>
-                        <input type="text" class="form-control" name="last_name">
-                    </div>
-                    <!--
+                    <div class="formTable">
+
                         <div>
+                            <label class="form-label required">First Name</label>
+                            <input type="text" class="form-control" name="first_name">
+                        </div>
+                        <div>
+                            <label class="form-label required">Last Name</label>
+                            <input type="text" class="form-control" name="last_name">
+                        </div>
+
+                        <!--
+                            <div>
+                                Role:
+                                    <select name="role">
+
+                                    </select>
+                            </div>
+
+                            <div>
+                                <label class="form-label required">Courses</label>
+                                <input type="text" class="form-control" name="">
+                            </div>
+                            -->
+                        <div>
+                            <label class="form-label required">Username</label>
+                            <input type="text" class="form-control" name="username">
+                        </div>
+                        <div>
+                            <label class="form-label required">Password</label>
+                            <input type="text" class="form-control" name="password">
+                        </div>
+                        <div>
+                            <label class="form-label required">Email</label>
+                            <input type="email" class="form-control" name="email">
+                        </div>
+                        <div>
+                            <label class="form-label required">Phone Number</label>
+                            <input type="number" class="form-control" name="phone_number">
+                        </div>
+                        <div class="fullWidth">
+                            <label class="form-label">Address</label>
+                            <input type="text" class="form-control" name="address">
+                        </div>
+                        <div class="fullWidth">
                             Role:
-                                <select name="role">
-
-                                </select>
+                            <select name="role">
+                                <option></option>
+                                {% for i in roles %}
+                                    <option value="{{ i.0 }}">{{ i.1 }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
 
-                        <div>
-                            <label class="form-label required">Courses</label>
-                            <input type="text" class="form-control" name="">
-                        </div>
+                        <!--
+                            <div>
+                                <label class="form-label required">Courses</label>
+                                <input type="text" class="form-control" name="">
+                            </div>
+
                         -->
-                    <div>
-                        <label class="form-label required">Username</label>
-                        <input type="text" class="form-control" name="username">
                     </div>
-                    <div>
-                        <label class="form-label required">Password</label>
-                        <input type="text" class="form-control" name="password">
+                    <div class="submitAndCancelButtons">
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                        <button type="button" class="btn btn-secondary" popovertarget="createUser"
+                                popovertargetaction="hide">
+                            Cancel
+                        </button>
                     </div>
-                    <div>
-                        <label class="form-label required">Email</label>
-                        <input type="email" class="form-control" name="email">
-                    </div>
-                    <div>
-                        <label class="form-label required">Phone Number</label>
-                        <input type="number" class="form-control" name="phone_number">
-                    </div>
-                    <div>
-                        <label class="form-label">Address</label>
-                        <input type="text" class="form-control" name="address">
-                    </div>
-                    <div>
-                        Role:
-                        <select name="role">
-                            <option></option>
-                            {% for i in roles %}
-                                <option value="{{ i.0 }}">{{ i.1 }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <!--
-                        <div>
-                            <label class="form-label required">Courses</label>
-                            <input type="text" class="form-control" name="">
-                        </div>
-
-                    -->
-                    <input type="submit">
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button popovertarget="createUser" popovertargetaction="hide">
-                    Cancel
-                </button>
             </div>
         </div>
     </div>
@@ -128,7 +133,7 @@
                 <h2>Edit user info:</h2>
                 <div class="modal-header" id="myModal {{ user.id }}">
                     <form method="POST" action="{% url 'configure_user' %}">
-                       {% csrf_token %}
+                        {% csrf_token %}
                         <input type="hidden" name="form_name" value="edit_user">
                         <input type="hidden" name="username" value="{{ user.username }}">
                         <div class="modal-dialog">
@@ -163,7 +168,6 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Save</button>
                             <button type="button" class="btn btn-secondary" popovertarget="editModal {{ user.id }}"
                                     popovertargetaction="hide">
                                 Cancel
