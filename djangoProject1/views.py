@@ -202,12 +202,13 @@ class ConfigureCoursePage(View):
         instructors = User.objects.filter(role="Instructor")
         tas = User.objects.filter(role="TA")
         sections = Section.objects.all()
+        users = User.objects.all()
 
 
         if form == "create_course":
             return self.add_course_helper(courses, instructors, tas, sections, request)
         elif form == "create_section":
-            return self.add_section_helper(request, courses, instructors, tas, sections)
+            return self.add_section_helper(request, courses, instructors, tas, sections, users)
         elif form == "edit_course":
             return self.edit_course_helper(course_id, request)
         elif form == "edit_lab":
@@ -243,7 +244,7 @@ class ConfigureCoursePage(View):
                 'courses': courses, 'sections':sections, 'message': "The course \"" + cname + "\" has been created"})
 
 
-    def add_section_helper(self, request, courses, instructors, tas, sections):
+    def add_section_helper(self, request, courses, instructors, tas, sections, users):
         # get all of the variables we will need to create the course
         section_name = request.POST['section_name']
         course_name = request.POST['section_course']
@@ -280,10 +281,12 @@ class ConfigureCoursePage(View):
         sections = Section.objects.all()
         if section is None:
             return render(request, "configure_course.html", {'courses': courses, 'sections':sections,
-                'tas':tas, 'instructors':instructors, 'message': "Something went wrong when creating the section \"" + section_name + "\""})
+                                                'users':users,'tas':tas, 'instructors':instructors, 'days':DAYS_OF_WEEK,
+                                                'message': "Something went wrong when creating the section \"" + section_name + "\""})
         else:
             return render(request, "configure_course.html", {'courses': courses, 'sections':sections,
-                'tas':tas, 'instructors':instructors,'message': "The section \"" + section_name + "\" has been created"})
+                                                'users':users,'tas':tas, 'instructors':instructors,'days':DAYS_OF_WEEK,
+                                                'message': "The section \"" + section_name + "\" has been created"})
 
     def edit_course_helper(self, course_id,request):
         updated_course = EditCourse.edit_course(course_id, request)

@@ -115,9 +115,11 @@
                             <select name="section_user">
                                 <option></option>
                                 {% for user in users %}
+                                    {% if user.role == "Instructor" or user.role == "TA" %}
                                     <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}
                                         ({{ user.role }})
                                     </option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>

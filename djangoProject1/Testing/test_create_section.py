@@ -22,8 +22,7 @@ class CreateSectionUnitTest(TestCase):
         self.assertEqual(section.name, "Lecture 001")
         self.assertEqual(section.course, self.course)
         self.assertEqual(section.user, self.instructor)
-        courseDays = section.days.split(",")
-        self.assertEqual(courseDays[0], "Monday")
+        self.assertEqual(section.days[0], "Monday")
         self.assertEqual(section.time.hour, 9)
         self.assertEqual(section.time.minute, 30)
         self.assertEqual(section.location, "Chem 110")
@@ -34,8 +33,7 @@ class CreateSectionUnitTest(TestCase):
         self.assertEqual(section.name, "Lab 001")
         self.assertEqual(section.course, self.course)
         self.assertEqual(section.user, self.ta)
-        courseDays = section.days.split(",")
-        self.assertEqual(courseDays[0],"Thursday")
+        self.assertEqual(section.days[0],"Thursday")
         self.assertEqual(section.time.hour, 9)
         self.assertEqual(section.time.minute, 30)
         self.assertEqual(section.location, "KIRC 1130")
@@ -46,8 +44,7 @@ class CreateSectionUnitTest(TestCase):
         self.assertEqual(section.name, "Discussion 001")
         self.assertEqual(section.course, self.course)
         self.assertEqual(section.user, self.ta)
-        courseDays = section.days.split(",")
-        self.assertEqual(courseDays[0], "Tuesday")
+        self.assertEqual(section.days[0], "Tuesday")
         self.assertEqual(section.time.hour, 9)
         self.assertEqual(section.time.minute, 30)
         self.assertEqual(section.location, "EMS 119")
@@ -58,9 +55,9 @@ class CreateSectionUnitTest(TestCase):
         self.assertEqual(section.name, "Discussion 001")
         self.assertEqual(section.course, self.course)
         self.assertEqual(section.user, self.ta)
-        courseDays = section.days.split(",")
-        self.assertEqual(courseDays[0], "Tuesday")
-        self.assertEqual(courseDays[1], "Thursday")
+
+        self.assertEqual(section.days[0], "Tuesday")
+        self.assertEqual(section.days[1], "Thursday")
         self.assertEqual(section.time.hour, 9)
         self.assertEqual(section.time.minute, 30)
         self.assertEqual(section.location, "EMS 119")
@@ -107,8 +104,7 @@ class CreateSectionUnitTest(TestCase):
         self.assertEqual(section.name, "Lab 001")
         self.assertEqual(section.course, self.course)
         self.assertEqual(section.user, None)
-        courseDays = section.days.split(",")
-        self.assertEqual(courseDays[0], "Thursday")
+        self.assertEqual(section.days[0], "Thursday")
         self.assertEqual(section.time.hour, 9)
         self.assertEqual(section.time.minute, 30)
         self.assertEqual(section.location, "KIRC 1130")
@@ -137,13 +133,13 @@ class CreateSectionUnitTest(TestCase):
     def test_blank_day(self):
         section = CreateSection.create_section("Discussion 001", self.course, self.ta,
                                                [], self.time, "EMS 119")
-        self.assertEqual(section.name, "Lab 001")
+        self.assertEqual(section.name, "Discussion 001")
         self.assertEqual(section.course, self.course)
         self.assertEqual(section.user, self.ta)
-        self.assertEqual(section.days, None)
+        self.assertEqual(section.days, [])
         self.assertEqual(section.time.hour, 9)
         self.assertEqual(section.time.minute, 30)
-        self.assertEqual(section.location, "KIRC 1130")
+        self.assertEqual(section.location, "EMS 119")
 
     def test_wrong_type_day(self):
         section = CreateSection.create_section("Discussion 001", self.course, self.ta,
@@ -161,13 +157,12 @@ class CreateSectionUnitTest(TestCase):
     def test_no_time(self):
         section = CreateSection.create_section("Discussion 001", self.course, self.ta,
                                                ["Tuesday"], None, "EMS 119")
-        self.assertEqual(section.name, "Lab 001")
+        self.assertEqual(section.name, "Discussion 001")
         self.assertEqual(section.course, self.course)
         self.assertEqual(section.user, self.ta)
-        courseDays = section.days.split(",")
-        self.assertEqual(courseDays[0], "Thursday")
+        self.assertEqual(section.days[0], "Tuesday")
         self.assertEqual(section.time, None)
-        self.assertEqual(section.location, "KIRC 1130")
+        self.assertEqual(section.location, "EMS 119")
 
     def test_wrong_type_time(self):
         section = CreateSection.create_section("Discussion 001", self.course, self.ta,
@@ -188,19 +183,18 @@ class CreateSectionUnitTest(TestCase):
     def test_blank_location(self):
         section = CreateSection.create_section("Discussion 001", self.course, self.ta,
                                                ["Tuesday"], self.time, "")
-        self.assertEqual(section, None)
+        self.assertEqual(section.name, "Discussion 001")
+        self.assertEqual(section.course, self.course)
+        self.assertEqual(section.user, self.ta)
+        self.assertEqual(section.days[0], "Tuesday")
+        self.assertEqual(section.time.hour, 9)
+        self.assertEqual(section.time.minute, 30)
+        self.assertEqual(section.location, "")
 
     def test_wrong_type_location(self):
         section = CreateSection.create_section("Discussion 001", self.course, self.ta,
                                                ["Tuesday"], self.time, 123)
-        self.assertEqual(section.name, "Lab 001")
-        self.assertEqual(section.course, self.course)
-        self.assertEqual(section.user, self.ta)
-        courseDays = section.days.split(",")
-        self.assertEqual(courseDays[0], "Thursday")
-        self.assertEqual(section.time.hour, 9)
-        self.assertEqual(section.time.minute, 30)
-        self.assertEqual(section.location, None)
+        self.assertEqual(section, None)
 
     #duplicate test
     def test_lab_already_exists(self):
