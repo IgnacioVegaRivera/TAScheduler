@@ -9,7 +9,7 @@ import re
 from django.template.context_processors import static
 
 from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateSectionInterface, EditUserInterface, \
-    CreateUserInterface, EditCourseInterface, EditLabInterface, RemoveUserInterface
+    CreateUserInterface, EditCourseInterface, EditSectionInterface, RemoveUserInterface
 
 from djangoProject1.models import Course, User, Section, DAYS_OF_WEEK
 
@@ -267,37 +267,38 @@ class EditCourse(EditCourseInterface):
         return course
 
 
-class EditLab(EditLabInterface):
+class EditSection(EditSectionInterface):
     @staticmethod
-    def edit_lab(lab_id, request):
-        lab = Lab.objects.get(id=lab_id)
-        if lab_id == None or lab_id == "":
-            return None
+    def edit_section(request, lab_id, section_name, course, user, days, the_time, location):
 
-        # Update Lab name
-        lab.name = request.POST.get("lab", lab.name)
-        if lab.name == None or lab.name == "":
-            return None
-        lab.save()
-
-        # Update TAs
-        selected_ta = request.POST.get("ta")
-        if selected_ta:
-            ta = User.objects.filter(id=selected_ta, role="TA").first()
-            lab.ta = ta
-        else:
-            lab.ta = None
-
-        # Update Courses, (be able to change  what course that lab is assigned
-        selected_course_id = request.POST.get("course")
-        if selected_course_id:
-            course = Course.objects.filter(id=selected_course_id).first()
-            lab.course = course
-        else:
-            lab.course = None
-
-        lab.save()
-        return lab
+        # lab = Lab.objects.get(id=lab_id)
+        # if lab_id == None or lab_id == "":
+        #     return None
+        #
+        # # Update Lab name
+        # lab.name = request.POST.get("lab", lab.name)
+        # if lab.name == None or lab.name == "":
+        #     return None
+        # lab.save()
+        #
+        # # Update TAs
+        # selected_ta = request.POST.get("ta")
+        # if selected_ta:
+        #     ta = User.objects.filter(id=selected_ta, role="TA").first()
+        #     lab.ta = ta
+        # else:
+        #     lab.ta = None
+        #
+        # # Update Courses, (be able to change  what course that lab is assigned
+        # selected_course_id = request.POST.get("course")
+        # if selected_course_id:
+        #     course = Course.objects.filter(id=selected_course_id).first()
+        #     lab.course = course
+        # else:
+        #     lab.course = None
+        #
+        # lab.save()
+        return None
 
 class RemoveUser(RemoveUserInterface):
     @staticmethod

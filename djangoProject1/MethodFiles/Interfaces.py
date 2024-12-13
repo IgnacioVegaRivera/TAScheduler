@@ -31,9 +31,9 @@ class EditCourseInterface(abc.ABC):
     def edit_course(self, courses):
         pass
 
-class EditLabInterface(abc.ABC):
+class EditSectionInterface(abc.ABC):
     @abc.abstractmethod
-    def edit_lab(self, lab_id):
+    def edit_section(self, request, lab_id, section_name, course, user, days, the_time, location):
         pass
 
 class CreateUserInterface(abc.ABC):

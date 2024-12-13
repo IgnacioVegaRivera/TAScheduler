@@ -209,7 +209,7 @@
                             <form method="POST" action="{% url 'configure_course' %}">
                                 <div class="modal-dialog">
                                     {% csrf_token %}
-                                    <input type="hidden" name="form_name" value="edit_lab">
+                                    <input type="hidden" name="form_name" value="edit_section">
                                     <input type="hidden" name="lab_id" value="{{ lab.id }}">
                                     {% if lab.course.name == course.name %}
                                         <div>
