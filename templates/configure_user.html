@@ -32,11 +32,11 @@
 
                         <div>
                             <label class="form-label required">First Name</label>
-                            <input type="text" class="form-control" name="first_name">
+                            <input type="text" class="form-control" name="first_name" required>
                         </div>
                         <div>
                             <label class="form-label required">Last Name</label>
-                            <input type="text" class="form-control" name="last_name">
+                            <input type="text" class="form-control" name="last_name" required>
                         </div>
 
                         <!--
@@ -54,19 +54,19 @@
                             -->
                         <div>
                             <label class="form-label required">Username</label>
-                            <input type="text" class="form-control" name="username">
+                            <input type="text" class="form-control" name="username" required>
                         </div>
                         <div>
                             <label class="form-label required">Password</label>
-                            <input type="text" class="form-control" name="password">
+                            <input type="text" class="form-control" name="password" required>
                         </div>
                         <div>
                             <label class="form-label required">Email</label>
-                            <input type="email" class="form-control" name="email">
+                            <input type="email" class="form-control" name="email" required>
                         </div>
                         <div>
                             <label class="form-label required">Phone Number</label>
-                            <input type="number" class="form-control" name="phone_number">
+                            <input type="number" class="form-control" name="phone_number" required>
                         </div>
                         <div class="fullWidth">
                             <label class="form-label">Address</label>
@@ -74,7 +74,7 @@
                         </div>
                         <div class="fullWidth">
                             Role:
-                            <select name="role">
+                            <select name="role" required>
                                 <option></option>
                                 {% for i in roles %}
                                     <option value="{{ i.0 }}">{{ i.1 }}</option>

@@ -17,7 +17,7 @@ from djangoProject1.models import Course, User, Section, DAYS_OF_WEEK
 class CreateUser(CreateUserInterface):
     @staticmethod
     def create_user(user_name, user_email, user_password, user_first_name, user_last_name, user_phone_number,
-                    user_address, user_role):
+                    user_address, user_role, user_skills = ""):
         # Check if the username already exists and if it is valid
         if User.objects.filter(username=user_name).exists() or user_name == '':
             return None

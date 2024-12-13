@@ -38,7 +38,7 @@ class EditLabInterface(abc.ABC):
 
 class CreateUserInterface(abc.ABC):
     @abc.abstractmethod
-    def create_user(self, user_name, user_email, user_password, user_first_name, user_last_name, user_phone_number, user_address, user_role):
+    def create_user(self, user_name, user_email, user_password, user_first_name, user_last_name, user_phone_number, user_address, user_role, user_skills):
       pass
 
 class GetUserInterface(abc.ABC):
