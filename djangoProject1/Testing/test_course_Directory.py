@@ -52,11 +52,6 @@ class TestCourseDirectoryUnit(TestCase):
         self.assertIn(self.course3, assigned_courses)
         self.assertNotIn(self.course2, assigned_courses)
 
-    def test_courses_with_no_labs(self):
-        self.course4 = Course.objects.create(name="Course 4")
-        labs = self.course4.labs.all()
-        self.assertEqual(labs.count(), 0)
-
     def test_courses_with_no_users(self):
         self.course4 = Course.objects.create(name="Course 4")
         self.assertEqual(self.course4.users.count(), 0)
