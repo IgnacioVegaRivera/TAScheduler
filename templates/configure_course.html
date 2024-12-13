@@ -30,7 +30,7 @@
                     <input type="hidden" name="form_name" value="create_course">
                     <div>
                         <label class="form-label required">Course Name</label>
-                        <input type="text" class="form-control" name="course_name">
+                        <input type="text" class="form-control" name="course_name" required>
                     </div>
                     <div>
                         <label class="form-label required">Instructor:</label>
@@ -69,11 +69,11 @@
                         <legend>Section Details</legend>
                         <div>
                             <label class="form-label required">Section Name:</label>
-                            <input type="text" class="form-control" name="section_name">
+                            <input type="text" class="form-control" name="section_name" required>
                         </div>
                         <div>
                             <label class="form-label required">Course:</label>
-                            <select name="section_course">
+                            <select name="section_course" required>
                                 <option></option>
                                 {% for i in courses %}
                                     <option>{{ i.name }}</option>
