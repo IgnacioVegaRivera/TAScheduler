@@ -5,6 +5,7 @@ from djangoProject1.models import User, Course, Section
 class TestRemoveUserUnit(TestCase):
     def setUp(self):
         #create some users
+        self.donkey = Client()
         self.admin = User.objects.create(first_name='Ad', last_name='Min', username='admin',
                                          email='admin@uwm.edu', phone_number="1234567890", role='Admin', skills='Admin skills')
         self.instructor = User.objects.create(first_name='Inst', last_name='Ructor', username='instructor',
@@ -25,5 +26,19 @@ class TestRemoveUserUnit(TestCase):
 
 
     def test_remove_valid_user(self):
-        old_account = self.admin
-        # old_account = RemoveUser.remove_user(old_account.id, )
+        RemoveUser.remove_user(self.instructor.id)
+        self.assertIsNone(self.instructor, "The user should have been removed")
+        self.assertEqual(User.objects.count(), 2)
+
+    def test_remove_invalid_user(self):
+        RemoveUser.remove_user(4)
+        self.assertIsNotNone(self.instructor, "The user should have been removed, but an incorrect id was used")
+        self.assertEqual(User.objects.count(), 3)
+
+    def test_remove_twice(self):
+        RemoveUser.remove_user(self.instructor.id)
+        self.assertIsNone(self.instructor, "The user should have been removed")
+        self.assertEqual(User.objects.count(), 2)
+
+        RemoveUser.remove_user(self.instructor.id)
+        self.assertEqual(User.objects.count(), 2)

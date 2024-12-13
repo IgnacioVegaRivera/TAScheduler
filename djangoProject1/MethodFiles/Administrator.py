@@ -301,5 +301,5 @@ class EditLab(EditLabInterface):
 
 class RemoveUser(RemoveUserInterface):
     @staticmethod
-    def remove_user(user_id, request):
+    def remove_user(user_id):
         pass
