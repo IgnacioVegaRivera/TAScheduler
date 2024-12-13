@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from djangoProject1.views import LoginPage, HomePage, AdminHomePage, ConfigureUserPage, UserDirectoryPage, \
-    CourseDirectoryPage, ConfigureCoursePage
+    CourseDirectoryPage, ConfigureCoursePage, ProfilePage
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +26,8 @@ urlpatterns = [
     path('user_directory.html', UserDirectoryPage.as_view()),
 
     path('course_directory.html', CourseDirectoryPage.as_view()),
+
+    path('profile_page.html', ProfilePage.as_view(), name='profile_page'),
     path('configure_user.html', ConfigureUserPage.as_view(), name='configure_user'),
     path('configure_course.html', ConfigureCoursePage.as_view(), name='configure_course'),
     path('admin_home.html', AdminHomePage.as_view())

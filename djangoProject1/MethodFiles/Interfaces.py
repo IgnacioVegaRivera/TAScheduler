@@ -7,6 +7,7 @@ class CreateCourseInterface(abc.ABC):
 
 class CreateSectionInterface(abc.ABC):
     @abc.abstractmethod
+
     def create_section(self, section_name, course, user, days, time, location):
         pass
 
@@ -43,4 +44,9 @@ class CreateUserInterface(abc.ABC):
 class GetUserInterface(abc.ABC):
     @abc.abstractmethod
     def get_user(self, request):
+        pass
+
+class RemoveUserInterface(abc.ABC):
+    @abc.abstractmethod
+    def remove_user(self,user_id, request):
         pass

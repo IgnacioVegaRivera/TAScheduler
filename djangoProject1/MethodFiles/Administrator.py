@@ -8,9 +8,9 @@ import re
 from django.template.context_processors import static
 
 from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateSectionInterface, EditUserInterface, \
-    CreateUserInterface, EditCourseInterface, EditLabInterface
+    CreateUserInterface, EditCourseInterface, EditLabInterface, RemoveUserInterface
 
-from djangoProject1.models import Course, User
+from djangoProject1.models import Course, User, Section
 
 
 class CreateUser(CreateUserInterface):
@@ -231,3 +231,8 @@ class EditLab(EditLabInterface):
 
         lab.save()
         return lab
+
+class RemoveUser(RemoveUserInterface):
+    @staticmethod
+    def remove_user(user_id, request):
+        pass

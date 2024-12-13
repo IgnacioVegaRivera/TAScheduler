@@ -80,6 +80,10 @@ class ConfigureUserPage(View):
             phone = request.POST['phone_number']
             role = request.POST['role']
             return self.editUserHelper(request, username, firstname, lastname, phone, email, role, users)
+        elif form == "remove_user":
+            user_id = request.POST['user_id']
+            return render(request, "configure_user.html", {"roles": User.ROLE_CHOICES, "users": users,
+                                                           'message': "Something went wrong when fetching the form, please try again"})
         else:
             return render(request, "configure_user.html", {"roles": User.ROLE_CHOICES, "users": users,
                                         'message': "Something went wrong when fetching the form, please try again"})
@@ -158,6 +162,10 @@ class CourseDirectoryPage(View):
         courses = Course.objects.all()
         return render(request, "course_directory.html", {'courses': courses})
 
+class ProfilePage(View):
+    def get(self, request):
+        return render(request, "profile_page.html", {})
+
 class HomePage(View):
     def get(self, request):
         return render(request, "home.html", {})
@@ -190,12 +198,12 @@ class ConfigureCoursePage(View):
         instructors = User.objects.filter(role="Instructor")
         tas = User.objects.filter(role="TA")
         sections = Section.objects.all()
-        lab_id = request.POST.get('lab_id')
+
 
         if form == "create_course":
-            return self.add_course_helper(courses, instructors, tas, sections,  request)
+            return self.add_course_helper(courses, instructors, tas, sections, request)
         elif form == "create_section":
-            return self.add_section_helper(courses, instructors, tas, sections,  request)
+            return self.add_section_helper(request, courses)
         elif form == "edit_course":
             return self.edit_course_helper(course_id, request)
         elif form == "edit_lab":
@@ -231,7 +239,15 @@ class ConfigureCoursePage(View):
                 'courses': courses, 'sections':sections, 'message': "The course \"" + cname + "\" has been created"})
 
 
-    def add_section_helper(self, courses, instructors, tas, sections, request):
+    def add_section_helper(self, courses, request):
+        section_name = request.POST.get('section_name')
+        section_course = request.POST.get('section_course')
+        section_user = request.POST.get('section_user')
+        section_day = request.POST.get('section_day')
+        section_time = request.POST.get('section_time')
+        section_location = request.POST.get('section_location')
+        section_time = request.POST.get('section_time')
+        sections = Section.objects.all()
         #get the course name from the form and use it to find the course
         course_name = request.POST['course']
         if course_name != "":
@@ -239,27 +255,32 @@ class ConfigureCoursePage(View):
         else:
             course = None
 
-        #get the ta name from the form and use it to find the ta
-        ta_name = request.POST['ta']
-        if ta_name != "":
-            # splits first and last name into 2 separate strings, also the role in () but that's not necessary here
-            names = ta_name.split(" ")
-            ta = User.objects.get(first_name=names[0], last_name=names[1])
+        # #get the ta name from the form and use it to find the ta
+        # ta_name = request.POST['ta']
+        # if ta_name != "":
+        #     # splits first and last name into 2 separate strings, also the role in () but that's not necessary here
+        #     names = ta_name.split(" ")
+        #     ta = User.objects.get(first_name=names[0], last_name=names[1])
+        # else:
+        #     ta = None
+        #
+        #
+        # lname = request.POST['lab_name']
+        #
+        # # will return None if the creation failed, will return a lab and save it to the database if it succeeded
+        # # lab = CreateLab.create_lab(lname, course, ta)
+        # lab = None
+        section = CreateSection.create_section(request, section_name, section_course, section_user, section_day, section_time, section_location)
+        section_id = request.POST.get('section_id')
+        days_selected = request.POST.getlist('days')  # Get list of days from the form
+
+        section = Section.objects.get(id=section_id)
+        section.days = days_selected  # Assign the selected days to the section
+        section.save()
+        if section is None:
+            return render(request, "configure_course.html", {'courses': courses, 'sections':sections, 'message': "Something went wrong when creating the section \"" + section_name + "\""})
         else:
-            ta = None
-
-
-        lname = request.POST['lab_name']
-
-        # will return None if the creation failed, will return a lab and save it to the database if it succeeded
-        # lab = CreateLab.create_lab(lname, course, ta)
-        lab = None
-        if lab is None:
-            return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
-                'courses': courses, 'sections':sections, 'message': "Something went wrong when creating the lab \"" + lname + "\""})
-        else:
-            return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
-                'courses': courses, 'sections':sections, 'message': "The lab \"" + lname + "\" has been created"})
+            return render(request, "configure_course.html", {'courses': courses, 'sections':sections, 'message': "The section \"" + section_name + "\" has been created"})
 
     def edit_course_helper(self, course_id,request):
         updated_course = EditCourse.edit_course(course_id, request)

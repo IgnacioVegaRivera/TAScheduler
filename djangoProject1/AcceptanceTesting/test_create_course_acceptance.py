@@ -13,7 +13,7 @@ class CreateCourseAcceptanceTest(TestCase):
     #test if the inputted course is valid then it is added to the database
     def test_valid_course(self):
         response = self.donkey.post("/configure_course.html",
-                                {"instructors": User.objects.filter(role="Instructor"), "instructor": self.valid,
+                                {"users": User.objects.filter(role="Instructor"), "instructor": self.valid,
                                     "course_name": "course name", "form_name": "create_course"}, follow=True)
         self.assertEqual(Course.objects.count(), 1)
         self.assertIn('message', response.context)
