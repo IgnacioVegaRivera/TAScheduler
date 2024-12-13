@@ -48,6 +48,12 @@ class Unit_Admin_CreateAccountTest(TestCase):
                                             "Bob", "Smith", "4141234567", "UWM", "Admin")
         self.assertEqual(newAccount.role,"Admin","The role is not correct")
 
+    def test_Create_Account_Skills(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "Smith", "4141234567",
+                                            "UWM", "Admin", "skills")
+        self.assertEqual(newAccount.skills,"skills","The skills is not correct")
+
     def test_invalid_firstName(self):
         newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
                                             "", "Smith", "4141234567", "UWM", "Admin")
@@ -97,6 +103,12 @@ class Unit_Admin_CreateAccountTest(TestCase):
         newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
                                             "Bob", "Smith", "4141234567", "UWM", "Administrate")
         self.assertEqual(newAccount,None,"The role is not correct")
+
+    def test_invalid_Skills(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "Smith", "4141234567",
+                                            "UWM", "Admin", 4)
+        self.assertEqual(newAccount,None,"The skills is not correct")
     #unit tests testing created account with default values
 
     # def test_Create_Account_defaultFirstNames(self):
