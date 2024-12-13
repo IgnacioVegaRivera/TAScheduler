@@ -129,6 +129,12 @@ class CreateSectionUnitTest(TestCase):
                                                ["Tuesday"], self.time, "EMS 119")
         self.assertEqual(section, None)
 
+    def test_user_not_in_course(self):
+        unassigned_user = User(username="ructor", role="Instructor")
+        section = CreateSection.create_section("Lecture 001", self.course, unassigned_user,
+                                               ["Tuesday"], self.time, "EMS 119")
+        self.assertEqual(section, None)
+
     #day tests
     def test_blank_day(self):
         section = CreateSection.create_section("Discussion 001", self.course, self.ta,

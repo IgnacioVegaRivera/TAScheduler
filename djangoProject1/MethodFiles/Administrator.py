@@ -100,6 +100,9 @@ class CreateSection(CreateSectionInterface):
 
         #check if the user exists they are of the right role
         if user is not None:
+            user_courses = Course.objects.filter(users=user)
+            if course not in user_courses:
+                return None
             if "Lecture" not in section_name:
                 if user.role == "Instructor":
                     return None
