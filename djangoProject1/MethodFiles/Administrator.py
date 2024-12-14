@@ -2,11 +2,11 @@
 from abc import ABC
 from datetime import time
 
-from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
+
+# import re is used for checking the length of the phone number field
 import re
 
-from django.template.context_processors import static
+# from django.template.context_processors import static
 
 from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateSectionInterface, EditUserInterface, \
     CreateUserInterface, EditCourseInterface, EditSectionInterface, RemoveUserInterface

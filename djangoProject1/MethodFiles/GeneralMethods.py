@@ -1,4 +1,4 @@
-from djangoProject1.MethodFiles.Interfaces import CheckPermissionInterface, GetUserInterface
+from djangoProject1.MethodFiles.Interfaces import CheckPermissionInterface, GetUserInterface, EditPersonalUserInterface
 from djangoProject1.models import User
 
 
@@ -25,3 +25,8 @@ class GetUser(GetUserInterface):
             return None
         else:
             return User.objects.filter(username=name).first()
+
+class EditPersonalUser(EditPersonalUserInterface):
+    @staticmethod
+    def edit_personal_user(newPassword, newPhone, newEmail, newAddress, newSkills):
+        pass
