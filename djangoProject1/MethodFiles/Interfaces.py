@@ -33,7 +33,7 @@ class EditCourseInterface(abc.ABC):
 
 class EditSectionInterface(abc.ABC):
     @abc.abstractmethod
-    def edit_section(self, request, lab_id, section_name, course, user, days, the_time, location):
+    def edit_section(self, request, section_id, name, course, user, days, the_time, location):
         pass
 
 class CreateUserInterface(abc.ABC):

@@ -84,7 +84,7 @@ class EditSectionUnitTest(TestCase):
         response = self.llama.post("/configure_course.html",{'form_name':"edit_section",
                                    'section_id': self.lab.id, 'section_name':"Lecture 02",'section_course':self.course,
                                    'section_days' : ["Monday", "Wednesday"], 'section_time': time(9, 30),
-                                   'section_location': "Building 123", 'section_user': self.instructor})
+                                   'section_location': "Building 123", 'section_user': self.instructor.id})
         self.lab.refresh_from_db()
         self.assertEqual(self.lab.name, "Lecture 02")
         self.assertEqual(self.lab.course, self.course)

@@ -268,7 +268,7 @@ class EditCourse(EditCourseInterface):
 
 class EditSection(EditSectionInterface):
     @staticmethod
-    def edit_section(request, lab_id, section_name, course, user, days, the_time, location):
+    def edit_section(request, section_id, name, course, user, days, the_time, location):
 
         # lab = Lab.objects.get(id=lab_id)
         # if lab_id == None or lab_id == "":

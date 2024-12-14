@@ -294,6 +294,39 @@ class ConfigureCoursePage(View):
         return redirect('configure_course')
 
     def edit_section_helper(self, request, courses, instructors, tas, sections, users):
+        #get all of the data we need
+        section_id = request.POST['section_id']
+        section_name = request.POST['section_name']
+        course_name = request.POST['section_course']
+        user_id = request.POST['section_user']
+        section_days = request.POST.getlist('section_days')
+        section_time = request.POST['section_time']
+        section_location = request.POST['section_location']
+
+        # convert the course, user, and time to be the way that we want them to be
+        if course_name != "":
+            section_course = Course.objects.get(name=course_name)
+        else:
+            section_course = None
+
+        if user_id != "":
+            section_user = User.objects.get(id=user_id)
+        else:
+            section_user = None
+
+        if ":" in section_time:
+            time_parts = section_time.split(":")
+            section_time = time(int(time_parts[0]), int(time_parts[1]))
+        else:
+            section_time = None
+
+        edited_section = EditSection.edit_section(request, section_id, section_name, section_course, section_user,
+                                                  section_days, section_time, section_location)
+
+
+        return render(request, "configure_course.html", {'courses': courses, 'sections':sections,
+                    'users':users,'tas':tas, 'instructors':instructors, 'days':DAYS_OF_WEEK,
+                    'message': "Something went wrong when editing the section"})
         # updated_lab = EditLab.edit_lab(section_id,)
         # if updated_lab is not None:
         #     message = f"Lab '{updated_lab.name}' updated successfully."
@@ -307,6 +340,3 @@ class ConfigureCoursePage(View):
         #     "sections":sections,
         #     "message": message
         # })
-        return render(request, "configure_course.html", {'courses': courses, 'sections':sections,
-                    'users':users,'tas':tas, 'instructors':instructors, 'days':DAYS_OF_WEEK,
-                    'message': "Something went wrong when creating the section \"\""})
