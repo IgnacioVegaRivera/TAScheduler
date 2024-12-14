@@ -50,3 +50,8 @@ class RemoveUserInterface(abc.ABC):
     @abc.abstractmethod
     def remove_user(self,user_id):
         pass
+
+class EditPersonalUserInterface(abc.ABC):
+    @abc.abstractmethod
+    def edit_personal_user(self, newPassword, newPhone, newEmail, newAddress, newSkills):
+        pass
