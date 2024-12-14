@@ -84,7 +84,7 @@ class CreateCourse(CreateCourseInterface):
         # if everything is fine then we can create the course no problem
         course = Course(name=name)
         course.save()
-        course.instructors.add(instructor)
+        course.users.add(instructor)
 
         return course
 
@@ -261,7 +261,7 @@ class EditCourse(EditCourseInterface):
 
         selected_instructors = request.POST.getlist("instructor[]")
         instructors = User.objects.filter(id__in=selected_instructors)
-        course.instructors.set(instructors)
+        course.users.set(instructors)
 
         course.save()
         return course
