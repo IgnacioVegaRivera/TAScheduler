@@ -146,8 +146,7 @@ class CreateSection(CreateSectionInterface):
                 return None
 
         # create the object
-        if Section.objects.filter(name=section_name,course=course, user=user, days=days, time=scheduled_time,
-                          location=location).exists():
+        if Section.objects.filter(name=section_name, course=course).exists():
             return None
         else:
             section = Section(name=section_name, course=course, user=user, days=days, time=scheduled_time,

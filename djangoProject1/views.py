@@ -208,7 +208,7 @@ class ConfigureCoursePage(View):
         elif form == "edit_course":
             return self.edit_course_helper(course_id, request)
         elif form == "edit_section":
-            return self.edit_section_helper(request)
+            return self.edit_section_helper(request, courses, instructors, tas, sections, users)
         else:
             return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
                 'courses':courses, 'message': "Something went wrong when fetching the form, please try again."})
@@ -293,7 +293,7 @@ class ConfigureCoursePage(View):
 
         return redirect('configure_course')
 
-    def edit_section_helper(self, request):
+    def edit_section_helper(self, request, courses, instructors, tas, sections, users):
         # updated_lab = EditLab.edit_lab(section_id,)
         # if updated_lab is not None:
         #     message = f"Lab '{updated_lab.name}' updated successfully."
@@ -307,4 +307,6 @@ class ConfigureCoursePage(View):
         #     "sections":sections,
         #     "message": message
         # })
-        return None
+        return render(request, "configure_course.html", {'courses': courses, 'sections':sections,
+                    'users':users,'tas':tas, 'instructors':instructors, 'days':DAYS_OF_WEEK,
+                    'message': "Something went wrong when creating the section \"\""})
