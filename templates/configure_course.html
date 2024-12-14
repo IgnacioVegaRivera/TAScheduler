@@ -36,8 +36,8 @@
                         <label class="form-label required">Instructor:</label>
                         <select name="instructor">
                             <option></option>
-                            {% for i in instructors %}
-                                <option>{{ i.first_name }} {{ i.last_name }}</option>
+                            {% for instructor in instructors %}
+                                <option>{{ instructor.first_name }} {{ instructor.last_name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -148,7 +148,7 @@
         <div class="whiteBox">
             <h2>{{ course.name }}</h2>
             <p><b>Instructors</b><br/>
-                {% for instructor in course.instructors.all %}
+                {% for instructor in course.users.all %}
                     {{ instructor }}<br/>
                 {% empty %}
                     No Instructor Assigned<br/>
@@ -173,7 +173,7 @@
                                             <input type="checkbox"
                                                    name="instructor[]"
                                                    value="{{ instructor.id }}"
-                                                   {% if instructor in course.instructors.all %}checked{% endif %}>
+                                                   {% if instructor in course.users.all %}checked{% endif %}>
                                             <label>{{ instructor }}</label>
                                         </div>
                                     {% endfor %}
