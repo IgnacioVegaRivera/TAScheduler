@@ -18,6 +18,8 @@
     {#        <a class="active" href="admin_home.html">Admin Home</a>#}
 </div>
 
+{% load custom_filters %}
+
 <div class="addUserModal">
     <div class="create-user" popover id="createUser">
         <div class="createNewUserModalHeader">
@@ -128,7 +130,7 @@
                 {% if user.role == "Admin" %}
                     No Courses.<br/>
                 {% endif %}
-                {{ user.email }}<br/>{{ user.phone_number }}</p>
+                {{ user.email }}<br/>{{ user.phone_number|format_phone }}</p>
 
             <div class="edit-modal" popover id="editModal {{ user.id }}">
                 <h2>Edit user info:</h2>

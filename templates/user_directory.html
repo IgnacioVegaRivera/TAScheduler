@@ -16,6 +16,9 @@
     <a href="course_directory.html" style="padding: 110px">Course Directory</a>
     <a href="/" style="padding: 110px">Log Out</a>
 </div>
+
+{% load custom_filters %}
+
 <h2 class="container">Users:</h2>
 <div class="boxContainer">
     {% for user in users %}
@@ -46,7 +49,7 @@
                 </textarea>
             </p>
 
-            <p>{{ user.email }}<br/>{{ user.phone_number }}</p>
+            <p>{{ user.email }}<br/>{{ user.phone_number|format_phone }}</p>
         </div>
     {% endfor %}
 </div>
