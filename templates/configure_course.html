@@ -68,7 +68,7 @@
                     <fieldset>
                         <legend>Section Details</legend>
                         <div>
-                            <label class="form-label required">Section Name:</label>
+                            <label class="form-label required">Section Name (Must Include "Lecture", "Lab", or "Discussion"):</label>
                             <input type="text" class="form-control" name="section_name" required>
                         </div>
                         <div>
@@ -107,11 +107,11 @@
                 <fieldset>
                 <legend>Location & Users</legend>
                         <div>
-                            <label class="form-label required">Location:</label>
+                            <label class="form-label required">Location (if included, write the building and room number):</label>
                             <input type="text" class="form-control" name="section_location">
                         </div>
                         <div>
-                            <label class="form-label required">Assign User:</label>
+                            <label class="form-label required">Assign User (user must be in selected course if included):</label>
                             <select name="section_user">
                                 <option></option>
                                 {% for user in users %}
@@ -208,11 +208,12 @@
                         <div class="modal-header" id="myModal {{ section.id }}">
                             <form action=" " method="post">
                     {% csrf_token %}
-                    <input type="hidden" name="form_name" value="create_section">
+                    <input type="hidden" name="form_name" value="edit_section">
+                    <input type="hidden" name="section_id" value="{{ section.id }}">
                     <fieldset>
                         <legend>Section Details</legend>
                         <div>
-                            <label class="form-label required">Section Name:</label>
+                            <label class="form-label required">Section Name (Must Include "Lecture", "Lab", or "Discussion"):</label>
                             <input type="text" class="form-control" name="section_name" value="{{ section.name }}" required>
                         </div>
                         <div>
@@ -255,11 +256,11 @@
                 <fieldset>
                 <legend>Location & Users</legend>
                         <div>
-                            <label class="form-label required">Location:</label>
+                            <label class="form-label required">Location (if included, write the building and room number):</label>
                             <input type="text" class="form-control" name="section_location" value="{{ section.location }}">
                         </div>
                         <div>
-                            <label class="form-label required">Assign User:</label>
+                            <label class="form-label required">Assign User (user must be in selected course if included):</label>
                             <select name="section_user">
                                 <option></option>
                                 {% for user in users %}

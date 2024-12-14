@@ -213,6 +213,33 @@ class CreateSectionUnitTest(TestCase):
                                                self.time, "KIRC 1130")
         self.assertEqual(section2, None)
 
+    def test_same_name_different_course(self):
+        #create a section
+        section = CreateSection.create_section("Lab 001", self.course, self.ta, ["Tuesday"],
+                                               self.time, "KIRC 1130")
+
+        #try to create a section with the same name and a different course
+        course2 = Course(name="new course")
+        course2.save()
+        course2.users.add(self.ta)
+        section2 = CreateSection.create_section("Lab 001", course2, self.ta, ["Tuesday"],
+                                               self.time, "KIRC 1130")
+        self.assertEqual(section2.name, "Lab 001")
+        self.assertEqual(section2.course, course2)
+        self.assertEqual(section2.user, self.ta)
+        self.assertEqual(section2.days[0], "Tuesday")
+        self.assertEqual(section2.time.hour, 9)
+        self.assertEqual(section2.time.minute, 30)
+        self.assertEqual(section2.location, "KIRC 1130")
+
+    def test_same_name_and_course_different_other_stuff(self):
+            # create a section
+        section = CreateSection.create_section("Lab 001", self.course, self.ta, ["Thursday"],
+                                               self.time, "KIRC 1130")
+
+        section2 = CreateSection.create_section("Lab 001", self.course, self.ta, ["Tuesday"],
+                                                self.time, "KIRC 1131")
+        self.assertEqual(section2, None)
 
 #need to work on
 # class CreateLabAcceptanceTest(TestCase):

@@ -93,26 +93,26 @@ class CreateSection(CreateSectionInterface):
 
     # this is a helper for creating sections, it's to clean up the create_section code
     @staticmethod
-    def create_section_helper(section_name, course, user, days, scheduled_time, location):
+    def verify_fields(section_name, course, user, days, scheduled_time, location):
         # check each parameter is the correct type
         if not isinstance(user, User) and user is not None:
-            return None
+            return False
 
         #check if the user exists they are of the right role
         if user is not None:
             user_courses = Course.objects.filter(users=user)
             if course not in user_courses:
-                return None
+                return False
             if "Lecture" not in section_name:
                 if user.role == "Instructor":
-                    return None
+                    return False
             else:
                 if user.role == "TA":
-                    return None
+                    return False
 
         #check that the days are formatted properly
         if not isinstance(days, list):
-            return None
+            return False
 
         for day in days:
             found = False
@@ -122,14 +122,14 @@ class CreateSection(CreateSectionInterface):
                     break
 
             if not found:
-                return None
+                return False
 
         #check that the time is formatted properly
         if not isinstance(scheduled_time, time) and scheduled_time is not None:
-            return None
+            return False
 
         if not isinstance(location, str):
-            return None
+            return False
 
         # requires a building and a room number if a location is provided
         if location != "":
@@ -143,17 +143,11 @@ class CreateSection(CreateSectionInterface):
                     break
 
             if not digit or not character:
-                return None
+                return False
 
         # create the object
-        if Section.objects.filter(name=section_name,course=course, user=user, days=days, time=scheduled_time,
-                          location=location).exists():
-            return None
-        else:
-            section = Section(name=section_name, course=course, user=user, days=days, time=scheduled_time,
-                          location=location)
-            section.save()
-            return section
+        return True
+
 
     # need to update this eventually to reflect the changes from labs to sections, old implementation commented out
     @staticmethod
@@ -179,8 +173,14 @@ class CreateSection(CreateSectionInterface):
             if "Lecture" in section_name:
                 return None
 
-        section = CreateSection.create_section_helper(section_name, course, user, days, scheduled_time, location)
-        return section
+        valid = CreateSection.verify_fields(section_name, course, user, days, scheduled_time, location)
+        if valid and not Section.objects.filter(name=section_name, course=course).exists():
+            section = Section(name=section_name, course=course, user=user, days=days, time=scheduled_time,
+                              location=location)
+            section.save()
+            return section
+        else:
+            return None
 
 
 class EditUser(EditUserInterface, ABC):
@@ -269,36 +269,49 @@ class EditCourse(EditCourseInterface):
 
 class EditSection(EditSectionInterface):
     @staticmethod
-    def edit_section(request, lab_id, section_name, course, user, days, the_time, location):
+    def edit_section(request, section_id, name, course, user, days, the_time, location):
+        section = Section.objects.get(id=section_id)
+        # every section needs a course
+        if course == None or not isinstance(course, Course):
+            return None
 
-        # lab = Lab.objects.get(id=lab_id)
-        # if lab_id == None or lab_id == "":
-        #     return None
-        #
-        # # Update Lab name
-        # lab.name = request.POST.get("lab", lab.name)
-        # if lab.name == None or lab.name == "":
-        #     return None
-        # lab.save()
-        #
-        # # Update TAs
-        # selected_ta = request.POST.get("ta")
-        # if selected_ta:
-        #     ta = User.objects.filter(id=selected_ta, role="TA").first()
-        #     lab.ta = ta
-        # else:
-        #     lab.ta = None
-        #
-        # # Update Courses, (be able to change  what course that lab is assigned
-        # selected_course_id = request.POST.get("course")
-        # if selected_course_id:
-        #     course = Course.objects.filter(id=selected_course_id).first()
-        #     lab.course = course
-        # else:
-        #     lab.course = None
-        #
-        # lab.save()
-        return None
+        # determine the kind of section that is being created, also checks that only 1 of the 3 keywords is in the name
+        if not isinstance(name, str):
+            return None
+
+        if "Lab" not in name and "Discussion" not in name and "Lecture" not in name:
+            return None
+
+        if "Lab" in name:
+            # if either of the other 2 identifiers is in the name then invalid name
+            if "Discussion" in name or "Lecture" in name:
+                return None
+
+        elif "Discussion" in name:
+            # if lecture is in the name then invalid name
+            if "Lecture" in name:
+                return None
+
+        valid = CreateSection.verify_fields(name, course, user, days, the_time, location)
+
+        #check if there already exists a section in the database with the same name and course, then check if it's
+        #a different course than the one we are currently editing
+        different = False
+        if Section.objects.filter(name=name, course=course).exists():
+            if Section.objects.get(name=name, course=course).id != section.id:
+                different = True
+
+        if valid and not different:
+            section.name = name
+            section.course = course
+            section.user = user
+            section.days = days
+            section.time = the_time
+            section.location = location
+            section.save()
+            return section
+        else:
+            return None
 
 class RemoveUser(RemoveUserInterface):
     @staticmethod

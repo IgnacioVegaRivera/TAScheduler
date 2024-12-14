@@ -208,7 +208,7 @@ class ConfigureCoursePage(View):
         elif form == "edit_course":
             return self.edit_course_helper(course_id, request)
         elif form == "edit_section":
-            return self.edit_section_helper(request)
+            return self.edit_section_helper(request, courses, instructors, tas, sections, users)
         else:
             return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
                 'courses':courses, 'message': "Something went wrong when fetching the form, please try again."})
@@ -293,18 +293,42 @@ class ConfigureCoursePage(View):
 
         return redirect('configure_course')
 
-    def edit_section_helper(self, request):
-        # updated_lab = EditLab.edit_lab(section_id,)
-        # if updated_lab is not None:
-        #     message = f"Lab '{updated_lab.name}' updated successfully."
-        # else:
-        #     message = "Failed to update lab. Please check your inputs and try again."
-        #
-        # return render(request, "configure_course.html", {
-        #     "instructors": instructors,
-        #     "courses": courses,
-        #     "tas": tas,
-        #     "sections":sections,
-        #     "message": message
-        # })
-        return None
+    def edit_section_helper(self, request, courses, instructors, tas, sections, users):
+        #get all of the data we need
+        section_id = request.POST['section_id']
+        section_name = request.POST['section_name']
+        course_name = request.POST['section_course']
+        user_id = request.POST['section_user']
+        section_days = request.POST.getlist('section_days')
+        section_time = request.POST['section_time']
+        section_location = request.POST['section_location']
+
+        # convert the course, user, and time to be the way that we want them to be
+        if course_name != "":
+            section_course = Course.objects.get(name=course_name)
+        else:
+            section_course = None
+
+        if user_id != "":
+            section_user = User.objects.get(id=user_id)
+        else:
+            section_user = None
+
+        if ":" in section_time:
+            time_parts = section_time.split(":")
+            section_time = time(int(time_parts[0]), int(time_parts[1]))
+        else:
+            section_time = None
+
+        edited_section = EditSection.edit_section(request, section_id, section_name, section_course, section_user,
+                                                  section_days, section_time, section_location)
+
+        #return things the way we would like to
+        if edited_section is not None:
+            return render(request, "configure_course.html", {'courses': courses, 'sections': sections,
+                    'users': users, 'tas': tas, 'instructors': instructors,'days': DAYS_OF_WEEK,
+                    'message': "The section has been successfully edited"})
+        else:
+            return render(request, "configure_course.html", {'courses': courses, 'sections':sections,
+                    'users':users,'tas':tas, 'instructors':instructors, 'days':DAYS_OF_WEEK,
+                    'message': "Something went wrong when editing the section"})
