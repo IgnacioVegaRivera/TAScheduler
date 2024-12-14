@@ -323,20 +323,12 @@ class ConfigureCoursePage(View):
         edited_section = EditSection.edit_section(request, section_id, section_name, section_course, section_user,
                                                   section_days, section_time, section_location)
 
-
-        return render(request, "configure_course.html", {'courses': courses, 'sections':sections,
+        #return things the way we would like to
+        if edited_section is not None:
+            return render(request, "configure_course.html", {'courses': courses, 'sections': sections,
+                    'users': users, 'tas': tas, 'instructors': instructors,'days': DAYS_OF_WEEK,
+                    'message': "The section has been successfully edited"})
+        else:
+            return render(request, "configure_course.html", {'courses': courses, 'sections':sections,
                     'users':users,'tas':tas, 'instructors':instructors, 'days':DAYS_OF_WEEK,
                     'message': "Something went wrong when editing the section"})
-        # updated_lab = EditLab.edit_lab(section_id,)
-        # if updated_lab is not None:
-        #     message = f"Lab '{updated_lab.name}' updated successfully."
-        # else:
-        #     message = "Failed to update lab. Please check your inputs and try again."
-        #
-        # return render(request, "configure_course.html", {
-        #     "instructors": instructors,
-        #     "courses": courses,
-        #     "tas": tas,
-        #     "sections":sections,
-        #     "message": message
-        # })

@@ -208,7 +208,7 @@
                         <div class="modal-header" id="myModal {{ section.id }}">
                             <form action=" " method="post">
                     {% csrf_token %}
-                    <input type="hidden" name="form_name" value="create_section">
+                    <input type="hidden" name="form_name" value="edit_section">
                     <input type="hidden" name="section_id" value="{{ section.id }}">
                     <fieldset>
                         <legend>Section Details</legend>
