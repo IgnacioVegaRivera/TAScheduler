@@ -55,3 +55,8 @@ class EditPersonalUserInterface(abc.ABC):
     @abc.abstractmethod
     def edit_personal_user(self, newPassword, newPhone, newEmail, newAddress, newSkills):
         pass
+
+class AssignUserInterface(abc.ABC):
+    @abc.abstractmethod
+    def assign_user(self, section_id, user, request):
+        pass
