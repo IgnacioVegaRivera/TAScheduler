@@ -187,10 +187,20 @@ class AdminHomePage(View):
     def get(self, request):
         user = GetUser.get_user(request)
         can_access = CheckPermission.check_admin(user)
-        if can_access:
-            return render(request, "admin_home.html", {})
-        else:
+        if not can_access:
             return render(request, "home.html", {'message': "You cannot access this page."})
+
+        # database selection
+        selected_db = request.GET.get('database', 'users')  # default to users
+        data = None
+        if selected_db == 'users':
+            data = User.objects.all()
+        elif selected_db == 'courses':
+            data = Course.objects.all()
+        elif selected_db == 'sections':
+            data = Section.objects.all()
+
+        return render(request, "admin_home.html", {'selected_db': selected_db, 'data': data})
 
 
 class ConfigureCoursePage(View):
