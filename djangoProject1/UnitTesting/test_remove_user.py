@@ -20,6 +20,8 @@ class TestRemoveUserUnit(TestCase):
         self.course = Course.objects.create(name="Course 1")
         self.course.save()
         self.course.users.add(self.instructor)
+        self.course.users.add(self.ta)
+        self.course.save()
 
         self.lab = Section.objects.create(name="Lab 1", course=self.course, user=self.ta)
         self.lab.save()
@@ -27,18 +29,41 @@ class TestRemoveUserUnit(TestCase):
 
     def test_remove_valid_user(self):
         RemoveUser.remove_user(self.instructor.id)
-        self.assertIsNone(self.instructor, "The user should have been removed")
+        self.assertNotIn(self.instructor, User.objects.all())
+        self.assertNotIn(self.instructor, self.course.users.all())
+        self.assertEqual(self.course.users.count(), 1)
         self.assertEqual(User.objects.count(), 2)
 
     def test_remove_invalid_user(self):
         RemoveUser.remove_user(4)
-        self.assertIsNotNone(self.instructor, "The user should have been removed, but an incorrect id was used")
+        self.assertIn(self.admin, User.objects.all())
+        self.assertIn(self.instructor, User.objects.all())
+        self.assertIn(self.instructor, self.course.users.all())
+        self.assertIn(self.ta, User.objects.all())
+        self.assertIn(self.ta, self.course.users.all())
+        self.assertEqual(self.course.users.count(), 2)
         self.assertEqual(User.objects.count(), 3)
 
     def test_remove_twice(self):
         RemoveUser.remove_user(self.instructor.id)
-        self.assertIsNone(self.instructor, "The user should have been removed")
         self.assertEqual(User.objects.count(), 2)
+        self.assertNotIn(self.instructor, User.objects.all())
+        self.assertNotIn(self.instructor, self.course.users.all())
+        self.assertEqual(self.course.users.count(), 1)
 
         RemoveUser.remove_user(self.instructor.id)
         self.assertEqual(User.objects.count(), 2)
+
+    def test_remove_two_users(self):
+        RemoveUser.remove_user(self.instructor.id)
+        RemoveUser.remove_user(self.ta.id)
+        self.assertEqual(User.objects.count(), 1)
+        self.assertNotIn(self.instructor, User.objects.all())
+        self.assertNotIn(self.instructor, self.course.users.all())
+        self.assertNotIn(self.ta, User.objects.all())
+        self.assertNotIn(self.ta, self.course.users.all())
+        self.assertEqual(self.course.users.count(), 0)
+
+
+
+
