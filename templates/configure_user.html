@@ -8,12 +8,12 @@
 <body style="background-color: rgb(217,217,217)">
 {#    <br/><a href="/templates/home.html">TA Scheduler</a>#}
 <a href="home.html">
-    <img src="/static/Logo.jpeg" alt="TA Scheduler Logo" style="height: 75px; width: auto;">
+    <img src="/static/Logo.jpeg" alt="TA Scheduler Logo" style="height: 10vh; width: auto;">
 </a>
 <div class="navbar">
-    <a class="active" href="configure_user.html" style="padding: 150px">Configure Users</a>
-    <a href="configure_course.html" style="padding: 150px">Configure Courses</a>
-    <a href="/" style="padding: 150px">Log Out</a>
+    <a class="active" href="configure_user.html" style="padding: 12%">Configure Users</a>
+    <a href="configure_course.html" style="padding: 12%">Configure Courses</a>
+    <a href="/" style="padding: 12%">Log Out</a>
     {#        <a href="">Databases</a>#}
     {#        <a class="active" href="admin_home.html">Admin Home</a>#}
 </div>
@@ -106,7 +106,6 @@
 </div>
 <button popovertarget="createUser">Add User</button>
 <p style="text-align: center">{{ message }}</p>
-<h2 class="container">Users:</h2>
 <div class="boxContainer">
     {% for user in users %}
         <div class="whiteBox">
@@ -171,7 +170,9 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" popovertarget="editModal {{ user.id }}"
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary"
+                                    popovertarget="editModal {{ user.id }}"
                                     popovertargetaction="hide">
                                 Cancel
                             </button>
@@ -179,8 +180,16 @@
                     </form>
                 </div>
             </div>
-            <button popovertarget="editModal {{ user.id }}">Edit</button>
-            <br/><br/>
+            <br/>
+            <div class="buttons-container">
+                <button class="btn btn-primary" popovertarget="editModal {{ user.id }}">Edit</button>
+                <form method="POST" action="{% url 'configure_user' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_name" value="remove_user">
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                    <button type="submit" class="btn btn-danger ">Remove</button>
+                </form>
+            </div>
         </div>
     {% endfor %}
 </div>

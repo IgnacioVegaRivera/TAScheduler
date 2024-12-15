@@ -3,7 +3,8 @@ from sys import set_coroutine_origin_tracking_depth
 from django.shortcuts import render, redirect
 from django.views import View
 
-from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser, CreateSection, EditUser, EditCourse, EditSection
+from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser, CreateSection, EditUser, EditCourse, \
+    EditSection, RemoveUser
 from djangoProject1.MethodFiles.GeneralMethods import GetUser, CheckPermission
 from djangoProject1.models import User, Course, Section, DAYS_OF_WEEK
 from datetime import time
@@ -16,47 +17,45 @@ class LoginPage(View):
         return render(request, "login.html", {})
 
     def post(self, request):
-        #get the entered username and password in the form
+        # get the entered username and password in the form
         username = request.POST['username']
         password = request.POST['password']
 
-        #filters to see if the user of the specified username is within the database
+        # filters to see if the user of the specified username is within the database
         user = User.objects.filter(username=username)
 
-        #if we find a match then we proceed to check if the password matches
+        # if we find a match then we proceed to check if the password matches
         if user.exists():
-            #check for valid password, if valid then redirect to home page, if not then show the error message on login page
+            # check for valid password, if valid then redirect to home page, if not then show the error message on login page
             if user[0].password == password:
-                #if we have a match this stores the user's username this can be used to access the current user's data
-                #in all the other pages using this: user = GetUser.get_user(request)
+                # if we have a match this stores the user's username this can be used to access the current user's data
+                # in all the other pages using this: user = GetUser.get_user(request)
                 request.session['cur_user_name'] = user[0].username
                 return redirect("home.html")
             else:
                 message = "Username or Password is incorrect"
                 return render(request, "login.html", {'message': message})
 
-        #If we have an invalid username then print this message on the login page
+        # If we have an invalid username then print this message on the login page
         else:
             message = "Username or Password is incorrect"
             return render(request, "login.html", {'message': message})
-
 
 
 class ConfigureUserPage(View):
     def get(self, request):
         users = User.objects.all()
 
-        #Display the courses assigned to that user, if the user is a instructor
+        # Display the courses assigned to that user, if the user is a instructor
         user = GetUser.get_user(request)
         if not user:
             return redirect('/')
-
 
         return render(request, "configure_user.html",
                       {"roles": User.ROLE_CHOICES, "users": users})
 
     def post(self, request):
-        #filter to see which form is being accessed:
+        # filter to see which form is being accessed:
         form = request.POST.get('form_name')
         # Get the required fields for creating a user
 
@@ -85,13 +84,12 @@ class ConfigureUserPage(View):
             return self.editUserHelper(request, username, firstname, lastname, phone, email, role, users)
         elif form == "remove_user":
             user_id = request.POST['user_id']
-            return render(request, "configure_user.html", {"roles": User.ROLE_CHOICES, "users": users,
-                                                           'message': "Something went wrong when fetching the form, please try again"})
+            return self.removeUserHelper(request, user_id)
         else:
             return render(request, "configure_user.html", {"roles": User.ROLE_CHOICES, "users": users,
-                                        'message': "Something went wrong when fetching the form, please try again"})
+                                                           'message': "Something went wrong when fetching the form, please try again"})
 
-    #helper class to enable the addition of user
+    # helper class to enable the addition of user
     def addUserHelper(self, username, email, password, firstname, lastname, phone, address, role, request):
 
         # course_name = request.POST['name']
@@ -115,8 +113,8 @@ class ConfigureUserPage(View):
                 "users": all_users,
                 'message': "The user \"" + name + "\" has been created"})
 
-    #Helper class to save/edit the user
-    def editUserHelper(self,request, username, firstname, lastname, phone, email, role, users):
+    # Helper class to save/edit the user
+    def editUserHelper(self, request, username, firstname, lastname, phone, email, role, users):
         user = EditUser.edit_user(request, username, firstname, lastname, phone, email, role)
         if user is None:
             return render(request, "configure_user.html",
@@ -127,6 +125,17 @@ class ConfigureUserPage(View):
                           {"roles": User.ROLE_CHOICES, "users": users,
                            "message": "The user has been successfully updated"})
 
+    # Helper class to remove the user
+    def removeUserHelper(self, request, user_id):
+        user_id = request.POST.get('user_id')
+        message = RemoveUser.remove_user(user_id)
+        users = User.objects.all()
+        return render(request, "configure_user.html", {
+            "roles": User.ROLE_CHOICES,
+            "users": users,
+            "message": message
+        })
+
 class UserDirectoryPage(View):
     def get(self, request):
         users = User.objects.all()
@@ -136,6 +145,7 @@ class UserDirectoryPage(View):
 
     def post(self, request):
         return redirect('/home/')
+
 
 class CourseDirectoryPage(View):
     def get(self, request):
@@ -155,19 +165,23 @@ class CourseDirectoryPage(View):
             if user.role == 'TA' or user.role == 'Instructor':
                 courses = Course.objects.filter(users=user)
 
-        return render(request, "course_directory.html", {'courses': courses, 'user': user, 'filter_assigned': filter_assigned})
+        return render(request, "course_directory.html",
+                      {'courses': courses, 'user': user, 'filter_assigned': filter_assigned})
 
     def post(self, request):
         courses = Course.objects.all()
         return render(request, "course_directory.html", {'courses': courses})
 
+
 class ProfilePage(View):
     def get(self, request):
         return render(request, "profile_page.html", {})
 
+
 class HomePage(View):
     def get(self, request):
         return render(request, "home.html", {})
+
 
 class AdminHomePage(View):
     def get(self, request):
@@ -176,30 +190,32 @@ class AdminHomePage(View):
         if can_access:
             return render(request, "admin_home.html", {})
         else:
-            return render(request, "home.html", {'message':"You cannot access this page."})
+            return render(request, "home.html", {'message': "You cannot access this page."})
+
 
 class ConfigureCoursePage(View):
     def get(self, request):
-        #make this into a method
+        # make this into a method
         courses = Course.objects.all()
         instructors = User.objects.filter(role="Instructor")
         tas = User.objects.filter(role="TA")
         sections = Section.objects.all()
         users = User.objects.all()
-        return render(request, "configure_course.html", {"instructors": instructors, "tas": tas, "courses": courses, 'sections':sections, 'days': DAYS_OF_WEEK, 'users': users})
+        return render(request, "configure_course.html",
+                      {"instructors": instructors, "tas": tas, "courses": courses, 'sections': sections,
+                       'days': DAYS_OF_WEEK, 'users': users})
 
     def post(self, request):
-        #this is to filter based on which form is being accessed
+        # this is to filter based on which form is being accessed
         form = request.POST.get('form_name')
         course_name = request.POST.get('name')
         course_id = request.POST.get('course_id')
         courses = Course.objects.all()
-        #get the list of the instructors so that we can show it
+        # get the list of the instructors so that we can show it
         instructors = User.objects.filter(role="Instructor")
         tas = User.objects.filter(role="TA")
         sections = Section.objects.all()
         users = User.objects.all()
-
 
         if form == "create_course":
             return self.add_course_helper(courses, instructors, tas, sections, request)
@@ -211,8 +227,8 @@ class ConfigureCoursePage(View):
             return self.edit_section_helper(request, courses, instructors, tas, sections, users)
         else:
             return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
-                'courses':courses, 'message': "Something went wrong when fetching the form, please try again."})
-
+                                                             'courses': courses,
+                                                             'message': "Something went wrong when fetching the form, please try again."})
 
     def add_course_helper(self, courses, instructors, tas, sections, request):
         # this gets the first and last name of the instructor as well as their role
@@ -230,15 +246,16 @@ class ConfigureCoursePage(View):
         # no need to filter role because the create_course method already does that
         cname = request.POST['course_name']
 
-        #will return None if the creation failed, will return a course and save it to the database if it succeeded
+        # will return None if the creation failed, will return a course and save it to the database if it succeeded
         course = CreateCourse.create_course(cname, instructor)
         if course is None:
             return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
-                'courses': courses, 'sections':sections, 'message': "Something went wrong when creating the course \"" + cname + "\""})
+                                                             'courses': courses, 'sections': sections,
+                                                             'message': "Something went wrong when creating the course \"" + cname + "\""})
         else:
             return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
-                'courses': courses, 'sections':sections, 'message': "The course \"" + cname + "\" has been created"})
-
+                                                             'courses': courses, 'sections': sections,
+                                                             'message': "The course \"" + cname + "\" has been created"})
 
     def add_section_helper(self, request, courses, instructors, tas, sections, users):
         # get all of the variables we will need to create the course
@@ -276,15 +293,17 @@ class ConfigureCoursePage(View):
         # section.save()
         sections = Section.objects.all()
         if section is None:
-            return render(request, "configure_course.html", {'courses': courses, 'sections':sections,
-                                                'users':users,'tas':tas, 'instructors':instructors, 'days':DAYS_OF_WEEK,
-                                                'message': "Something went wrong when creating the section \"" + section_name + "\""})
+            return render(request, "configure_course.html", {'courses': courses, 'sections': sections,
+                                                             'users': users, 'tas': tas, 'instructors': instructors,
+                                                             'days': DAYS_OF_WEEK,
+                                                             'message': "Something went wrong when creating the section \"" + section_name + "\""})
         else:
-            return render(request, "configure_course.html", {'courses': courses, 'sections':sections,
-                                                'users':users,'tas':tas, 'instructors':instructors,'days':DAYS_OF_WEEK,
-                                                'message': "The section \"" + section_name + "\" has been created"})
+            return render(request, "configure_course.html", {'courses': courses, 'sections': sections,
+                                                             'users': users, 'tas': tas, 'instructors': instructors,
+                                                             'days': DAYS_OF_WEEK,
+                                                             'message': "The section \"" + section_name + "\" has been created"})
 
-    def edit_course_helper(self, course_id,request):
+    def edit_course_helper(self, course_id, request):
         updated_course = EditCourse.edit_course(course_id, request)
         if updated_course:
             message = f"Course '{updated_course.name}' was updated successfully."
@@ -294,7 +313,7 @@ class ConfigureCoursePage(View):
         return redirect('configure_course')
 
     def edit_section_helper(self, request, courses, instructors, tas, sections, users):
-        #get all of the data we need
+        # get all of the data we need
         section_id = request.POST['section_id']
         section_name = request.POST['section_name']
         course_name = request.POST['section_course']
@@ -323,12 +342,14 @@ class ConfigureCoursePage(View):
         edited_section = EditSection.edit_section(request, section_id, section_name, section_course, section_user,
                                                   section_days, section_time, section_location)
 
-        #return things the way we would like to
+        # return things the way we would like to
         if edited_section is not None:
             return render(request, "configure_course.html", {'courses': courses, 'sections': sections,
-                    'users': users, 'tas': tas, 'instructors': instructors,'days': DAYS_OF_WEEK,
-                    'message': "The section has been successfully edited"})
+                                                             'users': users, 'tas': tas, 'instructors': instructors,
+                                                             'days': DAYS_OF_WEEK,
+                                                             'message': "The section has been successfully edited"})
         else:
-            return render(request, "configure_course.html", {'courses': courses, 'sections':sections,
-                    'users':users,'tas':tas, 'instructors':instructors, 'days':DAYS_OF_WEEK,
-                    'message': "Something went wrong when editing the section"})
+            return render(request, "configure_course.html", {'courses': courses, 'sections': sections,
+                                                             'users': users, 'tas': tas, 'instructors': instructors,
+                                                             'days': DAYS_OF_WEEK,
+                                                             'message': "Something went wrong when editing the section"})

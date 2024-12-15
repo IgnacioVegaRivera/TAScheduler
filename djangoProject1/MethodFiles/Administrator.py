@@ -2,7 +2,6 @@
 from abc import ABC
 from datetime import time
 
-
 # import re is used for checking the length of the phone number field
 import re
 
@@ -17,7 +16,7 @@ from djangoProject1.models import Course, User, Section, DAYS_OF_WEEK
 class CreateUser(CreateUserInterface):
     @staticmethod
     def create_user(user_name, user_email, user_password, user_first_name, user_last_name, user_phone_number,
-                    user_address, user_role, user_skills = ""):
+                    user_address, user_role, user_skills=""):
         # Check if the username already exists and if it is valid
         if User.objects.filter(username=user_name).exists() or user_name == '':
             return None
@@ -98,7 +97,7 @@ class CreateSection(CreateSectionInterface):
         if not isinstance(user, User) and user is not None:
             return False
 
-        #check if the user exists they are of the right role
+        # check if the user exists they are of the right role
         if user is not None:
             user_courses = Course.objects.filter(users=user)
             if course not in user_courses:
@@ -110,7 +109,7 @@ class CreateSection(CreateSectionInterface):
                 if user.role == "TA":
                     return False
 
-        #check that the days are formatted properly
+        # check that the days are formatted properly
         if not isinstance(days, list):
             return False
 
@@ -124,7 +123,7 @@ class CreateSection(CreateSectionInterface):
             if not found:
                 return False
 
-        #check that the time is formatted properly
+        # check that the time is formatted properly
         if not isinstance(scheduled_time, time) and scheduled_time is not None:
             return False
 
@@ -148,11 +147,10 @@ class CreateSection(CreateSectionInterface):
         # create the object
         return True
 
-
     # need to update this eventually to reflect the changes from labs to sections, old implementation commented out
     @staticmethod
     def create_section(section_name, course, user, days, scheduled_time, location):
-        #every section needs a course
+        # every section needs a course
         if course == None or not isinstance(course, Course):
             return None
 
@@ -164,12 +162,12 @@ class CreateSection(CreateSectionInterface):
             return None
 
         if "Lab" in section_name:
-            #if either of the other 2 identifiers is in the name then invalid name
+            # if either of the other 2 identifiers is in the name then invalid name
             if "Discussion" in section_name or "Lecture" in section_name:
                 return None
 
         elif "Discussion" in section_name:
-            #if lecture is in the name then invalid name
+            # if lecture is in the name then invalid name
             if "Lecture" in section_name:
                 return None
 
@@ -294,8 +292,8 @@ class EditSection(EditSectionInterface):
 
         valid = CreateSection.verify_fields(name, course, user, days, the_time, location)
 
-        #check if there already exists a section in the database with the same name and course, then check if it's
-        #a different course than the one we are currently editing
+        # check if there already exists a section in the database with the same name and course, then check if it's
+        # a different course than the one we are currently editing
         different = False
         if Section.objects.filter(name=name, course=course).exists():
             if Section.objects.get(name=name, course=course).id != section.id:
@@ -313,7 +311,14 @@ class EditSection(EditSectionInterface):
         else:
             return None
 
+
 class RemoveUser(RemoveUserInterface):
     @staticmethod
     def remove_user(user_id):
-        pass
+        user = User.objects.filter(id=user_id).first()
+
+        if user:
+            user.delete()
+            return "The user has been successfully removed"
+        elif not user:
+            return "User does not exist"

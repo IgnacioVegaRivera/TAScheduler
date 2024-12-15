@@ -1,7 +1,6 @@
 /*
-    Configure Users Style:
-*/
-
+Configure User style
+ */
 
 .navbar {
     background-color: #54d38e;
@@ -9,17 +8,17 @@
 }
 
 .navbar a {
-    padding: 10px;
+    padding: 0.625rem;
     color: midnightblue;
     text-align: center;
-    font-size: 17px;
+    font-size: 1.0625rem;
     text-decoration: none;
 }
 
 .navbar a:hover {
     background-color: black;
     color: white;
-    border-bottom: 2px black;
+    border-bottom: 0.125rem solid black;
 }
 
 .navbar a.active {
@@ -34,33 +33,40 @@
 }
 
 .whiteBox {
-    width: 300px;
+    width: 100%;
+    max-width: 20rem;
     height: auto;
     background-color: white;
-    margin-left: 20px;
-    margin-top: 10px;
+    margin-left: 2%;
+    margin-top: 2%;
     text-align: center;
+    position: relative;
+    padding-bottom: 5rem;
 }
 
 .edit-modal {
-    width: 500px;
-    height: 500px;
+    width: 90vw;
+    max-width: 31.25rem;
+    height: auto;
+    max-height: 31.25rem;
 }
 
 .addUserModal {
-    padding: 8px;
-    font-size: 15px;
+    padding: 0.5rem;
+    font-size: 0.9375rem;
 }
 
 .create-user {
-    width: 500px;
-    height: 500px;
+    width: 90vw;
+    max-width: 31.25rem;
+    height: auto;
+    max-height: 31.25rem;
 }
 
 .formTable {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 1rem;
 }
 
 .formTable div {
@@ -75,8 +81,8 @@
 .submitAndCancelButtons {
     display: flex;
     justify-content: flex-start;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 0.625rem;
+    margin-top: 0.625rem;
 }
 
 .required:after {
@@ -86,11 +92,17 @@
 
 summary {
     background-color: #530e0e;
-    padding: 10px;
+    padding: 0.625rem;
     cursor: pointer;
 }
 
-
+.buttons-container {
+    position:absolute;
+    margin-top: 17%;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
 /*
     Display Courses style:
  */
@@ -104,14 +116,13 @@ summary {
 }
 
 .ol {
-    border: 5px solid cornflowerblue;
+    border: 0.3125rem solid cornflowerblue;
 }
 
 .p {
-    font-size: 20px;
-    margin: 10px 0;
+    font-size: 1.25rem;
+    margin: 0.625rem 0;
 }
-
 
 
 /*
@@ -123,39 +134,41 @@ summary {
 Configure Courses page css:
 */
 
-
 .form-label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 0.5rem;
 }
-
 
 .instructor-checkboxes {
     display: flex;
     flex-direction: column;
-    margin-top: 10px;
+    margin-top: 1rem;
 }
 
 .instructor-checkboxes div {
-    margin-bottom: 5px;
+    margin-bottom: 0.5rem;
 }
 
 .day-checkboxes {
     display: flex;
     flex-direction: column;
-    margin-top: 10px;
+    margin-top: 1rem;
 }
 
 .day-checkboxes div {
-    margin-bottom: 5px;
+    margin-bottom: 0.5rem;
 }
 
 .edit-course-modal {
-    width: 350px;
-    height: 350px;
+    width: 80vw;
+    max-width: 25rem;
+    height: 50vh;
+    max-height: 25rem;
 }
 
 .edit-lab-modal {
-    width: 350px;
-    height: 350px;
+    width: 80vw;
+    max-width: 25rem;
+    height: 50vh;
+    max-height: 25rem;
 }
