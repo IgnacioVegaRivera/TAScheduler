@@ -7,21 +7,21 @@
 </head>
 <body style="background-color: rgb(217,217,217)">
 <a href="home.html">
-    <img src="/static/Logo.jpeg" alt="TA Scheduler Logo" style="height: 75px; width: auto;">
+    <img src="/static/Logo.jpeg" alt="TA Scheduler Logo" style="height: 10vh; width: auto;">
 </a>
 <a href="profile_page.html" style="margin-left: 95%">Profile</a>
 <div class="navbar">
-    <a href="admin_home.html" style="padding: 110px">Admin Home</a>
-    <a href="user_directory.html" style="padding: 110px">User Directory</a>
-    <a class="active" href="course_directory.html" style="padding: 110px">Course Directory</a>
-    <a href="/" style="padding: 110px">Log Out</a>
+    <a href="admin_home.html" style="padding: 9%">Admin Home</a>
+    <a href="user_directory.html" style="padding: 9%">User Directory</a>
+    <a class="active" href="course_directory.html" style="padding: 9%">Course Directory</a>
+    <a href="/" style="padding: 9%">Log Out</a>
 </div>
 
 <div class="container">
     <h2 class="container">Courses:</h2>
 
     <!-- Filter Toggle -->
-    <form method="get" action="course_directory.html" style="margin-bottom: 20px;">
+    <form method="get" action="course_directory.html" style="margin-bottom: 1vw;">
         <label>
             <input type="checkbox" name="filter" value="assigned" {% if filter_assigned %}checked{% endif %}>
             Show Only Assigned Courses/Labs
