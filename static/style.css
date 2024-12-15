@@ -26,6 +26,97 @@ Configure User style
     color: black;
 }
 
+.greenBtn{
+    margin-top: 2%;
+    margin-right: 5%;
+    font-size: 1vw;
+    padding: 0.7% 2%;
+    background-color: #54d38e;
+    font-weight: bold;
+    color: black;
+    border: 2px solid black;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
+}
+
+.greenBtn:hover{
+    background-color: #3d9e66;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
+}
+
+.cancelButton{
+    margin-top: 2%;
+    margin-left: 5%;
+    font-size: 1vw;
+    padding: 0.7% 2%;
+    background-color: lightgrey;
+    font-weight: bold;
+    color: black;
+    border: 2px solid black;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
+}
+
+.cancelButton:hover{
+    background-color: #919090;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);;
+}
+
+.addBtn {
+    margin-left: 2%;
+    font-size: 1vw;
+    padding: 0.9% 0.7%;
+    background-color: #54d38e;
+    font-weight: bold;
+    color: #000000;
+    border: 2px solid black;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
+}
+
+.addBtn:hover {
+    background-color: #34875a;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
+}
+
+.removeButton{
+    font-size: 1vw;
+    padding: 2% 2%;
+    background-color: indianred;
+    font-weight: bold;
+    color: white;
+    border: 2px solid black;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
+}
+
+.removeButton:hover {
+    background-color: #a4494c;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
+}
+
+.editButton{
+    margin-top: 1%;
+    font-size: 1vw;
+    padding: 2% 2%;
+    background-color: cornflowerblue;
+    font-weight: bold;
+    color: white;
+    border: 2px solid black;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
+}
+
+.editButton:hover{
+    background-color: #185bd3;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
+}
+
 .boxContainer {
     width: 100%;
     display: flex;
@@ -38,7 +129,7 @@ Configure User style
     height: auto;
     background-color: white;
     margin-left: 2%;
-    margin-top: 2%;
+    margin-top: 1%;
     text-align: center;
     position: relative;
     padding-bottom: 5rem;
@@ -97,14 +188,15 @@ summary {
 }
 
 .buttons-container {
-    position:absolute;
-    margin-top: 17%;
+    position: absolute;
+    margin-top: 14%;
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    width: 99%;
 }
+
 /*
-    Display Courses style:
+    Courses Directory style:
  */
 .container {
     text-align: center;
@@ -124,6 +216,23 @@ summary {
     margin: 0.625rem 0;
 }
 
+.applyFilter{
+    margin-left: 2%;
+    font-size: 1vw;
+    padding: 0.8% 0.8%;
+    background-color: cornflowerblue;
+    font-weight: bold;
+    color: #202020;
+    border: 2px solid black;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
+}
+
+.applyFilter:hover{
+    background-color: #4f77bc;
+    box-shadow:  0 0 0.25rem rgba(0, 0, 0, 0.2);
+}
 
 /*
     User directory formatting
@@ -133,6 +242,29 @@ summary {
 /*
 Configure Courses page css:
 */
+
+.addCourseAndSectionBtn{
+    margin-left: 2%;
+    font-size: 1vw;
+    padding: 0.8% 0.8%;
+    background-color: #54d38e;
+    font-weight: bold;
+    color: black;
+    border: 2px solid black;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
+}
+
+.addCourseAndSectionBtn:hover{
+    background-color: #3d9e66;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
+}
+
+.alignCourseButtons{
+    margin-top: 1%;
+    display: flex;
+}
 
 .form-label {
     display: block;
