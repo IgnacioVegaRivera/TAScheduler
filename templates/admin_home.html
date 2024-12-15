@@ -10,13 +10,107 @@
     <img src="/static/Logo.jpeg" alt="TA Scheduler Logo" style="height: 10vh; width: auto;">
 </a>
     <div class="navbar">
-        <a href="configure_user.html" style="padding: 12vw">Configure Users</a>
-        <a href="configure_course.html" style="padding: 12vw">Configure Courses</a>
-        <a href="/" style="padding: 12vh">Log Out</a>
+        <a class="active" href="admin_home.html" style="padding: 9%">Databases</a>
+        <a href="configure_user.html" style="padding: 9%">Configure Users</a>
+        <a href="configure_course.html" style="padding: 9%">Configure Courses</a>
+        <a href="/" style="padding: 9%">Log Out</a>
 {#        <a href="">Databases</a>#}
 {#        <a class="active" href="admin_home.html">Admin Home</a>#}
     </div>
+    <br/>
+    <!--- dropdown for databases --->
+    <form method="get" action="">
+        <label for="database">Select Database:</label>
+        <select id="database" name="database" onchange="this.form.submit()">
+            <option value="users" {% if selected_db == "users" %}selected{% endif %}>Users</option>
+            <option value="courses" {% if selected_db == "courses" %}selected{% endif %}>Courses</option>
+            <option value="sections" {% if selected_db == "sections" %}selected{% endif %}>Sections</option>
+        </select>
+    </form>
 
+    {% if selected_db == "users" %}
+    <h2>Users</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Role</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Address</th>
+                <th>Skills</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in data %}
+            <tr>
+                <td>{{ user.first_name }}</td>
+                <td>{{ user.last_name }}</td>
+                <td>{{ user.get_role_display }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.phone_number }}</td>
+                <td>{{ user.address }}</td>
+                <td>{{ user.skills }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% elif selected_db == "courses" %}
+    <h2>Courses</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Users</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in data %}
+            <tr>
+                <td>{{ course.name }}</td>
+                <td>
+                    {% for user in course.users.all %}
+                        {{ user.first_name }} {{ user.last_name }} ({{ user.get_role_display }})<br/>
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% elif selected_db == "sections" %}
+    <h2>Sections</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Course</th>
+                <th>Days</th>
+                <th>Time</th>
+                <th>Location</th>
+                <th>User</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for section in data %}
+            <tr>
+                <td>{{ section.name }}</td>
+                <td>{{ section.course.name }}</td>
+                <td>{{ section.days|join:", " }}</td>
+                <td>{{ section.time|date:"h:i A" }}</td>
+                <td>{{ section.location }}</td>
+                <td>
+                    {% if section.user %}
+                        {{ section.user.first_name }} {{ section.user.last_name }} ({{ section.user.get_role_display }})
+                    {% else %}
+                        None
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
 
 </body>
 </html>
