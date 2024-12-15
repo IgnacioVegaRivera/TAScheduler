@@ -94,8 +94,8 @@
                         -->
                     </div>
                     <div class="submitAndCancelButtons">
-                        <input type="submit" class="btn btn-primary" value="Submit">
-                        <button type="button" class="btn btn-secondary" popovertarget="createUser"
+                        <input type="submit" class="greenBtn" value="Submit">
+                        <button type="button" class="cancelButton" popovertarget="createUser"
                                 popovertargetaction="hide">
                             Cancel
                         </button>
@@ -105,9 +105,13 @@
         </div>
     </div>
 </div>
-<button popovertarget="createUser">Add User</button>
+
+<button popovertarget="createUser" class="addBtn">
+    Add User +
+</button>
 <p style="text-align: center">{{ message }}</p>
 <div class="boxContainer">
+
     {% for user in users %}
         <div class="whiteBox">
             <h2>{{ user.first_name }} {{ user.last_name }}</h2>
@@ -171,8 +175,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                            <button type="button" class="btn btn-secondary"
+                            <button type="submit" class="greenBtn">Save</button>
+                            <button type="button" class="cancelButton"
                                     popovertarget="editModal {{ user.id }}"
                                     popovertargetaction="hide">
                                 Cancel
@@ -183,12 +187,12 @@
             </div>
             <br/>
             <div class="buttons-container">
-                <button class="btn btn-primary" popovertarget="editModal {{ user.id }}">Edit</button>
+                <button class="editButton" popovertarget="editModal {{ user.id }}">Edit</button>
                 <form method="POST" action="{% url 'configure_user' %}">
                     {% csrf_token %}
                     <input type="hidden" name="form_name" value="remove_user">
                     <input type="hidden" name="user_id" value="{{ user.id }}">
-                    <button type="submit" class="btn btn-danger ">Remove</button>
+                    <button type="submit" class="removeButton ">Remove</button>
                 </form>
             </div>
         </div>
