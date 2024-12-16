@@ -1,16 +1,12 @@
-from django.template.context_processors import request
 from django.test import TestCase, Client
-import unittest
 
-from djangoProject1.MethodFiles.Administrator import EditUser
-from djangoProject1.models import User
+from djangoProject1.models import User, Course, Section
 
 
 class EditUserUnitTest(TestCase):
     def setUp(self):
         self.client = Client()
-        self.mock_user = User(
-            id=1,
+        self.user = User(
             first_name="John",
             last_name="Doe",
             username="johndoe",
@@ -18,185 +14,373 @@ class EditUserUnitTest(TestCase):
             email="johndoe@example.com",
             phone_number="1234567890",
             address="123 Main St",
-            role="Admin"
+            role="TA"
         )
-        self.mock_user.save()
+        self.user.save()
 
+        self.course = Course(name="course 1")
+        self.course.save()
+        self.course.users.add(self.user)
+
+        self.lab = Section(name="Lab 1", course=self.course, user=self.user)
+        self.lab.save()
+
+    #firstname tests
     def test_EditFirstName(self):
-        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'Jane',
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'Jane',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'johndoe@example.com',
                                                             'username': 'johndoe',
                                                             'phone_number': '1234567890',
-                                                            'role': 'Admin'})
-        self.mock_user.refresh_from_db()
-        self.assertEqual(self.mock_user.first_name, "Jane")
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.first_name, "Jane")
 
     def test_EditFirstNameBlankEntry(self):
-        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': '',
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': '',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'johndoe@example.com',
                                                             'username': 'johndoe',
                                                             'phone_number': '1234567890',
-                                                            'role': 'Admin'})
-        self.mock_user.refresh_from_db()
-        self.assertEqual(self.mock_user.first_name, "John")
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.first_name, "John")
 
-    def test_EditFirstNameInvalidEntry(self):
-        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': '123',
+    def test_EditFirstNameNumber(self):
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': '123',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'johndoe@example.com',
                                                             'username': 'johndoe',
                                                             'phone_number': '1234567890',
-                                                            'role': 'Admin'})
-        self.mock_user.refresh_from_db()
-        self.assertEqual(self.mock_user.first_name, "John")
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.first_name, "John")
 
+    def test_EditFirstNameSpecial(self):
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': '[Jane]',
+                                                            "form_name": "edit_user",
+                                                            'last_name': 'Doe',
+                                                            'email': 'johndoe@example.com',
+                                                            'username': 'johndoe',
+                                                            'phone_number': '1234567890',
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.first_name, "John")
+
+    #last name tests
     def test_EditLastName(self):
-        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Smith',
                                                             'email': 'johndoe@example.com',
                                                             'username': 'johndoe',
                                                             'phone_number': '1234567890',
-                                                            'role': 'Admin'})
-        self.mock_user.refresh_from_db()
-        self.assertEqual(self.mock_user.last_name, "Smith")
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.last_name, "Smith")
 
-    def test_EditLastNameInvalidEntry(self):
-        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
+    def test_EditLastNameNumber(self):
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': '456',
                                                             'email': 'johndoe@example.com',
                                                             'username': 'johndoe',
                                                             'phone_number': '1234567890',
-                                                            'role': 'Admin'})
-        self.mock_user.refresh_from_db()
-        self.assertEqual(self.mock_user.last_name, "Doe")
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.last_name, "Doe")
+
+    def test_EditLastNameSpecial(self):
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
+                                                            "form_name": "edit_user",
+                                                            'last_name': '[Doe]',
+                                                            'email': 'johndoe@example.com',
+                                                            'username': 'johndoe',
+                                                            'phone_number': '1234567890',
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.last_name, "Doe")
 
     def test_EditLastNameBlankEntry(self):
-        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': '',
                                                             'email': 'johndoe@example.com',
                                                             'username': 'johndoe',
                                                             'phone_number': '1234567890',
-                                                            'role': 'Admin'})
-        self.mock_user.refresh_from_db()
-        self.assertEqual(self.mock_user.last_name, "Doe")
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.last_name, "Doe")
 
+    #email tests
     def test_EditEmail(self):
-        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmith@example.com',
                                                             'username': 'johndoe',
                                                             'phone_number': '1234567890',
-                                                            'role': 'Admin'})
-        self.mock_user.refresh_from_db()
-        self.assertEqual(self.mock_user.email, "janesmith@example.com")
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.email, "janesmith@example.com")
 
     def test_EditEmailBlankEntry(self):
-        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': '',
                                                             'username': 'johndoe',
                                                             'phone_number': '1234567890',
-                                                            'role': 'Admin'})
-        self.mock_user.refresh_from_db()
-        self.assertEqual(self.mock_user.email, "johndoe@example.com")
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.email, "johndoe@example.com")
 
     def test_EditEmailNoAt(self):
-        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmithexample.com',
                                                             'username': 'johndoe',
                                                             'phone_number': '1234567890',
-                                                            'role': 'Admin'})
-        self.mock_user.refresh_from_db()
-        self.assertEqual(self.mock_user.email, "johndoe@example.com")
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.email, "johndoe@example.com")
 
     def test_EditEmailNoPeriod(self):
-        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmith@examplecom',
                                                             'username': 'johndoe',
                                                             'phone_number': '1234567890',
-                                                            'role': 'Admin'})
-        self.mock_user.refresh_from_db()
-        self.assertEqual(self.mock_user.email, "johndoe@example.com")
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.email, "johndoe@example.com")
 
+    #phone tests
     def test_EditPhone(self):
-        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmith@example.com',
                                                             'username': 'johndoe',
                                                             'phone_number': '1234567899',
-                                                            'role': 'Admin'})
-        self.mock_user.refresh_from_db()
-        self.assertEqual(self.mock_user.phone_number, "1234567899")
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.phone_number, "1234567899")
 
     def test_EditPhoneInvalidEntry(self):
-        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmith@example.com',
                                                             'username': 'johndoe',
                                                             'phone_number': 'invalidate',
-                                                            'role': 'Admin'})
-        self.mock_user.refresh_from_db()
-        self.assertEqual(self.mock_user.phone_number, "1234567890")
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.phone_number, "1234567890")
 
     def test_EditPhoneTooShort(self):
-        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmith@example.com',
                                                             'username': 'johndoe',
                                                             'phone_number': '12345',
-                                                            'role': 'Admin'})
-        self.mock_user.refresh_from_db()
-        self.assertEqual(self.mock_user.phone_number, "1234567890")
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.phone_number, "1234567890")
 
     def test_EditPhoneTooLong(self):
-        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmith@example.com',
                                                             'username': 'johndoe',
                                                             'phone_number': '1234567890123',
-                                                            'role': 'Admin'})
-        self.mock_user.refresh_from_db()
-        self.assertEqual(self.mock_user.phone_number, "1234567890")
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.phone_number, "1234567890")
 
-    def test_EditRole(self):
-        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
+    #phonenumber is optional field
+    def test_EditPhoneBlank(self):
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
+                                                            "form_name": "edit_user",
+                                                            'last_name': 'Doe',
+                                                            'email': 'janesmith@example.com',
+                                                            'username': 'johndoe',
+                                                            'phone_number': '',
+                                                            'role': 'TA',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.phone_number, "")
+
+    #role tests
+    def test_MakeIntoInstructor(self):
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmith@example.com',
                                                             'username': 'johndoe',
                                                             'phone_number': '1234567890',
-                                                            'role': 'TA'})
-        self.mock_user.refresh_from_db()
-        self.assertEqual(self.mock_user.role, "TA")
+                                                            'role': 'Instructor',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.course.refresh_from_db()
+        self.lab.refresh_from_db()
+        self.assertEqual(self.user.role, "Instructor")
+        #ta to instructor and vice versa removes the user from their sections, not their courses
+        self.assertEqual(self.course.users.count(), 1)
+        self.assertEqual(self.lab.user, None)
+
+    def test_MakeIntoAdmin(self):
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
+                                                             "form_name": "edit_user",
+                                                             'last_name': 'Doe',
+                                                             'email': 'janesmith@example.com',
+                                                             'username': 'johndoe',
+                                                             'phone_number': '1234567890',
+                                                             'role': 'Admin',
+                                                             'address': '123 Main St',
+                                                             'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.course.refresh_from_db()
+        self.lab.refresh_from_db()
+        self.assertEqual(self.user.role, "Admin")
+        # when a user is made into an admin then they are no longer assigned to any courses or sections
+        self.assertEqual(self.course.users.count(), 0)
+        self.assertEqual(self.lab.user, None)
 
     def test_EditRoleInvalidEntry(self):
-        response = self.client.post('/configure_user.html', {'id': self.mock_user.id, 'first_name': 'John',
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
                                                             "form_name": "edit_user",
                                                             'last_name': 'Doe',
                                                             'email': 'janesmith@example.com',
                                                             'username': 'johndoe',
                                                             'phone_number': '1234567890',
-                                                            'role': 'Invalid'})
-        self.mock_user.refresh_from_db()
-        self.assertEqual(self.mock_user.role, "Admin")
+                                                            'role': 'Invalid',
+                                                            'address': '123 Main St',
+                                                            'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.role, "TA")
+
+    #address tests
+    def test_EditAddress(self):
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
+                                                             "form_name": "edit_user",
+                                                             'last_name': 'Doe',
+                                                             'email': 'janesmith@example.com',
+                                                             'username': 'johndoe',
+                                                             'phone_number': '1234567890',
+                                                             'role': 'TA',
+                                                             'address': '123 Elm Rd',
+                                                             'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.address, "123 Elm Rd")
+
+    #address is optional
+    def test_EditAddressEmpty(self):
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
+                                                             "form_name": "edit_user",
+                                                             'last_name': 'Doe',
+                                                             'email': 'janesmith@example.com',
+                                                             'username': 'johndoe',
+                                                             'phone_number': '1234567890',
+                                                             'role': 'TA',
+                                                             'address': '',
+                                                             'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.address, "")
+
+    def test_EditAddressNoNumber(self):
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
+                                                             "form_name": "edit_user",
+                                                             'last_name': 'Doe',
+                                                             'email': 'janesmith@example.com',
+                                                             'username': 'johndoe',
+                                                             'phone_number': '1234567890',
+                                                             'role': 'TA',
+                                                             'address': 'Elm Rd',
+                                                             'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.address, "123 Main St")
+
+    def test_EditAddressNoLetters(self):
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
+                                                             "form_name": "edit_user",
+                                                             'last_name': 'Doe',
+                                                             'email': 'janesmith@example.com',
+                                                             'username': 'johndoe',
+                                                             'phone_number': '1234567890',
+                                                             'role': 'TA',
+                                                             'address': '123',
+                                                             'skills': 'not much'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.address, "123 Main St")
+
+    def test_EditSkills(self):
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
+                                                             "form_name": "edit_user",
+                                                             'last_name': 'Doe',
+                                                             'email': 'janesmith@example.com',
+                                                             'username': 'johndoe',
+                                                             'phone_number': '1234567890',
+                                                             'role': 'TA',
+                                                             'address': '123 Main St',
+                                                             'skills': 'What about the skills?'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.skills, "What about the skills?")
+
+    #skills is an optional field
+    def test_EditSkillsEmpty(self):
+        response = self.client.post('/configure_user.html', {'id': self.user.id, 'first_name': 'John',
+                                                             "form_name": "edit_user",
+                                                             'last_name': 'Doe',
+                                                             'email': 'janesmith@example.com',
+                                                             'username': 'johndoe',
+                                                             'phone_number': '1234567890',
+                                                             'role': 'TA',
+                                                             'address': '123 Main St',
+                                                             'skills': ''})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.skills, "")
 
 
 # class EditUserAcceptanceTest(TestCase):

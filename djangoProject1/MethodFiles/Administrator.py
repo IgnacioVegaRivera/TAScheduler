@@ -210,55 +210,92 @@ class CreateSection(CreateSectionInterface):
 
 class EditUser(EditUserInterface, ABC):
     @staticmethod
-    def edit_user(request, username, newFirstname, newLastname, newPhone, newEmail, newRole):
+    def edit_user(request, username, newFirstname, newLastname, newPhone, newEmail, newRole, newAddress, newSkills):
+        #get the user that we want to change
         user = User.objects.get(username=username)
 
+        if user is None or not isinstance(user, User):
+            return None
+
         # check for first name
-        if (not isinstance(user, User) or not isinstance(newFirstname, str) or
-                not newFirstname.strip() or newFirstname == "" or not newFirstname.isalpha()):
+        if not isinstance(newFirstname, str) or not newFirstname.strip() or newFirstname == "" or not newFirstname.isalpha():
             return None
 
         # check for last name
-        if (not isinstance(user, User) or not isinstance(newLastname, str)
-                or not newLastname.strip() or newLastname == "" or not newLastname.isalpha()):
+        if not isinstance(newLastname, str) or not newLastname.strip() or newLastname == "" or not newLastname.isalpha():
             return None
 
         # check for email
-        if (not isinstance(user, User) or not isinstance(newEmail, str) or not len(newEmail) > 0
-                or newEmail.find('@') == -1 or newEmail.find('.') == -1):
+        if not isinstance(newEmail, str) or not len(newEmail) > 0:
+            return None
+
+        if newEmail.find('@') == -1 or newEmail.find('.') == -1:
             return None
 
         # check for phone number
-        if not isinstance(user, User) or not isinstance(newPhone, str) or not newPhone.isdigit() or len(newPhone) != 10:
+        if not isinstance(newPhone, str):
             return None
+
+        if len(newPhone) != 10 and newPhone != "":
+            return None
+
+        if len(newPhone) == 10:
+            for char in newPhone:
+                if not char.isdigit():
+                    return None
 
         valid_roles = {"TA", "Instructor", "Admin"}  # Add other valid roles as needed
         if not isinstance(user, User) or not isinstance(newRole, str) or newRole not in valid_roles:
             return None
 
-        # if the user is an admin then they shouldn't have any courses or labs
-        if newRole == "Admin":
-            removeInstructor = Course.objects.filter(instructors=user)
-            removeTa = Lab.objects.filter(ta=user)
-            for course in removeInstructor:
-                course.instructors.remove(user)
 
-            for lab in removeTa:
-                lab.ta = None
+        #checks for address
+        if not isinstance(newAddress, str):
+            return None
+
+        #address must have a street number and street name
+        if newAddress != "":
+            digit = character = False
+            for char in newAddress:
+                if char.isdigit():
+                    digit = True
+                if char.isalpha():
+                    character = True
+                if digit and character:
+                    break
+            if not digit or not character:
+                return None
+
+        #check for skills
+        if not isinstance(newSkills, str):
+            return None
+
+        # make sure to check last in case any other field messes up, then we don't want to make changes to
+        # the courses and sections because they shouldn't change if we don't update the user
+
+        # if the user is an admin then they shouldn't have any courses or sections,
+        if newRole == "Admin" and user.role != "Admin":
+            removeCourses = Course.objects.filter(users=user)
+            removeSections = Section.objects.filter(user=user)
+            for course in removeCourses:
+                course.users.remove(user)
+
+            for lab in removeSections:
+                lab.user = None
                 lab.save()
 
-        # if the user is an Instructor then they shouldnt have any labs
-        if newRole == "Instructor":
-            removeTa = Lab.objects.filter(ta=user)
-            for lab in removeTa:
-                lab.ta = None
+        # if the user becomes an Instructor then they shouldnt have any labs or discussions
+        if newRole == "Instructor" and user.role != "Instructor":
+            removeLabAndDiscussion = Section.objects.filter(user=user)
+            for lab in removeLabAndDiscussion:
+                lab.user = None
                 lab.save()
 
-        # if the user is an Instructor then they shouldnt have any courses
-        if newRole == "TA":
-            removeInstructor = Course.objects.filter(instructors=user)
-            for course in removeInstructor:
-                course.instructors.remove(user)
+        # if the user becomes a TA then they shouldnt have any lectures
+        if newRole == "TA" and user.role != "TA":
+            removeLectures = Section.objects.filter(user=user)
+            for lecture in removeLectures:
+                lecture.user = None
 
         # changes all of the necessary values to their new ones
         user.first_name = request.POST.get('first_name', user.first_name)
@@ -266,6 +303,8 @@ class EditUser(EditUserInterface, ABC):
         user.role = request.POST.get("role", user.role)
         user.email = request.POST.get("email", user.email)
         user.phone_number = request.POST.get("phone_number", user.phone_number)
+        user.address = request.POST.get("address", user.address)
+        user.skills = request.POST.get("skills", user.skills)
 
         # Saves user
         user.save()
