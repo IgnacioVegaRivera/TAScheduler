@@ -7,6 +7,16 @@ Configure User style
     overflow: hidden;
 }
 
+.pfplogo1 {
+
+    display: inline-block;
+}
+
+.pfplogo2 {
+    margin-left: 87%;
+    display: inline-block
+}
+
 .navbar a {
     padding: 0.625rem;
     color: midnightblue;
