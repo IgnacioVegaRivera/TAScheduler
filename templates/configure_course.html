@@ -35,22 +35,22 @@
                             <input type="text" class="form-control" name="course_name" required>
                         </div>
                         <div>
-                            <label class="form-label required">Instructor:</label>
-                            <select name="instructor">
-                                <option></option>
-                                {% for instructor in instructors %}
-                                    <option>{{ instructor.first_name }} {{ instructor.last_name }}</option>
-                                {% endfor %}
-                            </select>
+                            <label class="form-label required">Instructor(s):</label>
+                            {% for instructor in instructors %}
+                                <div>
+                                    <input type="checkbox" name="instructors" value="{{ instructor.id }}">
+                                    {{ instructor.first_name }} {{ instructor.last_name }}
+                                </div>
+                            {% endfor %}
                         </div>
                         <div>
-                            <label class="form-label required">TAs:</label>
-                            <select name="instructor">
-                                <option></option>
-                                {% for ta in tas %}
-                                    <option>{{ ta.first_name }} {{ ta.last_name }}</option>
-                                {% endfor %}
-                            </select>
+                            <label class="form-label required">TA(s):</label>
+                            {% for ta in tas %}
+                                <div>
+                                    <input type="checkbox" name="tas" value="{{ ta.id }}">
+                                    {{ ta.first_name }} {{ ta.last_name }}
+                                </div>
+                            {% endfor %}
                         </div>
                         <div class="submitAndCancelButtons">
                             <input type="submit" class="greenBtn" value="Submit">
