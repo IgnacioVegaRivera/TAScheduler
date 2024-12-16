@@ -339,6 +339,7 @@ class EditCourse(EditCourseInterface):
         return course
 
 
+
 class EditSection(EditSectionInterface):
     @staticmethod
     def edit_section(request, section_id, name, course, user, days, the_time, location):
