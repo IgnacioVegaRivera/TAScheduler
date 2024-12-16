@@ -16,9 +16,9 @@ from djangoProject1.models import Course, User, Section, DAYS_OF_WEEK
 class CreateUser(CreateUserInterface):
     @staticmethod
     def create_user(user_name, user_email, user_password, user_first_name, user_last_name, user_phone_number,
-                    user_address, user_role, user_skills=""):
+                    user_address, user_role, user_skills):
         # Check if the username already exists and if it is valid
-        if User.objects.filter(username=user_name).exists() or user_name == '':
+        if User.objects.filter(username=user_name).exists() or user_name == '' or not isinstance(user_name, str):
             return None
 
         # check for valid role
@@ -31,32 +31,59 @@ class CreateUser(CreateUserInterface):
             return None
 
         # First name should only have alphabetical characters
+        if not isinstance(user_first_name, str):
+            return None
+
         if not user_first_name.isalpha() or user_first_name == '':
             return None
 
         # Last name should only have alphabetical characters
+        if not isinstance(user_last_name, str):
+            return None
+
         if not user_last_name.isalpha() or user_last_name == '':
             return None
 
-        # Phone can only have digits and must be between 10 and 15 digits
-        if not re.match(r'^\d{10}$', user_phone_number):
+        # Phone can only have digits and must be 10 digits
+        if not isinstance(user_phone_number, str):
             return None
 
-        # Address cannot be empty
-        if not user_address:
+        if len(user_phone_number) != 10 and user_phone_number != "":
             return None
+
+        # Address must have a street and house number if it is filled out
+        if not isinstance(user_address, str):
+            return None
+
+        if user_address != "":
+            digit = character = False
+            for char in user_address:
+                if char.isdigit():
+                    digit = True
+                if char.isalpha():
+                    character = True
+                if digit and character:
+                    break
+            if not digit or not character:
+                return None
+
 
         # email cannot be empty
-        if user_email == '':
+        if user_email == '' or not isinstance(user_email, str):
             return None
 
         # password should not be empty
-        if user_password == '':
+        if user_password == '' or not isinstance(user_password, str):
             return None
 
+        #skills is an optional field, all we need to check is if it is a string
+        if not isinstance(user_skills, str):
+            return None
+
+        #if everything is all good we can then we can create the user and save it
         user = User(username=user_name, email=user_email, password=user_password,
                     first_name=user_first_name, last_name=user_last_name, phone_number=user_phone_number,
-                    address=user_address, role=user_role)
+                    address=user_address, role=user_role, skills=user_skills)
         user.save()
         return user
 
