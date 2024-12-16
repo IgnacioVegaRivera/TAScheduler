@@ -90,7 +90,7 @@ class CreateUser(CreateUserInterface):
 
 class CreateCourse(CreateCourseInterface):
     @staticmethod
-    def create_course(name, instructors, tas):
+    def create_course(name, users):
         if not isinstance(name, str) or not name.strip():
             return None
 
@@ -98,14 +98,9 @@ class CreateCourse(CreateCourseInterface):
         if name == None or name == "":
             return None
 
-        # checks whether the instructors input is a list type, and also checks whether all the elements in the
+        # checks whether the users input is a list type, and also checks whether all the elements in the
         # instructors list are User objects
-        if not isinstance(instructors, list) or not all(isinstance(instructor, User) for instructor in instructors):
-            return None
-
-        # checks whether the tas input is a list type, and also checks whether all the elements in the
-        # tas list are User objects
-        if not isinstance(tas, list) or not all(isinstance(ta, User) for ta in tas):
+        if not isinstance(users, list) or not all((isinstance(user, User) and user.role != "Admin") for user in users):
             return None
 
         # if the course already exists then return None
@@ -116,8 +111,7 @@ class CreateCourse(CreateCourseInterface):
         course = Course(name=name)
         course.save()
 
-        course.users.add(*instructors)
-        course.users.add(*tas)
+        course.users.add(*users)
 
         return course
 

@@ -201,6 +201,7 @@
                     {% csrf_token %}
                     <input type="hidden" name="form_name" value="remove_user">
                     <input type="hidden" name="user_id" value="{{ user.id }}">
+
                     <button type="submit" class="removeButton ">Remove</button>
                 </form>
             </div>
