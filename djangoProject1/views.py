@@ -364,3 +364,6 @@ class ConfigureCoursePage(View):
                                                              'message': "Something went wrong when editing the section"})
 
 
+class EditSectionAssignmentPage(View):
+    def get(self, request):
+        return render(request, "edit_section_assignment.html", {})
