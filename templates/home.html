@@ -4,20 +4,28 @@
     <meta charset="UTF-8">
     <title>Home | Scheduler</title>
     <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .homePageLinks {
+            display: inline-flex;
+
+        }
+    </style>
 </head>
 <body style="background-color: rgb(217,217,217)">
-<a href="home.html">
-    <img src="/static/Logo.jpeg" alt="TA Scheduler Logo" style="height: 10vh; width: auto;">
-</a>
-<div><a href="profile_page.html" style="margin-left: 95%">Profile</a></div>
-    <div class="navbar">
-        <a href="admin_home.html" style="padding: 9%">Admin Home</a>
-        <a href="user_directory.html" style="padding: 9%">User Directory</a>
-        <a href="course_directory.html" style="padding: 9%">Course Directory</a>
-        <a href="/" style="padding: 9%">Log Out</a>
-    </div>
-    <h1>Home Page</h1>
-    <p style="text-align: center">{{ message }}
-        <img src="/static/Logo.jpeg" alt="logo" style="width:auto; height:31.25rem"></img>
+<div class="homePageLinks">
+    <a href="home.html">
+        <img src="/static/Logo.jpeg" alt="TA Scheduler Logo" style="height: 10vh; width: auto;">
+    </a>
+    <a href="profile_page.html" style="margin-left: 95%;">Profile</a>
+</div>
+<div class="navbar">
+    <a href="admin_home.html" style="padding: 9%">Admin Home</a>
+    <a href="user_directory.html" style="padding: 9%">User Directory</a>
+    <a href="course_directory.html" style="padding: 9%">Course Directory</a>
+    <a href="/" style="padding: 9%">Log Out</a>
+</div>
+<h1>Home Page</h1>
+<p style="text-align: center">{{ message }}
+    <img src="/static/Logo.jpeg" alt="logo" style="width:auto; height:31.25rem"></img>
 </body>
-</html>
+</html>p

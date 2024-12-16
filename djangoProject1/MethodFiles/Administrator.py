@@ -320,20 +320,28 @@ class EditUser(EditUserInterface, ABC):
 
 class EditCourse(EditCourseInterface):
     @staticmethod
-    def edit_course(course_id, request):
-        course = Course.objects.get(id=course_id)
-        if course_id == None or course_id == "":
+    def edit_course(newCourseName, newInstructors, newTas):
+        if not isinstance(newCourseName, str) or not newCourseName.strip():
             return None
 
-        new_course = request.POST.get("name", course.name)
-        if new_course:
-            course.name = new_course
+        # if any of the inputs are none then return None
+        if newCourseName == None or newCourseName == "":
+            return None
 
-        selected_instructors = request.POST.getlist("instructor[]")
-        instructors = User.objects.filter(id__in=selected_instructors)
-        course.users.set(instructors)
+        # checks whether the instructors input is a list type, and also checks whether all the elements in the
+        # instructors list are User objects
+        if not isinstance(newInstructors, list) or not all(isinstance(newInstructors, User) for newInstructor in newInstructors):
+            return None
 
-        course.save()
+        # checks whether the tas input is a list type, and also checks whether all the elements in the
+        # tas list are User objects
+        if not isinstance(newTas, list) or not all(isinstance(newTa, User) for newTa in newTas):
+            return None
+
+        # if the course already exists then return None
+        if Course.objects.filter(name=newCourseName).exists():
+            return None
+
         return course
 
 

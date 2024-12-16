@@ -236,7 +236,7 @@ class ConfigureCoursePage(View):
         elif form == "create_section":
             return self.add_section_helper(request, courses, instructors, tas, sections, users)
         elif form == "edit_course":
-            return self.edit_course_helper(course_id, request)
+            return self.edit_course_helper(courses, instructors, tas, sections, request)
         elif form == "edit_section":
             return self.edit_section_helper(request, courses, instructors, tas, sections, users)
         else:
@@ -259,9 +259,6 @@ class ConfigureCoursePage(View):
                                                              'courses': courses, 'sections': sections,
                                                              'message': "Something went wrong when creating the course \"" + cname + "\""})
         else:
-            #* unpacks the instructors and tas list so it adds individual objects
-            course.users.add(*selected_instructors)
-            course.users.add(*selected_tas)
             return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
                                                              'courses': courses, 'sections': sections,
                                                              'message': "The course \"" + cname + "\" has been created"})
@@ -312,8 +309,15 @@ class ConfigureCoursePage(View):
                                                              'days': DAYS_OF_WEEK,
                                                              'message': "The section \"" + section_name + "\" has been created"})
 
-    def edit_course_helper(self, course_id, request):
-        updated_course = EditCourse.edit_course(course_id, request)
+    def edit_course_helper(self, courses, instructors, tas, sections, request):
+        instructor_ids = request.POST.getlist('instructors')
+        ta_ids = request.POST.getlist('tas')
+        cname = request.POST['course_name']
+
+        selected_instructors = User.objects.filter(id__in=instructor_ids)
+        selected_tas = User.objects.filter(id__in=ta_ids)
+
+        updated_course = EditCourse.edit_course(cname, list(selected_instructors), list(selected_tas))
         if updated_course:
             message = f"Course '{updated_course.name}' was updated successfully."
         else:

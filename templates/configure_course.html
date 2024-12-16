@@ -182,18 +182,23 @@
                                 <input type="text" name="name" class="form-control" value="{{ course.name }}">
                             </div>
                             <div>
-                                <label class="form-label required">Instructors</label>
-                                <div class="instructor-checkboxes">
-                                    {% for instructor in instructors %}
-                                        <div>
-                                            <input type="checkbox"
-                                                   name="instructor[]"
-                                                   value="{{ instructor.id }}"
-                                                   {% if instructor in course.users.all %}checked{% endif %}>
-                                            <label>{{ instructor }}</label>
-                                        </div>
-                                    {% endfor %}
-                                </div>
+                                <label class="form-label required">Instructor(s):</label>
+                                {% for instructor in instructors %}
+                                    <div>
+                                        <input type="checkbox" name="instructors" value="{{ instructor.id }}">
+                                        {{ instructor.first_name }} {{ instructor.last_name }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div>
+                                <br/>
+                                <label class="form-label required">TA(s):</label>
+                                {% for ta in tas %}
+                                    <div>
+                                        <input type="checkbox" name="tas" value="{{ ta.id }}">
+                                        {{ ta.first_name }} {{ ta.last_name }}
+                                    </div>
+                                {% endfor %}
                             </div>
                         </div>
                         <div class="modal-footer">
