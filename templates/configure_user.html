@@ -120,23 +120,14 @@
         <div class="whiteBox">
             <h2>{{ user.first_name }} {{ user.last_name }}</h2>
             <p>{{ user.role }} <br/>
-                {% if user.role == "Instructor" %}
-                    {% for course in user.courses.all %}
-                        {{ course.name }}<br/>
-                    {% empty %}
-                        No Courses.<br/>
-                    {% endfor %}
-                {% elif user.role == "TA" %}
+                {% if user.role == "Instructor" or user.role == "TA"%}
                     {% for section in user.sections.all %}
-                        {{ section.name }}<br/>
+                        {{ section.name }} - {{ section.course.name }}<br/>
                     {% empty %}
                         No section assigned.<br/>
                     {% endfor %}
                 {% else %}
                     No assignments.<br/>
-                {% endif %}
-                {% if user.role == "Admin" %}
-                    No Courses.<br/>
                 {% endif %}
                 {{ user.email }}<br/>{{ user.phone_number|format_phone }}</p>
 
