@@ -74,15 +74,18 @@ class ConfigureUserPage(View):
             address = request.POST['address']
             skills = request.POST['skills']
             return self.addUserHelper(username, email, password, firstname, lastname, phone, address, role, skills, request)
+
         elif form == "edit_user":
             firstname = request.POST['first_name']
             lastname = request.POST['last_name']
             username = request.POST['username']
-            # course= request.POST['name']
             email = request.POST['email']
             phone = request.POST['phone_number']
             role = request.POST['role']
-            return self.editUserHelper(request, username, firstname, lastname, phone, email, role, users)
+            address = request.POST['address']
+            skills = request.POST['skills']
+            return self.editUserHelper(request, username, firstname, lastname, phone, email, role, address, skills, users)
+
         elif form == "remove_user":
             user_id = request.POST['user_id']
             return self.removeUserHelper(request, user_id)
@@ -115,8 +118,8 @@ class ConfigureUserPage(View):
                 'message': "The user \"" + name + "\" has been created"})
 
     # Helper class to save/edit the user
-    def editUserHelper(self, request, username, firstname, lastname, phone, email, role, users):
-        user = EditUser.edit_user(request, username, firstname, lastname, phone, email, role)
+    def editUserHelper(self, request, username, firstname, lastname, phone, email, role, address, skills, users,):
+        user = EditUser.edit_user(request, username, firstname, lastname, phone, email, role, address, skills)
         if user is None:
             return render(request, "configure_user.html",
                           {"roles": User.ROLE_CHOICES, "users": users,
