@@ -318,14 +318,22 @@ class ConfigureCoursePage(View):
                                                              'days': DAYS_OF_WEEK,
                                                              'message': "The section \"" + section_name + "\" has been created"})
 
-    def edit_course_helper(self, course_id, request):
-        updated_course = EditCourse.edit_course(course_id, request)
+    def edit_course_helper(self, courses, instructors, tas, sections, request):
+        instructor_ids = request.POST.getlist('instructors')
+        ta_ids = request.POST.getlist('tas')
+        cname = request.POST['course_name']
+
+        selected_instructors = User.objects.filter(id__in=instructor_ids)
+        selected_tas = User.objects.filter(id__in=ta_ids)
+
+        updated_course = EditCourse.edit_course(cname, list(selected_instructors), list(selected_tas))
         if updated_course:
             message = f"Course '{updated_course.name}' was updated successfully."
         else:
             message = "Failed to update course. Please check your inputs and try again."
 
         return redirect('configure_course')
+
 
     def edit_section_helper(self, request, courses, instructors, tas, sections, users):
         # get all of the data we need
