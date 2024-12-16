@@ -43,15 +43,24 @@
                                 {% endfor %}
                             </select>
                         </div>
-
+                        <div>
+                            <label class="form-label required">TAs:</label>
+                            <select name="instructor">
+                                <option></option>
+                                {% for ta in tas %}
+                                    <option>{{ ta.first_name }} {{ ta.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="submitAndCancelButtons">
+                            <input type="submit" class="greenBtn" value="Submit">
+                            <button popovertarget="createCourse" popovertargetaction="hide" class="cancelButton">
+                                Cancel
+                            </button>
+                        </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <input type="submit" class="greenBtn">
-                    <button popovertarget="createCourse" popovertargetaction="hide" class="cancelButton">
-                        Cancel
-                    </button>
-                </div>
+
             </div>
         </div>
     </div>
@@ -133,14 +142,15 @@
                                 </select>
                             </div>
                         </fieldset>
+                        <div class="modal-footer">
+                            <input type="submit" class="greenBtn" value="Submit">
+                            <button popovertarget="createSection" popovertargetaction="hide" class="cancelButton">
+                                Cancel
+                            </button>
+                        </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <input type="submit" class="greenBtn">
-                    <button popovertarget="createSection" popovertargetaction="hide" class="cancelButton">
-                        Cancel
-                    </button>
-                </div>
+
             </div>
         </div>
     </div>
@@ -304,7 +314,7 @@
                                     <input type="submit" class="greenBtn" value="Submit">
                                     <button type="button" class="cancelButton"
                                             popovertarget="editSectionModal {{ section.id }}"
-                                            popovertargetaction="hide" >
+                                            popovertargetaction="hide">
                                         Cancel
                                     </button>
                                 </div>
