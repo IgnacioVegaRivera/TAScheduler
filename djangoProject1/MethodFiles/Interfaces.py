@@ -2,7 +2,7 @@ import abc
 
 class CreateCourseInterface(abc.ABC):
     @abc.abstractmethod
-    def create_course(self, name, instructor):
+    def create_course(self, name, instructors, tas):
         pass
 
 class CreateSectionInterface(abc.ABC):
