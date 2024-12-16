@@ -90,32 +90,36 @@ class CreateUser(CreateUserInterface):
 
 class CreateCourse(CreateCourseInterface):
     @staticmethod
-    def create_course(name, users):
-        # if name is wrong type return none
-        if not isinstance(name, str):
+    def create_course(name, instructors, tas):
+        if not isinstance(name, str) or not name.strip():
             return None
 
-        if name == "" or Course.objects.filter(name=name).exists():
+        # if any of the inputs are none then return None
+        if name == None or name == "":
             return None
 
-        if not isinstance(users, list):
+        # checks whether the instructors input is a list type, and also checks whether all the elements in the
+        # instructors list are User objects
+        if not isinstance(instructors, list) or not all(isinstance(instructor, User) for instructor in instructors):
             return None
 
-        for user in users:
-            if not isinstance(user, User):
-                return None
+        # checks whether the tas input is a list type, and also checks whether all the elements in the
+        # tas list are User objects
+        if not isinstance(tas, list) or not all(isinstance(ta, User) for ta in tas):
+            return None
 
-            if user.role == "Admin":
-                return None
+        # if the course already exists then return None
+        if Course.objects.filter(name=name).exists():
+            return None
 
         # if everything is fine then we can create the course no problem
         course = Course(name=name)
         course.save()
-        for user in users:
-            course.users.add(user)
+
+        course.users.add(*instructors)
+        course.users.add(*tas)
 
         return course
-
 
 class CreateSection(CreateSectionInterface):
 
