@@ -8,107 +8,222 @@ class Unit_Admin_CreateAccountTest(TestCase):
         pass
 
     #tests for valid creations
+    #first name tests
     def test_Create_Account_firstName(self):
         newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
-                                            "Bob", "Smith", "4141234567", "UWM", "Admin")
+                                            "Bob", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
         self.assertEqual(newAccount.first_name,"Bob","The first name is not correct")
 
-    def test_Create_Account_lastName(self):
+    def test_blank_firstName(self):
         newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
-                                            "Bob", "Smith", "4141234567", "UWM", "Admin")
-        self.assertEqual(newAccount.last_name,"Smith","The last name is not correct")
-
-    def test_Create_Account_Username(self):
-        newAccount = CreateUser.create_user("login1", "email@gmail.com", "password1",
-                                            "Bob", "Smith", "4141234567", "UWM", "Admin")
-        self.assertEqual(newAccount.username,"login1","The username is not correct")
-
-    def test_Create_Account_Password(self):
-        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
-                                            "Bob", "Smith", "4141234567", "UWM", "Admin")
-        self.assertEqual(newAccount.password,"password1","The password is not correct")
-
-    def test_Create_Account_Email(self):
-        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
-                                            "Bob", "Smith", "4141234567", "UWM", "Admin")
-        self.assertEqual(newAccount.email,"email@gmail.com","The email is not correct")
-
-    def test_Create_Account_Phone(self):
-        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
-                                            "Bob", "Smith", "4141234567", "UWM", "Admin")
-        self.assertEqual(newAccount.phone_number,"4141234567","The phone number is not correct")
-
-    def test_Create_Account_Address(self):
-        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
-                                            "Bob", "Smith", "4141234567", "UWM", "Admin")
-        self.assertEqual(newAccount.address,"UWM","The address is not correct")
-
-    def test_Create_Account_Role(self):
-        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
-                                            "Bob", "Smith", "4141234567", "UWM", "Admin")
-        self.assertEqual(newAccount.role,"Admin","The role is not correct")
-
-    def test_Create_Account_Skills(self):
-        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
-                                            "Bob", "Smith", "4141234567",
-                                            "UWM", "Admin", "skills")
-        self.assertEqual(newAccount.skills,"skills","The skills is not correct")
-
-    def test_invalid_firstName(self):
-        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
-                                            "", "Smith", "4141234567", "UWM", "Admin")
+                                            "", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
         self.assertEqual(newAccount, None, "The first name is not correct")
 
     def test_firstName_with_number(self):
         newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
-                                            "Bob1", "Smith", "4141234567", "UWM", "Admin")
+                                            "Bob1", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
         self.assertEqual(newAccount, None, "The first name is not correct")
 
-    def test_invalid_lastName(self):
+    def test_firstName_with_special_char(self):
         newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
-                                            "Bob", "", "4141234567", "UWM", "Admin")
+                                            "[Bob]", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount, None, "The first name is not correct")
+
+    def test_firstName_invalid_type(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            12345, "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount, None, "The first name is not correct")
+
+    # last name tests
+    def test_Create_Account_lastName(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount.last_name,"Smith","The last name is not correct")
+
+    def test_blank_lastName(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
         self.assertEqual(newAccount, None, "The last name is not correct")
 
     def test_lastName_with_number(self):
         newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
-                                            "Bob", "Smith2", "4141234567", "UWM", "Admin")
+                                            "Bob", "Smith2", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
         self.assertEqual(newAccount, None, "The last name is not correct")
 
-    def test_invalid_username(self):
+    def test_lastName_with_special_char(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "_Smith_", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount, None, "The first name is not correct")
+
+    def test_lastName_invalid_type(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", 123, "4141234567", "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount, None, "The first name is not correct")
+
+    #username tests
+    def test_Create_Account_Username(self):
+        newAccount = CreateUser.create_user("login1", "email@gmail.com", "password1",
+                                            "Bob", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount.username,"login1","The username is not correct")
+
+    def test_blank_username(self):
         newAccount = CreateUser.create_user("", "email@gmail.com", "password1",
-            "Bob", "Smith", "4141234567", "UWM", "Admin")
+            "Bob", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
         self.assertEqual(newAccount, None, "The username is not correct")
 
-    def test_invalid_password(self):
+    def test_wrong_type_username(self):
+        newAccount = CreateUser.create_user(123, "email@gmail.com", "password1",
+                                            "Bob", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount, None, "The username is not correct")
+
+    #password tests
+    def test_Create_Account_Password(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount.password,"password1","The password is not correct")
+
+    def test_blank_password(self):
         newAccount = CreateUser.create_user("login", "email@gmail.com", "",
-            "Bob", "Smith", "4141234567", "UWM", "Admin")
+            "Bob", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
         self.assertEqual(newAccount, None, "The password is not correct")
 
-    def test_invalid_email(self):
+    def test_wrong_type_password(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", 123,
+                                            "Bob", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount, None, "The password is not correct")
+
+    #email tests
+    def test_Create_Account_Email(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount.email,"email@gmail.com","The email is not correct")
+
+    def test_blank_email(self):
         newAccount = CreateUser.create_user("login", "", "password1",
-                                        "Bob", "Smith", "4141234567", "UWM", "Admin")
+                                        "Bob", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
         self.assertEqual(newAccount, None, "The email is not correct")
 
-    def test_invalid_Phone(self):
+    def test_wrong_type_email(self):
+        newAccount = CreateUser.create_user("login", 456, "password1",
+                                            "Bob", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount, None, "The email is not correct")
+
+    #phone number tests
+    def test_Create_Account_Phone(self):
         newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
-                                            "Bob", "Smith", "4141234", "UWM", "Admin")
+                                            "Bob", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount.phone_number,"4141234567","The phone number is not correct")
+
+    def test_small_Phone(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "Smith", "4141234", "UWM 123", "Admin"
+                                            , "skills")
         self.assertEqual(newAccount,None,"The phone number is not correct")
 
-    def test_invalid_Address(self):
+    def test_large_phone(self):
         newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
-                                            "Bob", "Smith", "4141234567", "", "Admin")
-        self.assertEqual(newAccount,None,"The address is not correct")
+                                            "Bob", "Smith", "414123456789", "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount, None, "The phone number is not correct")
+
+    def test_wrong_type_phone(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "Smith", 4141234567, "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount, None, "The phone number is not correct")
+
+    #phone number should be an optional field
+    def test_blank_phone(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "Smith", "", "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount.phone_number, "", "The phone number is not correct")
+
+    #address tests
+    def test_Create_Account_Address(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount.address,"UWM 123","The address is not correct")
+
+    #address is an optional field
+    def test_blank_Address(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "Smith", "4141234567", "", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount.address, "", "The address is not correct")
+
+    def test_wrong_type_Address(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "Smith", "4141234567", 789, "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount, None, "The address is not correct")
+
+    def test_no_house_number(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "Smith", "4141234567", "UWM", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount, None, "The address is not correct")
+
+    def test_no_street_name(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "Smith", "4141234567", "123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount, None, "The address is not correct")
+
+    #role tests
+    def test_Create_Account_Role(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "Smith", "4141234567", "UWM 123", "Admin"
+                                            , "skills")
+        self.assertEqual(newAccount.role,"Admin","The role is not correct")
 
     def test_invalid_Role(self):
         newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
-                                            "Bob", "Smith", "4141234567", "UWM", "Administrate")
+                                            "Bob", "Smith", "4141234567", "UWM 123", "Administrate"
+                                            , "skills")
         self.assertEqual(newAccount,None,"The role is not correct")
 
-    def test_invalid_Skills(self):
+    #skills tests
+    def test_Create_Account_Skills(self):
         newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
                                             "Bob", "Smith", "4141234567",
-                                            "UWM", "Admin", 4)
+                                            "UWM 123", "Admin", "skills")
+        self.assertEqual(newAccount.skills,"skills","The skills is not correct")
+
+    def test_invalid_type_Skills(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "Smith", "4141234567",
+                                            "UWM 123", "Admin", 4)
         self.assertEqual(newAccount,None,"The skills is not correct")
+
+    #skills is an optional field
+    def test_blank_skills(self):
+        newAccount = CreateUser.create_user("login", "email@gmail.com", "password1",
+                                            "Bob", "Smith", "4141234567",
+                                            "UWM 123", "Admin", "")
+        self.assertEqual(newAccount.skills, "", "The skills is not correct")
+
     #unit tests testing created account with default values
 
     # def test_Create_Account_defaultFirstNames(self):
@@ -248,70 +363,4 @@ class Unit_Admin_CreateAccountTest(TestCase):
 ###
 ###
 ###AADI TESTS
-class UserUnitTest(TestCase):
-    def setUp(self):
-        pass
-
-
-    # def test_creation_default_users(self):
-    #     # Tests for creating users helper method
-    #     user = CreateUser.create_user(
-    #        "username",
-    #         "email",
-    #         "password",
-    #         "first_name",
-    #         "last_name",
-    #         "phone_number",
-    #         "address",
-    #         "role"
-    #     )
-    #     self.assertIsNotNone(user.id)
-    #     self.assertEqual(user.first_name, "Bob")
-    #     self.assertEqual(user.last_name, "Smith")
-    #     self.assertEqual(user.username, "login")
-    #     self.assertEqual(user.password, "thepassword")
-    #     self.assertEqual(user.email, "bob@gmail.com")
-    #     self.assertEqual(user.phone_number, "4141234567")
-    #     self.assertEqual(user.address, "UWM Campus")
-    #     self.assertEqual(user.role, "Admin")
-
-    #If user inputs no username, then it will raise a ValueError
-    def test_missing_username(self):
-        user = CreateUser.create_user(
-            "",
-            "bob@gmail.com",
-            "thepassword",
-            "Bob",
-            "Smith",
-            "4141234567",
-            "UWM Campus",
-            "Admin"
-        )
-        self.assertEqual(user, None)
-
-    def test_username_exists(self):
-        user = CreateUser.create_user(
-            "login",
-            "bob@gmail.com",
-            "thepassword",
-            "Bob",
-            "Smith",
-            "4141234567",
-            "UWM Campus",
-            "Admin"
-        )
-        self.assertEqual(user.username, "login")
-
-    def test_email_exists(self):
-        user = CreateUser.create_user(
-            "login",
-            "bob@gmail.com",
-            "thepassword",
-            "Bob",
-            "Smith",
-            "4141234567",
-            "UWM Campus",
-            "Admin"
-        )
-        self.assertEqual(user.email, "bob@gmail.com")
 
