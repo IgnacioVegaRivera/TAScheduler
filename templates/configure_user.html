@@ -34,11 +34,11 @@
                     <div class="formTable">
 
                         <div>
-                            <label class="form-label required">First Name</label>
+                            <label class="form-label required">First Name:</label>
                             <input type="text" class="form-control" name="first_name" required>
                         </div>
                         <div>
-                            <label class="form-label required">Last Name</label>
+                            <label class="form-label required">Last Name:</label>
                             <input type="text" class="form-control" name="last_name" required>
                         </div>
 
@@ -56,33 +56,37 @@
                             </div>
                             -->
                         <div>
-                            <label class="form-label required">Username</label>
+                            <label class="form-label required">Username:</label>
                             <input type="text" class="form-control" name="username" required>
                         </div>
                         <div>
-                            <label class="form-label required">Password</label>
+                            <label class="form-label required">Password:</label>
                             <input type="text" class="form-control" name="password" required>
                         </div>
                         <div>
-                            <label class="form-label required">Email</label>
+                            <label class="form-label required">Email:</label>
                             <input type="email" class="form-control" name="email" required>
                         </div>
                         <div>
-                            <label class="form-label required">Phone Number</label>
-                            <input type="number" class="form-control" name="phone_number" required>
+                            <label class="form-label">Phone Number:</label>
+                            <input type="number" class="form-control" name="phone_number">
                         </div>
                         <div class="fullWidth">
-                            <label class="form-label">Address</label>
+                            <label class="form-label">Address (Include Street Name and Number):</label>
                             <input type="text" class="form-control" name="address">
                         </div>
                         <div class="fullWidth">
-                            Role:
+                            <label class="form-label required">Role:</label>
                             <select name="role" required>
                                 <option></option>
                                 {% for i in roles %}
                                     <option value="{{ i.0 }}">{{ i.1 }}</option>
                                 {% endfor %}
                             </select>
+                        </div>
+                        <div class="fullWidth">
+                            <label class="form-label">Skills:</label>
+                            <textarea class="form-control" name="skills" style="resize: none; height: 50px;"></textarea>
                         </div>
 
                         <!--

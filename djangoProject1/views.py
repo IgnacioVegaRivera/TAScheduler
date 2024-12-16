@@ -72,7 +72,8 @@ class ConfigureUserPage(View):
             role = request.POST['role']
             password = request.POST['password']
             address = request.POST['address']
-            return self.addUserHelper(username, email, password, firstname, lastname, phone, address, role, request)
+            skills = request.POST['skills']
+            return self.addUserHelper(username, email, password, firstname, lastname, phone, address, role, skills, request)
         elif form == "edit_user":
             firstname = request.POST['first_name']
             lastname = request.POST['last_name']
@@ -90,14 +91,14 @@ class ConfigureUserPage(View):
                                                            'message': "Something went wrong when fetching the form, please try again"})
 
     # helper class to enable the addition of user
-    def addUserHelper(self, username, email, password, firstname, lastname, phone, address, role, request):
+    def addUserHelper(self, username, email, password, firstname, lastname, phone, address, role, skills, request):
 
         # course_name = request.POST['name']
 
         name = firstname + " " + lastname
 
         # Create user:
-        user = CreateUser.create_user(username, email, password, firstname, lastname, phone, address, role)
+        user = CreateUser.create_user(username, email, password, firstname, lastname, phone, address, role, skills)
 
         # Get all users to pass to the templateDesign
         all_users = User.objects.all()
