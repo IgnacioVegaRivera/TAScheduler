@@ -22,6 +22,10 @@ class TestCourseDirectoryAcceptance(TestCase):
         self.course2 = Course.objects.create(name="CourseTwo")
         self.course3 = Course.objects.create(name="CourseThree")
 
+        # Save the TA to course for the assignment of the Lab
+        self.course1.users.add(self.ta1)
+        self.course3.users.add(self.ta1)
+
         # Create labs and assign TAs
         self.lab1 = Section.objects.create(name="Lab One", course=self.course1, days="Monday", time="3:00",
                                              location="EMS", user=self.ta1)
@@ -68,30 +72,6 @@ class TestCourseDirectoryAcceptance(TestCase):
         self.assertContains(response, "Instruct1 User")
         self.assertContains(response, "TA1 User")
 
-    def test_admin_view_user_phone_number_acceptance(self):
-        self.login_as("admin")
-        response = self.client.get("/user_directory.html")
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 1213439090)
-        self.assertContains(response, 1415458080)
-        self.assertContains(response, 1615959090)
-
-    def test_instructor_view_user_phone_number_acceptance(self):
-        self.login_as("instructor")
-        response = self.client.get("/user_directory.html")
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 1213439090)
-        self.assertContains(response, 1415458080)
-        self.assertContains(response, 1615959090)
-
-    def test_ta_instructor_view_user_phone_number_acceptance(self):
-        self.login_as("ta")
-        response = self.client.get("/user_directory.html")
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 1213439090)
-        self.assertContains(response, 1415458080)
-        self.assertContains(response, 1615959090)
-
     def test_admin_view_user_email_acceptance(self):
         self.login_as("admin")
         response = self.client.get("/user_directory.html")
@@ -116,27 +96,77 @@ class TestCourseDirectoryAcceptance(TestCase):
         self.assertContains(response, "instructor@uwm.edu")
         self.assertContains(response, "ta@uwm.edu")
 
-    # Not displaying skills yet in user_directory so these fail
-    # def test_admin_view_user_skills_acceptance(self):
-    #     self.login_as("admin")
-    #     response = self.client.get("/user_directory.html")
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertContains(response, "None")
-    #     self.assertContains(response, "Data Structors, C, and Java")
-    #     self.assertContains(response, "Python, AI, and JavaScript")
-    #
-    # def test_instructor_view_user_skills_acceptance(self):
-    #     self.login_as("instructor")
-    #     response = self.client.get("/user_directory.html")
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertContains(response, "None")
-    #     self.assertContains(response, "Data Structors, C, and Java")
-    #     self.assertContains(response, "Python, AI, and JavaScript")
-    #
-    # def test_ta_view_user_skills_acceptance(self):
-    #     self.login_as("ta")
-    #     response = self.client.get("/user_directory.html")
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertContains(response, "None")
-    #     self.assertContains(response, "Data Structors, C, and Java")
-    #     self.assertContains(response, "Python, AI, and JavaScript")
+    def test_admin_view_user_phone_number_acceptance(self):
+        self.login_as("admin")
+        response = self.client.get("/user_directory.html")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "121-343-9090")
+        self.assertContains(response, "141-545-8080")
+        self.assertContains(response, "161-595-9090")
+
+    def test_instructor_view_user_phone_number_acceptance(self):
+        self.login_as("instructor")
+        response = self.client.get("/user_directory.html")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "121-343-9090")
+        self.assertContains(response, "141-545-8080")
+        self.assertContains(response, "161-595-9090")
+
+    def test_ta_instructor_view_user_phone_number_acceptance(self):
+        self.login_as("ta")
+        response = self.client.get("/user_directory.html")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "121-343-9090")
+        self.assertContains(response, "141-545-8080")
+        self.assertContains(response, "161-595-9090")
+
+    def test_admin_view_user_skills_acceptance(self):
+        self.login_as("admin")
+        response = self.client.get("/user_directory.html")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "None")
+        self.assertContains(response, "Data Structors, C, and Java")
+        self.assertContains(response, "Python, AI, and JavaScript")
+
+    def test_instructor_view_user_skills_acceptance(self):
+        self.login_as("instructor")
+        response = self.client.get("/user_directory.html")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "None")
+        self.assertContains(response, "Data Structors, C, and Java")
+        self.assertContains(response, "Python, AI, and JavaScript")
+
+    def test_ta_view_user_skills_acceptance(self):
+        self.login_as("ta")
+        response = self.client.get("/user_directory.html")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "None")
+        self.assertContains(response, "Data Structors, C, and Java")
+        self.assertContains(response, "Python, AI, and JavaScript")
+
+    def test_admin_view_user_sections_acceptance(self):
+        self.login_as("admin")
+        response = self.client.get("/user_directory.html")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Lab One - CourseOne")
+        self.assertNotContains(response, "Lab Two - CourseTwo")
+        self.assertContains(response, "Lab Three - CourseThree")
+
+    def test_instructor_view_user_sections_acceptance(self):
+        self.login_as("instructor")
+        response = self.client.get("/user_directory.html")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Lab One - CourseOne")
+        self.assertNotContains(response, "Lab Two - CourseTwo")
+        self.assertContains(response, "Lab Three - CourseThree")
+
+    def test_ta_view_user_sections_acceptance(self):
+        self.login_as("ta")
+        response = self.client.get("/user_directory.html")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Lab One - CourseOne")
+        self.assertNotContains(response, "Lab Two - CourseTwo")
+        self.assertContains(response, "Lab Three - CourseThree")
+
+
+

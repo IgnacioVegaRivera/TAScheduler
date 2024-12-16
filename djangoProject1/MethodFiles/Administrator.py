@@ -67,6 +67,7 @@ class CreateUser(CreateUserInterface):
             if not digit or not character:
                 return None
 
+
         # email cannot be empty
         if user_email == '' or not isinstance(user_email, str):
             return None
@@ -75,11 +76,11 @@ class CreateUser(CreateUserInterface):
         if user_password == '' or not isinstance(user_password, str):
             return None
 
-        # skills is an optional field, all we need to check is if it is a string
+        #skills is an optional field, all we need to check is if it is a string
         if not isinstance(user_skills, str):
             return None
 
-        # if everything is all good we can then we can create the user and save it
+        #if everything is all good we can then we can create the user and save it
         user = User(username=user_name, email=user_email, password=user_password,
                     first_name=user_first_name, last_name=user_last_name, phone_number=user_phone_number,
                     address=user_address, role=user_role, skills=user_skills)
@@ -89,22 +90,17 @@ class CreateUser(CreateUserInterface):
 
 class CreateCourse(CreateCourseInterface):
     @staticmethod
-    def create_course(name, instructors, tas):
-        if not isinstance(name, str) or not name.strip():
+    def create_course(name, instructor):
+        # if name or instructor are the wrong type return None
+        if not isinstance(instructor, User) or not isinstance(name, str):
             return None
 
         # if any of the inputs are none then return None
-        if name == None or name == "":
+        if name == None or name == "" or instructor == None:
             return None
 
-        # checks whether the instructors input is a list type, and also checks whether all the elements in the
-        # instructors list are User objects
-        if not isinstance(instructors, list) or not all(isinstance(instructor, User) for instructor in instructors):
-            return None
-
-        # checks whether the tas input is a list type, and also checks whether all the elements in the
-        # tas list are User objects
-        if not isinstance(tas, list) or not all(isinstance(ta, User) for ta in tas):
+        # if the role isn't instructor then we can't assign to a course so we return None
+        if instructor.role != "Instructor":
             return None
 
         # if the course already exists then return None
@@ -114,9 +110,7 @@ class CreateCourse(CreateCourseInterface):
         # if everything is fine then we can create the course no problem
         course = Course(name=name)
         course.save()
-
-        course.users.add(*instructors)
-        course.users.add(*tas)
+        course.users.add(instructor)
 
         return course
 
@@ -217,20 +211,18 @@ class CreateSection(CreateSectionInterface):
 class EditUser(EditUserInterface, ABC):
     @staticmethod
     def edit_user(request, username, newFirstname, newLastname, newPhone, newEmail, newRole, newAddress, newSkills):
-        # get the user that we want to change
+        #get the user that we want to change
         user = User.objects.get(username=username)
 
         if user is None or not isinstance(user, User):
             return None
 
         # check for first name
-        if not isinstance(newFirstname,
-                          str) or not newFirstname.strip() or newFirstname == "" or not newFirstname.isalpha():
+        if not isinstance(newFirstname, str) or not newFirstname.strip() or newFirstname == "" or not newFirstname.isalpha():
             return None
 
         # check for last name
-        if not isinstance(newLastname,
-                          str) or not newLastname.strip() or newLastname == "" or not newLastname.isalpha():
+        if not isinstance(newLastname, str) or not newLastname.strip() or newLastname == "" or not newLastname.isalpha():
             return None
 
         # check for email
@@ -256,11 +248,12 @@ class EditUser(EditUserInterface, ABC):
         if not isinstance(user, User) or not isinstance(newRole, str) or newRole not in valid_roles:
             return None
 
-        # checks for address
+
+        #checks for address
         if not isinstance(newAddress, str):
             return None
 
-        # address must have a street number and street name
+        #address must have a street number and street name
         if newAddress != "":
             digit = character = False
             for char in newAddress:
@@ -273,7 +266,7 @@ class EditUser(EditUserInterface, ABC):
             if not digit or not character:
                 return None
 
-        # check for skills
+        #check for skills
         if not isinstance(newSkills, str):
             return None
 
