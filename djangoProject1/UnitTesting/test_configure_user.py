@@ -18,6 +18,7 @@ class TestConfigureUserUnit(TestCase):
         self.course = Course.objects.create(name="Course 1")
         self.course.save()
         self.course.users.add(self.instructor)
+        self.course.users.add(self.ta)
 
         self.lab = Section.objects.create(name="Lab 1", course=self.course, user=self.ta)
         self.lab.save()
@@ -91,7 +92,7 @@ class TestConfigureUserUnit(TestCase):
     def test_ta_courses(self):
         courses = Course.objects.filter(users=self.ta)
         labs = Section.objects.filter(user=self.ta)
-        self.assertEqual(courses.count(), 0)
+        self.assertEqual(courses.count(), 1)
         self.assertEqual(labs.count(), 1)
         self.assertIn(self.lab, labs)
 
