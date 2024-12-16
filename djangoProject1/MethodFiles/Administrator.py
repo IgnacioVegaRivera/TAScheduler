@@ -90,17 +90,17 @@ class CreateUser(CreateUserInterface):
 
 class CreateCourse(CreateCourseInterface):
     @staticmethod
-    def create_course(name, instructor):
+    def create_course(name, users):
         # if name or instructor are the wrong type return None
-        if not isinstance(instructor, User) or not isinstance(name, str):
+        if not isinstance(users, User) or not isinstance(name, str):
             return None
 
         # if any of the inputs are none then return None
-        if name == None or name == "" or instructor == None:
+        if name == None or name == "" or users == None:
             return None
 
         # if the role isn't instructor then we can't assign to a course so we return None
-        if instructor.role != "Instructor":
+        if users.role != "Instructor":
             return None
 
         # if the course already exists then return None
@@ -110,7 +110,7 @@ class CreateCourse(CreateCourseInterface):
         # if everything is fine then we can create the course no problem
         course = Course(name=name)
         course.save()
-        course.users.add(instructor)
+        course.users.add(users)
 
         return course
 
