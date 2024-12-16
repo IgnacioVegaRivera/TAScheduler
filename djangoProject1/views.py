@@ -249,19 +249,25 @@ class ConfigureCoursePage(View):
         ta_ids = request.POST.getlist('tas')
         cname = request.POST['course_name']
 
-        selected_instructors = User.objects.filter(id__in=instructor_ids)
-        selected_tas = User.objects.filter(id__in=ta_ids)
+        selected_instructors = list(User.objects.filter(id__in=instructor_ids))
+        selected_tas = list(User.objects.filter(id__in=ta_ids))
+
+        users = []
+        for instructor in selected_instructors:
+            users.append(instructor)
+
+        for ta in selected_tas:
+            users.append(ta)
+
 
         # will return None if the creation failed, will return a course and save it to the database if it succeeded
-        course = CreateCourse.create_course(cname, list(selected_instructors), list(selected_tas))
+        course = CreateCourse.create_course(cname, users)
         if course is None:
             return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
                                                              'courses': courses, 'sections': sections,
                                                              'message': "Something went wrong when creating the course \"" + cname + "\""})
         else:
             #* unpacks the instructors and tas list so it adds individual objects
-            course.users.add(*selected_instructors)
-            course.users.add(*selected_tas)
             return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
                                                              'courses': courses, 'sections': sections,
                                                              'message': "The course \"" + cname + "\" has been created"})
