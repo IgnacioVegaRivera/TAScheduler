@@ -16,12 +16,12 @@ class EditUserUnitTest(TestCase):
         )
         self.user.save()
 
-        self.course = Course(name="course 1")
-        self.course.save()
-        self.course.users.add(self.user)
-
-        self.lab = Section(name="Lab 1", course=self.course, user=self.user)
-        self.lab.save()
+        # self.course = Course(name="course 1")
+        # self.course.save()
+        # self.course.users.add(self.user)
+        #
+        # self.lab = Section(name="Lab 1", course=self.course, user=self.user)
+        # self.lab.save()
 
     #firstname tests
     def test_EditFirstName(self):
