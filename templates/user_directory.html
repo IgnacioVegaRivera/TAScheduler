@@ -27,7 +27,7 @@
             <p>{{ user.role }} <br/>
             {% if user.role == "Instructor" %}
             {% endif %}
-                <p><strong>Courses:</strong><br/>
+                <p><strong>Sections:</strong><br/>
                 {% if user.role == "Instructor" %}
                     {% for course in user.courses.all %}
                         {{ course.name }}<br/>
@@ -36,7 +36,7 @@
                     {% endfor %}
                 {% elif user.role == "TA" %}
                     {% for section in user.sections.all %}
-                        {{ section.name }}<br/>
+                        {{ section.name }} - {{ section.course.name }}<br/>
                     {% empty %}
                         No section assigned.<br/>
                     {% endfor %}
