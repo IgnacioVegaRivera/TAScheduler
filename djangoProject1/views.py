@@ -245,28 +245,23 @@ class ConfigureCoursePage(View):
                                                              'message': "Something went wrong when fetching the form, please try again."})
 
     def add_course_helper(self, courses, instructors, tas, sections, request):
-        # this gets the first and last name of the instructor as well as their role
-        instructor_name = request.POST['instructor']
-
-        # checks if the no instructor option was selected, course must be initialized with an instructor
-        if instructor_name != "":
-            # splits first and last name into 2 separate strings, also the role in () but that's not necessary here
-            names = instructor_name.split(" ")
-            instructor = User.objects.get(first_name=names[0], last_name=names[1])
-        else:
-            instructor = None
-
-        # get the instructor by finding a user with the same first and last name
-        # no need to filter role because the create_course method already does that
+        instructor_ids = request.POST.getlist('instructors')
+        ta_ids = request.POST.getlist('tas')
         cname = request.POST['course_name']
 
+        selected_instructors = User.objects.filter(id__in=instructor_ids)
+        selected_tas = User.objects.filter(id__in=ta_ids)
+
         # will return None if the creation failed, will return a course and save it to the database if it succeeded
-        course = CreateCourse.create_course(cname, instructor)
+        course = CreateCourse.create_course(cname, list(selected_instructors), list(selected_tas))
         if course is None:
             return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
                                                              'courses': courses, 'sections': sections,
                                                              'message': "Something went wrong when creating the course \"" + cname + "\""})
         else:
+            #* unpacks the instructors and tas list so it adds individual objects
+            course.users.add(*selected_instructors)
+            course.users.add(*selected_tas)
             return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
                                                              'courses': courses, 'sections': sections,
                                                              'message': "The course \"" + cname + "\" has been created"})
