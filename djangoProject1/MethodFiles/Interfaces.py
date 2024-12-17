@@ -53,8 +53,8 @@ class RemoveUserInterface(abc.ABC):
 
 class EditPersonalUserInterface(abc.ABC):
     @abc.abstractmethod
-    def edit_personal_user(self,request, newUsername, newFirstname, newLastname, newPhone, newEmail, newRole, newAddress, newSkills,
-                                       newUsers):
+    def edit_personal_user(self, request, newUsername, newPassword, newFirstname, newLastname,
+                           newPhone, newEmail, newAddress, newSkills):
         pass
 
 class AssignUserInterface(abc.ABC):

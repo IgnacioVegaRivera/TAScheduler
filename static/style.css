@@ -208,7 +208,7 @@ summary {
 Configure Courses page css:
 */
 
-.create-section{
+.section-modal{
     width: 90vw;
     max-width: 31.25rem;
     height: auto;
@@ -264,17 +264,11 @@ Configure Courses page css:
 
 .edit-course-modal {
     width: 80vw;
-    max-width: 25rem;
-    height: 50vh;
-    max-height: 25rem;
+    max-width: 28rem;
+    height: auto;
+    max-height: 22rem;
 }
 
-.edit-lab-modal {
-    width: 80vw;
-    max-width: 25rem;
-    height: 50vh;
-    max-height: 25rem;
-}
 
 /*
     For all styles:
