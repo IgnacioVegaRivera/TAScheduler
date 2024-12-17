@@ -185,28 +185,27 @@ class ProfilePage(View):
 
         return render(request, "profile_page.html",
                       {"roles": User.ROLE_CHOICES, "user": user})
-
+        # post method:
     def post(self, request):
         form = request.POST.get('form_name')
         user = GetUser.get_user(request)
-        if form == "edit_user":
+        if form == "edit_profile":
             firstname = request.POST['first_name']
             lastname = request.POST['last_name']
-            username = request.POST['username']
             password = request.POST['password']
             email = request.POST['email']
             phone = request.POST['phone_number']
             address = request.POST['address']
             skills = request.POST['skills']
-            return self.editPersonalInfoHelper(request, username, password, firstname, lastname, phone, email, address, skills,
+            return self.editPersonalInfoHelper(request, password, firstname, lastname, phone, email, address, skills,
                                        user)
         else:
             return render(request, "profile_page.html", {"roles": User.ROLE_CHOICES, "user": user})
 
-    def editPersonalInfoHelper(self, request, username, password, firstname, lastname, phone, email, address, skills,
+    def editPersonalInfoHelper(self, request, password, firstname, lastname, phone, email, address, skills,
                                        user):
-        edited_user = EditPersonalUser.edit_personal_user(request, username, password, firstname, lastname,
-                                                   phone, email, address, skills)
+        edited_user = EditPersonalUser.edit_personal_user(request, password, firstname, lastname,
+                                                   phone, email, address, skills, user)
         if edited_user is None:
             return render(request, "profile_page.html",
                           {"roles": User.ROLE_CHOICES, "user": user,
