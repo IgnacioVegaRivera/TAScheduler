@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Configure User</title>
-    <link rel="stylesheet" href="/static/style.css"/>
+    <link rel="stylesheet" href="/static/style.css?v=1"/>
+    <style>
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body style="background-color: rgb(217,217,217)">
 {#    <br/><a href="/templates/home.html">TA Scheduler</a>#}
@@ -23,9 +30,7 @@
 
 <div class="addUserModal">
     <div class="create-user" popover id="createUser">
-        <div class="createNewUserModalHeader">
-            <h2>Add new User</h2>
-        </div>
+        <h1 class="formTitle">Add new User</h1>
         <div class="modal-header" id="myModal">
             <div class="modal-dialog">
                 <form action=" " method="post">
@@ -132,64 +137,60 @@
                 {{ user.email }}<br/>{{ user.phone_number|format_phone }}</p>
 
             <div class="edit-modal" popover id="editModal {{ user.id }}">
-                <h2>Edit user info:</h2>
+                <h1 class="formTitle">Edit user info:</h1>
                 <div class="modal-header" id="myModal {{ user.id }}">
                     <form method="POST" action="{% url 'configure_user' %}">
                         {% csrf_token %}
                         <input type="hidden" name="form_name" value="edit_user">
                         <input type="hidden" name="username" value="{{ user.username }}">
                         <div class="modal-dialog">
+                            <div class="formTable">
+                                <div>
+                                    <label class="form-label required">First Name:</label>
+                                    <input type="text" name="first_name" class="form-control"
+                                           value="{{ user.first_name }}">
+                                </div>
+                                <div>
+                                    <label class="form-label required">Last Name:</label>
+                                    <input type="text" name="last_name" class="form-control"
+                                           value="{{ user.last_name }}">
+                                </div>
 
-                            <div>
-                                <label class="form-label required" style="display: inline-block">First Name:</label>
-                                <input type="text" name="first_name" class="form-control" style="display: inline-block"
-                                       value="{{ user.first_name }}">
-                            </div>
-                            <div>
-                                <br/>
-                                <label class="form-label required" style="display: inline-block">Last Name:</label>
-                                <input type="text" name="last_name" class="form-control" style="display: inline-block"
-                                       value="{{ user.last_name }}">
-                            </div>
-                            <div class="form-group">
-                                <br/>
-                                <label for="roleControlSelect1" class="form-label required"
-                                       style="display: inline-block">Role:</label>
-                                <select name="role" class="form-control" id="roleControlSelect1"
-                                        style="display: inline-block">
-                                    <option value="TA" {% if user.role == "TA" %}selected{% endif %}>TA</option>
-                                    <option value="Instructor" {% if user.role == "Instructor" %}selected{% endif %}>
-                                        Instructor
-                                    </option>
-                                    <option value="Admin" {% if user.role == "Admin" %}selected{% endif %}>Admin
-                                    </option>
-                                </select>
-                            </div>
-                            <div>
-                                <br/>
-                                <label class="form-label required" style="display: inline-block">Email:</label>
-                                <input type="email" name="email" class="form-control" style="display: inline-block"
-                                       value="{{ user.email }}">
-                            </div>
-                            <div>
-                                <br/>
-                                <label class="form-label" style="display: inline-block">Phone Number:</label>
-                                <input type="number" name="phone_number" class="form-control"
-                                       style="display: inline-block"
-                                       value="{{ user.phone_number }}">
-                            </div>
-                            <div>
-                                <br/>
-                                <label class="form-label" style="display: inline-block">Address (Include Street Name and
-                                    Number):</label>
-                                <input type="text" class="form-control" name="address" style="display: inline-block"
-                                       value="{{ user.address }}">
-                            </div>
-                            <div>
-                                <br/>
-                                <label class="form-label">Skills:</label>
-                                <textarea class="form-control" name="skills"
-                                          style="resize: none; height: 6.4vh;">{{ user.skills }}</textarea>
+                                <div>
+                                    <label class="form-label required">Email:</label>
+                                    <input type="email" name="email" class="form-control"
+                                           value="{{ user.email }}">
+                                </div>
+                                <div>
+                                    <label class="form-label">Phone Number:</label>
+                                    <input type="number" name="phone_number" class="form-control"
+                                           value="{{ user.phone_number }}">
+                                </div>
+                                <div class="fullWidth">
+                                    <label class="form-label">Address (Include Street Name
+                                        and
+                                        Number):</label>
+                                    <input type="text" class="form-control" name="address"
+                                           value="{{ user.address }}">
+                                </div>
+                                <div class="fullWidth">
+                                    <label for="roleControlSelect1" class="form-label required">
+                                        Role:</label>
+                                    <select name="role" class="form-control" id="roleControlSelect1">
+                                        <option value="TA" {% if user.role == "TA" %}selected{% endif %}>TA</option>
+                                        <option value="Instructor"
+                                                {% if user.role == "Instructor" %}selected{% endif %}>
+                                            Instructor
+                                        </option>
+                                        <option value="Admin" {% if user.role == "Admin" %}selected{% endif %}>Admin
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="fullWidth">
+                                    <label class="form-label">Skills:</label>
+                                    <textarea class="form-control" name="skills"
+                                              style="resize: none; height: 6.4vh;">{{ user.skills }}</textarea>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">

@@ -2,77 +2,7 @@
 Configure User style
  */
 
-.navbar {
-    background-color: #54d38e;
-    overflow: hidden;
-}
 
-.pfplogo1 {
-
-    display: inline-block;
-}
-
-.pfplogo2 {
-    margin-left: 87%;
-    display: inline-block
-}
-
-.navbar a {
-    padding: 0.625rem;
-    color: midnightblue;
-    text-align: center;
-    font-size: 1.0625rem;
-    text-decoration: none;
-}
-
-.navbar a:hover {
-    background-color: black;
-    color: white;
-    border-bottom: 0.125rem solid black;
-}
-
-.navbar a.active {
-    background-color: cornflowerblue;
-    color: black;
-}
-
-.greenBtn{
-    margin-top: 2%;
-    margin-right: 5%;
-    font-size: 1vw;
-    padding: 0.7% 2%;
-    background-color: #54d38e;
-    font-weight: bold;
-    color: black;
-    border: 2px solid black;
-    border-radius: 4px;
-    cursor: pointer;
-    box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
-}
-
-.greenBtn:hover{
-    background-color: #3d9e66;
-    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
-}
-
-.cancelButton{
-    margin-top: 2%;
-    margin-left: 5%;
-    font-size: 1vw;
-    padding: 0.7% 2%;
-    background-color: lightgrey;
-    font-weight: bold;
-    color: black;
-    border: 2px solid black;
-    border-radius: 4px;
-    cursor: pointer;
-    box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
-}
-
-.cancelButton:hover{
-    background-color: #919090;
-    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);;
-}
 
 .addBtn {
     margin-left: 2%;
@@ -92,7 +22,7 @@ Configure User style
     box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
 }
 
-.removeButton{
+.removeButton {
     font-size: 1vw;
     padding: 2% 2%;
     background-color: indianred;
@@ -109,7 +39,7 @@ Configure User style
     box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
 }
 
-.editButton{
+.editButton {
     margin-top: 1%;
     font-size: 1vw;
     padding: 2% 2%;
@@ -122,7 +52,7 @@ Configure User style
     box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
 }
 
-.editButton:hover{
+.editButton:hover {
     background-color: #185bd3;
     box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
 }
@@ -162,21 +92,6 @@ Configure User style
     max-width: 31.25rem;
     height: auto;
     max-height: 31.25rem;
-}
-
-.formTable {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
-
-.formTable div {
-    display: flex;
-    flex-direction: column;
-}
-
-.formTable .fullWidth {
-    grid-column: span 2;
 }
 
 .submitAndCancelButtons {
@@ -244,6 +159,7 @@ summary {
 .noButton:hover {
     opacity: 0.8;
 }
+
 /*
     Courses Directory style:
  */
@@ -265,7 +181,7 @@ summary {
     margin: 0.625rem 0;
 }
 
-.applyFilter{
+.applyFilter {
     margin-left: 2%;
     font-size: 1vw;
     padding: 0.8% 0.8%;
@@ -278,9 +194,9 @@ summary {
     box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
 }
 
-.applyFilter:hover{
+.applyFilter:hover {
     background-color: #4f77bc;
-    box-shadow:  0 0 0.25rem rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
 }
 
 /*
@@ -292,7 +208,13 @@ summary {
 Configure Courses page css:
 */
 
-.addCourseAndSectionBtn{
+.create-section{
+    width: 90vw;
+    max-width: 31.25rem;
+    height: auto;
+    max-height: 31.25rem;
+}
+.addCourseAndSectionBtn {
     margin-left: 2%;
     font-size: 1vw;
     padding: 0.8% 0.8%;
@@ -305,12 +227,12 @@ Configure Courses page css:
     box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
 }
 
-.addCourseAndSectionBtn:hover{
+.addCourseAndSectionBtn:hover {
     background-color: #3d9e66;
     box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
 }
 
-.alignCourseButtons{
+.alignCourseButtons {
     margin-top: 1%;
     display: flex;
 }
@@ -352,4 +274,106 @@ Configure Courses page css:
     max-width: 25rem;
     height: 50vh;
     max-height: 25rem;
+}
+
+/*
+    For all styles:
+*/
+
+.formTitle {
+    width: 100%;
+    text-align: center;
+    background-color: #54d38e;
+    color: black;
+    font-size: 1.5vw;
+    font-weight: bold;
+    padding: 2%;
+    border-bottom: 2px solid black;
+}
+
+.navbar {
+    background-color: #54d38e;
+    overflow: hidden;
+}
+
+.pfplogo1 {
+
+    display: inline-block;
+}
+
+.pfplogo2 {
+    margin-left: 87%;
+    display: inline-block
+}
+
+.navbar a {
+    padding: 0.625rem;
+    color: midnightblue;
+    text-align: center;
+    font-size: 1.0625rem;
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    background-color: black;
+    color: white;
+    border-bottom: 0.125rem solid black;
+}
+
+.navbar a.active {
+    background-color: cornflowerblue;
+    color: black;
+}
+
+.greenBtn {
+    margin-top: 2%;
+    margin-right: 5%;
+    font-size: 1vw;
+    padding: 0.7% 2%;
+    background-color: #54d38e;
+    font-weight: bold;
+    color: black;
+    border: 2px solid black;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
+}
+
+.greenBtn:hover {
+    background-color: #3d9e66;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
+}
+
+.cancelButton {
+    margin-top: 2%;
+    margin-left: 5%;
+    font-size: 1vw;
+    padding: 0.7% 2%;
+    background-color: lightgrey;
+    font-weight: bold;
+    color: black;
+    border: 2px solid black;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.2);
+}
+
+.cancelButton:hover {
+    background-color: #919090;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);;
+}
+
+.formTable {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.formTable div {
+    display: flex;
+    flex-direction: column;
+}
+
+.formTable .fullWidth {
+    grid-column: span 2;
 }
