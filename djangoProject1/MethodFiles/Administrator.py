@@ -67,7 +67,6 @@ class CreateUser(CreateUserInterface):
             if not digit or not character:
                 return None
 
-
         # email cannot be empty
         if user_email == '' or not isinstance(user_email, str):
             return None
@@ -76,11 +75,11 @@ class CreateUser(CreateUserInterface):
         if user_password == '' or not isinstance(user_password, str):
             return None
 
-        #skills is an optional field, all we need to check is if it is a string
+        # skills is an optional field, all we need to check is if it is a string
         if not isinstance(user_skills, str):
             return None
 
-        #if everything is all good we can then we can create the user and save it
+        # if everything is all good we can then we can create the user and save it
         user = User(username=user_name, email=user_email, password=user_password,
                     first_name=user_first_name, last_name=user_last_name, phone_number=user_phone_number,
                     address=user_address, role=user_role, skills=user_skills)
@@ -211,7 +210,7 @@ class CreateSection(CreateSectionInterface):
 class EditUser(EditUserInterface, ABC):
     @staticmethod
     def edit_user(request, username, newFirstname, newLastname, newPhone, newEmail, newRole, newAddress, newSkills):
-        #get the user that we want to change
+        # get the user that we want to change
         user = User.objects.get(username=username)
 
         if user is None or not isinstance(user, User):
@@ -222,7 +221,8 @@ class EditUser(EditUserInterface, ABC):
             return None
 
         # check for last name
-        if not isinstance(newLastname, str) or not newLastname.strip() or newLastname == "" or not newLastname.isalpha():
+        if not isinstance(newLastname,
+                          str) or not newLastname.strip() or newLastname == "" or not newLastname.isalpha():
             return None
 
         # check for email
@@ -248,12 +248,11 @@ class EditUser(EditUserInterface, ABC):
         if not isinstance(user, User) or not isinstance(newRole, str) or newRole not in valid_roles:
             return None
 
-
-        #checks for address
+        # checks for address
         if not isinstance(newAddress, str):
             return None
 
-        #address must have a street number and street name
+        # address must have a street number and street name
         if newAddress != "":
             digit = character = False
             for char in newAddress:
@@ -266,7 +265,7 @@ class EditUser(EditUserInterface, ABC):
             if not digit or not character:
                 return None
 
-        #check for skills
+        # check for skills
         if not isinstance(newSkills, str):
             return None
 
@@ -349,7 +348,6 @@ class EditCourse(EditCourseInterface):
 
 
 
-
 class EditSection(EditSectionInterface):
     @staticmethod
     def edit_section(request, section_id, name, course, user, days, the_time, location):
@@ -411,6 +409,78 @@ class RemoveUser(RemoveUserInterface):
 
 class EditPersonalUser(EditPersonalUserInterface):
     @staticmethod
-    def edit_personal_usere(request, newUsername, newFirstname, newLastname, newPhone, newEmail, newRole, newAddress, newSkills,
-                                       newUsers):
-        pass
+    def edit_personal_user(request, newUsername, newPassword, newFirstname, newLastname,
+                           newPhone, newEmail, newAddress, newSkills):
+        # get the user that we want to change
+        user = User.objects.get(username=newUsername)
+
+        if user is None or not isinstance(user, User):
+            return None
+
+        # check for first name
+        if not isinstance(newFirstname,
+                          str) or not newFirstname.strip() or newFirstname == "" or not newFirstname.isalpha():
+            return None
+
+        # check for last name
+        if not isinstance(newLastname,
+                          str) or not newLastname.strip() or newLastname == "" or not newLastname.isalpha():
+            return None
+
+        # check for email
+        if not isinstance(newEmail, str) or not len(newEmail) > 0:
+            return None
+
+        if newEmail.find('@') == -1 or newEmail.find('.') == -1:
+            return None
+
+        # check for phone number
+        if not isinstance(newPhone, str):
+            return None
+
+        if len(newPhone) != 10 and newPhone != "":
+            return None
+
+        if len(newPhone) == 10:
+            for char in newPhone:
+                if not char.isdigit():
+                    return None
+
+        # checks for address
+        if not isinstance(newAddress, str):
+            return None
+
+        # address must have a street number and street name
+        if newAddress != "":
+            digit = character = False
+            for char in newAddress:
+                if char.isdigit():
+                    digit = True
+                if char.isalpha():
+                    character = True
+                if digit and character:
+                    break
+            if not digit or not character:
+                return None
+
+        # check for skills
+        if not isinstance(newSkills, str):
+            return None
+
+        # password should not be empty
+        if newPassword == '' or not isinstance(newPassword, str):
+            return None
+
+        # changes all of the necessary values to their new ones
+        user.password = request.POST.get('password', user.password)
+        user.first_name = request.POST.get('first_name', user.first_name)
+        user.last_name = request.POST.get("last_name", user.last_name)
+        user.email = request.POST.get("email", user.email)
+        user.phone_number = request.POST.get("phone_number", user.phone_number)
+        user.address = request.POST.get("address", user.address)
+        user.skills = request.POST.get("skills", user.skills)
+
+        # Saves user
+        user.save()
+        user.refresh_from_db()
+        return user

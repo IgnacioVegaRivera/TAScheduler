@@ -67,43 +67,66 @@
     <a href="/" style="padding: 23vh">Log Out</a>
 </div>
 {% load custom_filters %}
+
 <div class="modal-header" id="myModal {{ user.id }}">
     <h2 style="text-align: center; margin-bottom: 1rem;">Edit Account</h2>
     <form method="POST" action="{% url 'profile_page' %}">
         {% csrf_token %}
         <input type="hidden" name="form_name" value="edit_user">
+        <div>
+            <label class="form-label">Username:</label>
+            <input class="form-control" type="text" name="username" value="{{ user.username }}" readonly>
+        </div>
+        <div>
+            <label class="form-label">Password:</label>
+            <input type="password" class="form-control" name="password" value="{{ user.password }}">
+        </div>
+        <div>
+            <label class="form-label required">First Name:</label>
+            <input type="text" name="first_name" class="form-control"
+                   value="{{ user.first_name }}">
+        </div>
+        <div>
+            <label class="form-label required">Last Name:</label>
+            <input type="text" name="last_name" class="form-control"
+                   value="{{ user.last_name }}">
+        </div>
 
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" value="{{ user.username }}" readonly>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" value="{{ user.password }}">
-
-        <label for="first_name">First Name:</label>
-        <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}">
-
-        <label for="last_name">Last Name:</label>
-        <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}">
-
-        <label for="role">Role:</label>
-        <select id="role" name="role" disabled>
-            <option value="TA" {% if user.role == "TA" %}selected{% endif %}>TA</option>
-            <option value="Instructor" {% if user.role == "Instructor" %}selected{% endif %}>Instructor</option>
-            <option value="Admin" {% if user.role == "Admin" %}selected{% endif %}>Admin</option>
-        </select>
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="{{ user.email }}" >
-
-        <label for="phone_number">Phone Number:</label>
-        <input type="tel" id="phone_number" name="phone_number" value="{{ user.phone_number }}">
-
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="address" value="{{ user.address }}">
-
-        <label for="skills">Skills:</label>
-        <textarea id="skills" name="skills" rows="4">{{ user.skills }}</textarea>
-
+        <div>
+            <label class="form-label required">Email:</label>
+            <input type="email" name="email" class="form-control"
+                   value="{{ user.email }}">
+        </div>
+        <div>
+            <label class="form-label">Phone Number:</label>
+            <input type="number" name="phone_number" class="form-control"
+                   value="{{ user.phone_number }}">
+        </div>
+        <div class="fullWidth">
+            <label class="form-label">Address (Include Street Name
+                and
+                Number):</label>
+            <input type="text" class="form-control" name="address"
+                   value="{{ user.address }}">
+        </div>
+        <div class="fullWidth">
+            <label for="roleControlSelect1" class="form-label required">
+                Role:</label>
+            <select name="role" class="form-control" id="roleControlSelect1">
+                <option value="TA" {% if user.role == "TA" %}selected{% endif %}>TA</option>
+                <option value="Instructor"
+                        {% if user.role == "Instructor" %}selected{% endif %}>
+                    Instructor
+                </option>
+                <option value="Admin" {% if user.role == "Admin" %}selected{% endif %}>Admin
+                </option>
+            </select>
+        </div>
+        <div class="fullWidth">
+            <label class="form-label">Skills:</label>
+            <textarea class="form-control" name="skills"
+                      style="resize: none; height: 6.4vh;">{{ user.skills }}</textarea>
+        </div>
         <button type="submit">Save</button>
     </form>
 </div>

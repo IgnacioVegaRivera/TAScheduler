@@ -179,18 +179,16 @@ class CourseDirectoryPage(View):
 
 class ProfilePage(View):
     def get(self, request):
-        users = User.objects.all()
         user = GetUser.get_user(request)
         if not user:
             return redirect('/')
 
         return render(request, "profile_page.html",
-                      {"roles": User.ROLE_CHOICES, "users": users})
+                      {"roles": User.ROLE_CHOICES, "user": user})
 
     def post(self, request):
         form = request.POST.get('form_name')
-
-        users = User.objects.all()
+        user = GetUser.get_user(request)
         if form == "edit_user":
             firstname = request.POST['first_name']
             lastname = request.POST['last_name']
@@ -198,25 +196,24 @@ class ProfilePage(View):
             password = request.POST['password']
             email = request.POST['email']
             phone = request.POST['phone_number']
-            role = request.POST['role']
             address = request.POST['address']
             skills = request.POST['skills']
-            return self.editPersonalInfoHelper(request, username, firstname, lastname, phone, email, role, address, skills,
-                                       users)
+            return self.editPersonalInfoHelper(request, username, password, firstname, lastname, phone, email, address, skills,
+                                       user)
         else:
-            return render(request, "profile_page.html", {"roles": User.ROLE_CHOICES, "users": users,})
+            return render(request, "profile_page.html", {"roles": User.ROLE_CHOICES, "user": user})
 
-    def editPersonalInfoHelper(self, request, username, firstname, lastname, phone, email, role, address, skills,
-                                       users):
-        user = EditPersonalUser.edit_personal_user(request, username, firstname, lastname, phone, email, role, address, skills,
-                                       users)
-        if user is None:
+    def editPersonalInfoHelper(self, request, username, password, firstname, lastname, phone, email, address, skills,
+                                       user):
+        edited_user = EditPersonalUser.edit_personal_user(request, username, password, firstname, lastname,
+                                                   phone, email, address, skills)
+        if edited_user is None:
             return render(request, "profile_page.html",
-                          {"roles": User.ROLE_CHOICES, "users": users,
+                          {"roles": User.ROLE_CHOICES, "user": user,
                            "message": "Something went wrong when updating your info"})
         else:
-            return render(request, "configure_user.html",
-                          {"roles": User.ROLE_CHOICES, "users": users,
+            return render(request, "profile_page.html",
+                          {"roles": User.ROLE_CHOICES, "user": user,
                            "message": "Your information has been successfully updated"})
 
 class HomePage(View):
