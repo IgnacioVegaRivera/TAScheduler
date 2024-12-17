@@ -204,6 +204,46 @@ summary {
     justify-content: space-between;
     width: 99%;
 }
+
+.remove-popover {
+    background-color: #fff;
+    border: 0.1rem solid #ccc;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+    width: 40%;
+    max-width: 60rem;
+    min-width: 20rem;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.confirmButton {
+    background-color: indianred;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.2rem;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.noButton {
+    background-color: cornflowerblue;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.2rem;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.confirmButton:hover,
+.noButton:hover {
+    opacity: 0.8;
+}
 /*
     Courses Directory style:
  */

@@ -86,7 +86,8 @@
                         </div>
                         <div class="fullWidth">
                             <label class="form-label">Skills:</label>
-                            <textarea class="form-control" name="skills" style="resize: none; height: 6.4vh;"></textarea>
+                            <textarea class="form-control" name="skills"
+                                      style="resize: none; height: 6.4vh;"></textarea>
                         </div>
 
                         <!--
@@ -115,12 +116,11 @@
 </button>
 <p style="text-align: center">{{ message }}</p>
 <div class="boxContainer">
-
     {% for user in users %}
         <div class="whiteBox">
             <h2>{{ user.first_name }} {{ user.last_name }}</h2>
             <p>{{ user.role }} <br/>
-                {% if user.role == "Instructor" or user.role == "TA"%}
+                {% if user.role == "Instructor" or user.role == "TA" %}
                     {% for section in user.sections.all %}
                         {{ section.name }} - {{ section.course.name }}<br/>
                     {% empty %}
@@ -142,17 +142,21 @@
 
                             <div>
                                 <label class="form-label required" style="display: inline-block">First Name:</label>
-                                <input type="text" name="first_name" class="form-control" style="display: inline-block" value="{{ user.first_name }}">
+                                <input type="text" name="first_name" class="form-control" style="display: inline-block"
+                                       value="{{ user.first_name }}">
                             </div>
                             <div>
                                 <br/>
                                 <label class="form-label required" style="display: inline-block">Last Name:</label>
-                                <input type="text" name="last_name" class="form-control" style="display: inline-block" value="{{ user.last_name }}">
+                                <input type="text" name="last_name" class="form-control" style="display: inline-block"
+                                       value="{{ user.last_name }}">
                             </div>
                             <div class="form-group">
                                 <br/>
-                                <label for="roleControlSelect1" class="form-label required" style="display: inline-block">Role:</label>
-                                <select name="role" class="form-control" id="roleControlSelect1" style="display: inline-block">
+                                <label for="roleControlSelect1" class="form-label required"
+                                       style="display: inline-block">Role:</label>
+                                <select name="role" class="form-control" id="roleControlSelect1"
+                                        style="display: inline-block">
                                     <option value="TA" {% if user.role == "TA" %}selected{% endif %}>TA</option>
                                     <option value="Instructor" {% if user.role == "Instructor" %}selected{% endif %}>
                                         Instructor
@@ -164,23 +168,28 @@
                             <div>
                                 <br/>
                                 <label class="form-label required" style="display: inline-block">Email:</label>
-                                <input type="email" name="email" class="form-control" style="display: inline-block" value="{{ user.email }}">
+                                <input type="email" name="email" class="form-control" style="display: inline-block"
+                                       value="{{ user.email }}">
                             </div>
                             <div>
                                 <br/>
                                 <label class="form-label" style="display: inline-block">Phone Number:</label>
-                                <input type="number" name="phone_number" class="form-control" style="display: inline-block"
+                                <input type="number" name="phone_number" class="form-control"
+                                       style="display: inline-block"
                                        value="{{ user.phone_number }}">
                             </div>
                             <div>
                                 <br/>
-                                <label class="form-label" style="display: inline-block">Address (Include Street Name and Number):</label>
-                                <input type="text" class="form-control" name="address" style="display: inline-block" value="{{ user.address }}">
+                                <label class="form-label" style="display: inline-block">Address (Include Street Name and
+                                    Number):</label>
+                                <input type="text" class="form-control" name="address" style="display: inline-block"
+                                       value="{{ user.address }}">
                             </div>
                             <div>
                                 <br/>
                                 <label class="form-label">Skills:</label>
-                                <textarea class="form-control" name="skills" style="resize: none; height: 6.4vh;" >{{ user.skills }}</textarea>
+                                <textarea class="form-control" name="skills"
+                                          style="resize: none; height: 6.4vh;">{{ user.skills }}</textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -197,13 +206,23 @@
             <br/>
             <div class="buttons-container">
                 <button class="editButton" popovertarget="editModal {{ user.id }}">Edit</button>
-                <form method="POST" action="{% url 'configure_user' %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="form_name" value="remove_user">
-                    <input type="hidden" name="user_id" value="{{ user.id }}">
-
-                    <button type="submit" class="removeButton ">Remove</button>
-                </form>
+                <div class="remove-popover" popover id="removePopover {{ user.id }}">
+                    <h3 style="margin: 0; text-align: center;">Are you sure you want to remove this user?</h3>
+                    <form method="POST" action="{% url 'configure_user' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_name" value="remove_user">
+                        <input type="hidden" name="user_id" value="{{ user.id }}">
+                        <div style="text-align: center;">
+                            <button type="submit" class="confirmButton" style="margin-right: 2%;">Yes</button>
+                            <button type="button" class="noButton"
+                                    popovertarget="removePopover {{ user.id }}"
+                                    popovertargetaction="hide">
+                                No
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <button class="removeButton" popovertarget="removePopover {{ user.id }}">Remove</button>
             </div>
         </div>
     {% endfor %}

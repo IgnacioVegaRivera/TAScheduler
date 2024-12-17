@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser, CreateSection, EditUser, EditCourse, \
-    EditSection, RemoveUser
+    EditSection, RemoveUser, EditPersonalUser
 from djangoProject1.MethodFiles.GeneralMethods import GetUser, CheckPermission
 from djangoProject1.models import User, Course, Section, DAYS_OF_WEEK
 from datetime import time
@@ -179,8 +179,45 @@ class CourseDirectoryPage(View):
 
 class ProfilePage(View):
     def get(self, request):
-        return render(request, "profile_page.html", {})
+        users = User.objects.all()
+        user = GetUser.get_user(request)
+        if not user:
+            return redirect('/')
 
+        return render(request, "profile_page.html",
+                      {"roles": User.ROLE_CHOICES, "users": users})
+
+    def post(self, request):
+        form = request.POST.get('form_name')
+
+        users = User.objects.all()
+        if form == "edit_user":
+            firstname = request.POST['first_name']
+            lastname = request.POST['last_name']
+            username = request.POST['username']
+            password = request.POST['password']
+            email = request.POST['email']
+            phone = request.POST['phone_number']
+            role = request.POST['role']
+            address = request.POST['address']
+            skills = request.POST['skills']
+            return self.editPersonalInfoHelper(request, username, firstname, lastname, phone, email, role, address, skills,
+                                       users)
+        else:
+            return render(request, "profile_page.html", {"roles": User.ROLE_CHOICES, "users": users,})
+
+    def editPersonalInfoHelper(self, request, username, firstname, lastname, phone, email, role, address, skills,
+                                       users):
+        user = EditPersonalUser.edit_personal_user(request, username, firstname, lastname, phone, email, role, address, skills,
+                                       users)
+        if user is None:
+            return render(request, "profile_page.html",
+                          {"roles": User.ROLE_CHOICES, "users": users,
+                           "message": "Something went wrong when updating your info"})
+        else:
+            return render(request, "configure_user.html",
+                          {"roles": User.ROLE_CHOICES, "users": users,
+                           "message": "Your information has been successfully updated"})
 
 class HomePage(View):
     def get(self, request):
