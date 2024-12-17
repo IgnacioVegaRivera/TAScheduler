@@ -8,7 +8,7 @@ import re
 # from django.template.context_processors import static
 
 from djangoProject1.MethodFiles.Interfaces import CreateCourseInterface, CreateSectionInterface, EditUserInterface, \
-    CreateUserInterface, EditCourseInterface, EditSectionInterface, RemoveUserInterface
+    CreateUserInterface, EditCourseInterface, EditSectionInterface, RemoveUserInterface, EditPersonalUserInterface
 
 from djangoProject1.models import Course, User, Section, DAYS_OF_WEEK
 
@@ -397,3 +397,10 @@ class RemoveUser(RemoveUserInterface):
             return "The user has been successfully removed"
         elif not user:
             return "User does not exist"
+
+
+class EditPersonalUser(EditPersonalUserInterface):
+    @staticmethod
+    def edit_personal_usere(request, newUsername, newFirstname, newLastname, newPhone, newEmail, newRole, newAddress, newSkills,
+                                       newUsers):
+        pass

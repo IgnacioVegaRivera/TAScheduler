@@ -4,6 +4,53 @@
     <meta charset="UTF-8">
     <title>Profile Page | Scheduler</title>
     <link rel="stylesheet" href="/static/style.css">
+    <style>
+        form {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 40%;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 0.3rem;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        button {
+            background-color: #4ab87c;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 0.3rem;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body style="background-color: rgb(217,217,217)">
 <h1>Profile Page</h1>
@@ -12,16 +59,52 @@
 </a>
 <div><a href="profile_page.html" style="margin-left: 95%">Profile</a></div>
 <div class="navbar">
-{#    <a href="admin_home.html" style="padding: 9vh">Admin Home</a>#}
-    <a href="profile_page.html" class="active" style="padding: 9vh">Edit Account</a>
-    <a href="edit_section_assignment.html">Edit Section Assignment</a>
-{#    <a href="user_directory.html" style="padding: 9vh">User Directory</a>#}
-{#    <a href="course_directory.html" style="padding: 9vh">Course Directory</a>#}
-    <a href="/" style="padding: 9vh">Log Out</a>
+    {#    <a href="admin_home.html" style="padding: 9vh">Admin Home</a>#}
+    <a href="profile_page.html" class="active" style="padding: 23vh">Edit Account</a>
+    <a href="edit_section_assignment.html" style="padding: 23vh">Edit Section Assignment</a>
+    {#    <a href="user_directory.html" style="padding: 9vh">User Directory</a>#}
+    {#    <a href="course_directory.html" style="padding: 9vh">Course Directory</a>#}
+    <a href="/" style="padding: 23vh">Log Out</a>
 </div>
-<h2>Edit Account:</h2>
-
 {% load custom_filters %}
+<div class="modal-header" id="myModal {{ user.id }}">
+    <h2 style="text-align: center; margin-bottom: 1rem;">Edit Account</h2>
+    <form method="POST" action="{% url 'profile_page' %}">
+        {% csrf_token %}
+        <input type="hidden" name="form_name" value="edit_user">
+        <input type="hidden" name="username" value="{{ user.username }}">
+
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" >
+
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" >
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" value="{{ user.password }}" >
+
+        <label for="role">Role:</label>
+        <select id="role" name="role" required>
+            <option value="TA" {% if user.role == "TA" %}selected{% endif %}>TA</option>
+            <option value="Instructor" {% if user.role == "Instructor" %}selected{% endif %}>Instructor</option>
+            <option value="Admin" {% if user.role == "Admin" %}selected{% endif %}>Admin</option>
+        </select>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{ user.email }}" required>
+
+        <label for="phone_number">Phone Number:</label>
+        <input type="tel" id="phone_number" name="phone_number" value="{{ user.phone_number }}">
+
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" value="{{ user.address }}">
+
+        <label for="skills">Skills:</label>
+        <textarea id="skills" name="skills" rows="4">{{ user.skills }}</textarea>
+
+        <button type="submit">Save</button>
+    </form>
+</div>
 
 </body>
 </html>
