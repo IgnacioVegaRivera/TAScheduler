@@ -12,7 +12,7 @@ class TestCourseDirectoryAcceptance(TestCase):
         self.instructor1 = User.objects.create(first_name="Instruct1", last_name="User", username="instructor",
                                                  role="Instructor",
                                                  email="instructor@uwm.edu", phone_number=1415458080,
-                                                 skills="Data Structors, C, and Java")
+                                                 skills="Data Structors, C, and Java", password="password")
         self.ta1 = User.objects.create(first_name="TA1", last_name="User", username="ta", role="TA",
                                          email="ta@uwm.edu",
                                          phone_number=1615959090, skills="Python, AI, and JavaScript", password="password")
