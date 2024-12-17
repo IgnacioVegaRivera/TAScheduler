@@ -185,7 +185,7 @@ class ProfilePage(View):
 
         return render(request, "profile_page.html",
                       {"roles": User.ROLE_CHOICES, "user": user})
-
+        # post method:
     def post(self, request):
         form = request.POST.get('form_name')
         user = GetUser.get_user(request)
