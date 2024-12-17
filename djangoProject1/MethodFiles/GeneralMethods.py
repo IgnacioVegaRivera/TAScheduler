@@ -15,7 +15,13 @@ class CheckPermission(CheckPermissionInterface):
 
     @staticmethod
     def check_instructor(user):
-        pass
+        if isinstance(user, User):
+            if user.role == 'Instructor':
+                return True
+            else:
+                return False
+        else:
+            return False
 
 class GetUser(GetUserInterface):
     @staticmethod
