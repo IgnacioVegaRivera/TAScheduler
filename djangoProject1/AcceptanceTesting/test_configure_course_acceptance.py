@@ -21,6 +21,7 @@ class TestConfigureCourseAcceptance(TestCase):
 
         self.course1.users.add(self.ructor)
         self.course1.users.add(self.inst)
+        self.course1.users.add(self.t)
 
         self.lab1 = Section.objects.create(name="Lab 1", course=self.course1, user=self.t)
         self.lab1.save()
@@ -37,6 +38,7 @@ class TestConfigureCourseAcceptance(TestCase):
         self.a.save()
 
         self.course2.users.add(self.ructor)
+        self.course2.users.add(self.a)
 
         self.lab2 = Section.objects.create(name="Lab 2", course=self.course2, user=self.a)
         self.lab2.save()
@@ -55,6 +57,8 @@ class TestConfigureCourseAcceptance(TestCase):
         self.a.save()
 
         self.course3.users.add(self.inst)
+        self.course3.users.add(self.a)
+        self.course3.users.add(self.t)
 
         self.lab3 = Section.objects.create(name="Lab 3", course=self.course3, user=self.a)
         self.lab4 = Section.objects.create(name="Lab 4", course=self.course3, user=self.t)
