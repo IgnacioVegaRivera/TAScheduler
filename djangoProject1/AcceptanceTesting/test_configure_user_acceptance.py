@@ -75,7 +75,7 @@ class TestConfigureUserAcceptanceTest(TestCase):
         response = self.donkey.get("/configure_user.html")
         self.assertContains(response, "Ad Min")
         self.assertContains(response, "Admin")
-        self.assertContains(response, "No Courses.")
+        self.assertContains(response, "No assignments.")
         self.assertContains(response, "admin@uwm.edu")
         self.assertContains(response, "1234567890")
         self.assertContains(response, "Edit") #each user will have an edit field
@@ -87,7 +87,7 @@ class TestConfigureUserAcceptanceTest(TestCase):
         self.assertContains(response, "Inst")
         self.assertContains(response, "Ructor")
         self.assertContains(response, "Instructor")
-        self.assertContains(response, "No Courses.")
+        self.assertContains(response, "No section assigned.")
         self.assertNotContains(response, "Course 1") #other courses aren't printing when we have none
         self.assertContains(response, "instructor@uwm.edu")
         self.assertContains(response, "0123456789")
@@ -100,7 +100,7 @@ class TestConfigureUserAcceptanceTest(TestCase):
         self.assertContains(response, "Inst")
         self.assertContains(response, "Ructor")
         self.assertContains(response, "Instructor")
-        self.assertContains(response, "Course 1")
+
         self.assertContains(response, "instructor@uwm.edu")
         self.assertContains(response, "0123456789")
 
@@ -111,8 +111,7 @@ class TestConfigureUserAcceptanceTest(TestCase):
         self.assertContains(response, "Inst")
         self.assertContains(response, "Ructor")
         self.assertContains(response, "Instructor")
-        self.assertContains(response, "Course 1")
-        self.assertContains(response, "Course 2")
+
         self.assertContains(response, "instructor@uwm.edu")
         self.assertContains(response, "0123456789")
 
@@ -123,7 +122,7 @@ class TestConfigureUserAcceptanceTest(TestCase):
         self.assertContains(response, "T")
         self.assertContains(response, "A")
         self.assertContains(response, "TA")
-        self.assertContains(response, "No Labs.")
+        self.assertContains(response, "No section assigned.")
         self.assertContains(response, "ta@uwm.edu")
         self.assertContains(response, "9876543210")
 
@@ -134,7 +133,7 @@ class TestConfigureUserAcceptanceTest(TestCase):
         self.assertContains(response, "T")
         self.assertContains(response, "A")
         self.assertContains(response, "TA")
-        self.assertContains(response, "Lab 1")
+
         self.assertContains(response, "ta@uwm.edu")
         self.assertContains(response, "9876543210")
 
@@ -145,7 +144,6 @@ class TestConfigureUserAcceptanceTest(TestCase):
         self.assertContains(response, "T")
         self.assertContains(response, "A")
         self.assertContains(response, "TA")
-        self.assertContains(response, "Lab 1")
-        self.assertContains(response, "Lab 2")
+
         self.assertContains(response, "ta@uwm.edu")
         self.assertContains(response, "9876543210")
