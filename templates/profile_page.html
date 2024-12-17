@@ -72,7 +72,7 @@
     <h2 style="text-align: center; margin-bottom: 1rem;">Edit Account</h2>
     <form method="POST" action="{% url 'profile_page' %}">
         {% csrf_token %}
-        <input type="hidden" name="form_name" value="edit_user">
+        <input type="hidden" name="form_name" value="edit_profile">
         <div>
             <label class="form-label">Username:</label>
             <input class="form-control" type="text" name="username" value="{{ user.username }}" readonly>
@@ -112,7 +112,7 @@
         <div class="fullWidth">
             <label for="roleControlSelect1" class="form-label required">
                 Role:</label>
-            <select name="role" class="form-control" id="roleControlSelect1">
+            <select name="role" class="form-control" id="roleControlSelect1" disabled>
                 <option value="TA" {% if user.role == "TA" %}selected{% endif %}>TA</option>
                 <option value="Instructor"
                         {% if user.role == "Instructor" %}selected{% endif %}>

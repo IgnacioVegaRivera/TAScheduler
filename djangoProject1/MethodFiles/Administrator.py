@@ -409,11 +409,8 @@ class RemoveUser(RemoveUserInterface):
 
 class EditPersonalUser(EditPersonalUserInterface):
     @staticmethod
-    def edit_personal_user(request, newUsername, newPassword, newFirstname, newLastname,
-                           newPhone, newEmail, newAddress, newSkills):
-        # get the user that we want to change
-        user = User.objects.get(username=newUsername)
-
+    def edit_personal_user(request, newPassword, newFirstname, newLastname,
+                           newPhone, newEmail, newAddress, newSkills, user):
         if user is None or not isinstance(user, User):
             return None
 
