@@ -273,7 +273,9 @@ class ConfigureCoursePage(View):
         elif form == "create_section":
             return self.add_section_helper(request, courses, instructors, tas, sections, users)
         elif form == "edit_course":
-            return self.edit_course_helper(course_id, request)
+            return self.edit_course_helper(courses, instructors, tas, sections, request)
+
+        # def edit_course_helper(self, courses, instructors, tas, sections, request):
         elif form == "edit_section":
             return self.edit_section_helper(request, courses, instructors, tas, sections, users)
         else:
@@ -356,14 +358,23 @@ class ConfigureCoursePage(View):
                                                              'message': "The section \"" + section_name + "\" has been created"})
 
     def edit_course_helper(self, courses, instructors, tas, sections, request):
+        course_id = request.POST['course_id']
+        course = Course.objects.get(id=course_id)
         instructor_ids = request.POST.getlist('instructors')
         ta_ids = request.POST.getlist('tas')
-        cname = request.POST['course_name']
+        cname = request.POST['name']
 
-        selected_instructors = User.objects.filter(id__in=instructor_ids)
-        selected_tas = User.objects.filter(id__in=ta_ids)
+        selected_instructors = list(User.objects.filter(id__in=instructor_ids))
+        selected_tas = list(User.objects.filter(id__in=ta_ids))
 
-        updated_course = EditCourse.edit_course(cname, list(selected_instructors), list(selected_tas))
+        users = []
+        for instructor in selected_instructors:
+            users.append(instructor)
+
+        for ta in selected_tas:
+            users.append(ta)
+
+        updated_course = EditCourse.edit_course(course, cname, users)
         if updated_course:
             message = f"Course '{updated_course.name}' was updated successfully."
         else:

@@ -314,29 +314,39 @@ class EditUser(EditUserInterface, ABC):
 
 class EditCourse(EditCourseInterface):
     @staticmethod
-    def edit_course(newCourseName, newInstructors, newTas):
+    def edit_course(course, newCourseName, users):
         if not isinstance(newCourseName, str) or not newCourseName.strip():
-            return None
-
-        # if any of the inputs are none then return None
-        if newCourseName == None or newCourseName == "":
             return None
 
         # checks whether the instructors input is a list type, and also checks whether all the elements in the
         # instructors list are User objects
-        if not isinstance(newInstructors, list) or not all(isinstance(newInstructors, User) for newInstructor in newInstructors):
+        if not isinstance(users, list) or not all((isinstance(user, User) and user.role != "Admin") for user in users):
             return None
 
-        # checks whether the tas input is a list type, and also checks whether all the elements in the
-        # tas list are User objects
-        if not isinstance(newTas, list) or not all(isinstance(newTa, User) for newTa in newTas):
-            return None
 
-        # if the course already exists then return None
+        # if the course with the same name already exists then return None
+        different = False
         if Course.objects.filter(name=newCourseName).exists():
+            if Course.objects.get(name=newCourseName).id != course.id:
+                different = True
+
+        old_users = list(course.users.all())
+
+        if not different:
+            course.name = newCourseName
+            course.users.set(users)
+            course.save()
+
+            for user in old_users:
+                if user not in users:
+                    for section in Section.objects.filter(user=user):
+                        section.user = None
+                        section.save()
+
+            return course
+        else:
             return None
 
-        return course
 
 
 
