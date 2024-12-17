@@ -45,9 +45,6 @@ class test_unit_edit_course(TestCase):
         self.lecture.save()
         self.lab.save()
 
-        self.temp_course2 = Course(name="CS362")
-        self.temp_course2.save()
-
 
     def test_unit_editCourseName(self):
         response = self.client.post('/configure_course.html', {'course_id': self.temp_course.id,

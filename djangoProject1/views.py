@@ -380,7 +380,10 @@ class ConfigureCoursePage(View):
         else:
             message = "Failed to update course. Please check your inputs and try again."
 
-        return redirect('configure_course')
+        return render(request, "configure_course.html", {'courses': courses, 'sections': sections,
+                                                  'users': users, 'tas': tas, 'instructors': instructors,
+                                                  'days': DAYS_OF_WEEK,
+                                                  'message': message})
 
 
     def edit_section_helper(self, request, courses, instructors, tas, sections, users):
