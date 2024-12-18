@@ -5,21 +5,21 @@ from djangoProject1.models import User
 
 class TestAdminPageUnit(TestCase):
     def setUp(self):
-        self.admin = User(role='Admin')
-        self.instructor = User(role='instructor')
-        self.ta = User(role='TA')
+        self.admin = User(username='Admin', role="Admin")
+        self.instructor = User(username='Instructor', role='Instructor')
+        self.ta = User(username='TA', role='TA')
 
     def test_admin_user(self):
-        self.assertTrue(CheckPermission.check_admin(self.admin))
+        self.assertFalse(CheckPermission.check_instructor(self.admin))
 
     def test_instructor(self):
-        self.assertFalse(CheckPermission.check_admin(self.instructor))
+        self.assertTrue(CheckPermission.check_instructor(self.instructor))
 
     def test_ta(self):
-        self.assertFalse(CheckPermission.check_admin(self.ta))
+        self.assertFalse(CheckPermission.check_instructor(self.ta))
 
     def test_no_user(self):
-        self.assertFalse(CheckPermission.check_admin(None))
+        self.assertFalse(CheckPermission.check_instructor(None))
 
 # class TestAdminPageAcceptance(TestCase):
 #     def setUp(self):
