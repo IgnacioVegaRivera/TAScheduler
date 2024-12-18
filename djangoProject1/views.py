@@ -51,6 +51,9 @@ class ConfigureUserPage(View):
         if not user:
             return redirect('/')
 
+        if not CheckPermission.check_admin(user):
+            return redirect('/')
+
         return render(request, "configure_user.html",
                       {"roles": User.ROLE_CHOICES, "users": users})
 
@@ -142,6 +145,10 @@ class ConfigureUserPage(View):
 
 class UserDirectoryPage(View):
     def get(self, request):
+        user = GetUser.get_user(request)
+        if not user:
+            return redirect('/')
+
         users = User.objects.all()
         courses = Course.objects.all()
         sections = Section.objects.all()
@@ -204,6 +211,7 @@ class ProfilePage(View):
 
     def editPersonalInfoHelper(self, request, password, firstname, lastname, phone, email, address, skills,
                                        user):
+
         edited_user = EditPersonalUser.edit_personal_user(request, password, firstname, lastname,
                                                    phone, email, address, skills, user)
         if edited_user is None:
@@ -217,6 +225,9 @@ class ProfilePage(View):
 
 class HomePage(View):
     def get(self, request):
+        user = GetUser.get_user(request)
+        if not user:
+            return redirect('/')
         return render(request, "home.html", {})
 
 
@@ -225,6 +236,7 @@ class AdminHomePage(View):
         user = GetUser.get_user(request)
         if user is None:
             return redirect('/')
+
         can_access = CheckPermission.check_admin(user)
         if not can_access:
             return render(request, "home.html", {'message': "You cannot access this page."})
@@ -244,6 +256,12 @@ class AdminHomePage(View):
 
 class ConfigureCoursePage(View):
     def get(self, request):
+        user = GetUser.get_user(request)
+        if not user:
+            return redirect('/')
+
+        if not CheckPermission.check_admin(user):
+            return redirect('/')
         # make this into a method
         courses = Course.objects.all()
         instructors = User.objects.filter(role="Instructor")
