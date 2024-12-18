@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Course Directory | Scheduler</title>
-    <link rel="stylesheet" href="/static/style.css?v=1"/>
+    <link rel="stylesheet" href="/static/style.css?ver=1"/>
 </head>
 <body style="background-color: rgb(217,217,217)">
 <div class="pfplogo1">
@@ -11,11 +11,11 @@
         <img src="/static/Logo.jpeg" alt="TA Scheduler Logo" style="height: 10vh; width: auto;">
     </a>
 </div>
-    <div class="pfplogo2">
-    <a href="profile_page.html" >
+<div class="pfplogo2">
+    <a href="profile_page.html">
         <img src="/static/moo_deng_profilePic.png" alt="Profile Logo" style="height: 10vh; width: auto;">
     </a>
-    </div>
+</div>
 <div class="navbar">
     <a href="admin_home.html" style="padding: 9%">Admin Home</a>
     <a href="user_directory.html" style="padding: 9%">User Directory</a>
@@ -35,57 +35,53 @@
         <button type="submit" class="applyFilter">Apply Filter</button>
     </form>
 </div>
-{##}
-{#<!-- Display Courses -->#}
-{#{% for course in courses %}#}
-{#    <div class="userBox">#}
-{#        <p class="p">#}
-{#            <strong>{{ course.name }}</strong> <br>#}
-{#            <!-- Display Sections -->#}
-{#            {% for section in course.sections.all %}#}
-{#                <strong>Section: {{ section.name }}</strong> <br>#}
-{#                Instructor/TA: <br>#}
-{#                {% if section.user %}#}
-{#                    {{ section.user.first_name }} {{ section.user.last_name }} ({{ section.user.get_role_display }})#}
-{#                    <br>#}
-{#                {% else %}#}
-{#                    No user assigned.#}
-{#                {% endif %}#}
-{#                Day(s): {{ section.days|join:", " }} <br>#}
-{#                Time: {% if section.time %}{{ section.time|date:"h:i A" }} <br>#}
-{#            {% else %}Not specified{% endif %}#}
-{#                Location: {% if section.location %}{{ section.location }} <br>#}
-{#            {% else %}Not specified{% endif %}#}
-{#            {% empty %}#}
-{#                No sections available for this course.#}
-{#            {% endfor %}#}
-{#        </p>#}
-{#    </div>#}
-{#{% endfor %}#}
 <div class="boxContainer">
     {% for course in courses %}
         <div class="whiteBox">
-            <p class="p">
-                <strong>{{ course.name }}</strong> <br>
-                <!-- Display Sections -->
-                {% for section in course.sections.all %}
-                    <strong>Section: {{ section.name }}</strong> <br>
-                    Instructor/TA: <br>
-                    {% if section.user %}
-                        {{ section.user.first_name }} {{ section.user.last_name }} ({{ section.user.get_role_display }})
-                        <br>
-                    {% else %}
-                        No user assigned.
-                    {% endif %}
-                    Day(s): {{ section.days|join:", " }} <br>
-                    Time: {% if section.time %}{{ section.time|date:"h:i A" }} <br>
-                {% else %}Not specified{% endif %}
-                    Location: {% if section.location %}{{ section.location }} <br>
-                {% else %}Not specified{% endif %}
-                {% empty %}
-                    No sections available for this course.
-                {% endfor %}
-            </p>
+            <h2>{{ course.name }}</h2>
+            <!-- Display Sections -->
+            {% for section in course.sections.all %}
+                <section id="accordion" class="accordion">
+                    <div class="accordion-container">
+                        <details class="accordion-item">
+                            <summary class="accordion-trigger">
+                                <span class="accordion-title">
+                                    <strong>Section: {{ section.name }}</strong>
+                                </span>
+                                <span class="accordion-icon" aria-hidden="true">
+                                    &plus;
+                                </span>
+                            </summary>
+                            <div class="accordion-content">
+                                Instructor/TA: <br>
+                                {% if section.user %}
+                                    {{ section.user.first_name }} {{ section.user.last_name }} (
+                                    {{ section.user.get_role_display }})
+                                    <br>
+                                {% else %}
+                                    No user assigned.<br>
+                                {% endif %}
+                                <br>
+                                Day(s): {{ section.days|join:", " }} <br>
+                                Time:
+                                {% if section.time %}
+                                    {{ section.time|date:"h:i A" }} <br>
+                                {% else %}
+                                    Not specified<br>
+                                {% endif %}
+                                Location:
+                                {% if section.location %}
+                                    {{ section.location }} <br>
+                                {% else %}
+                                    Not specified<br>
+                                {% endif %}
+                            </div>
+                        </details>
+                    </div>
+                </section>
+            {% empty %}
+                No sections available for this course.
+            {% endfor %}
         </div>
     {% endfor %}
 </div>
