@@ -223,6 +223,8 @@ class HomePage(View):
 class AdminHomePage(View):
     def get(self, request):
         user = GetUser.get_user(request)
+        if user is None:
+            return redirect('/')
         can_access = CheckPermission.check_admin(user)
         if not can_access:
             return render(request, "home.html", {'message': "You cannot access this page."})
@@ -427,4 +429,7 @@ class ConfigureCoursePage(View):
 
 class EditSectionAssignmentPage(View):
     def get(self, request):
+        return render(request, "edit_section_assignment.html", {})
+
+    def post(self, request):
         return render(request, "edit_section_assignment.html", {})
