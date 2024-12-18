@@ -34,10 +34,14 @@ class TestInstructorAssignUserUnit(TestCase):
 
         # Create labs and assign TAs
         self.courseOne.users.add(self.instructor)
-        self.courseTwo.users.add(self.instructor)
         self.courseOne.users.add(self.ta)
-        self.courseThree.users.add(self.ta)
         self.courseOne.users.add(self.ta2)
+        self.courseTwo.users.add(self.instructor)
+        self.courseThree.users.add(self.ta)
+
+        self.lectureOne = Section.objects.create(name="Lecture 1", course=self.courseTwo)
+        self.lectureTwo = Section.objects.create(name="Lecture 2", course=self.courseThree)
+
         self.labOne = Section.objects.create(name="Lab 1", course=self.courseOne, days="Monday", time="3:00",
                                              location="EMS", user=None)
         self.labTwo = Section.objects.create(name="Lab 2", course=self.courseTwo, days="Wednesday", time="12:00",
@@ -55,27 +59,65 @@ class TestInstructorAssignUserUnit(TestCase):
         self.client.post("/", {"username": username, "password": "password"})
 
 
-    def test_assign_TA_user_to_course(self):
+    def test_assign_TA_user_to_lab_in_course(self):
         self.login_as("instructor")
-        response = self.donkey.post('/assign_user/', {"name": "Lab 1", "user": self.ta.id}, follow=True)
+        response = self.donkey.post('/edit_section_assignment.html', {"name": "Lab 1", "user": self.ta.id}, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertIn("message", response.context)
-        self.assertEqual(response.context["message"], "User added successfully.")
-        self.assertTemplateUsed(response, "edit_section_assignment.html")
         self.assertEqual(self.labOne.user, self.ta)
-        self.assertEqual(self.labOne.user.count(), 1)
 
-    def test_assign_TA_user_to_course_when_already_filled(self):
+    def test_assign_TA_user_to_lab_not_in_course(self):
         self.login_as("instructor")
-        response = self.donkey.post('/assign_user/', {"name": "Lab 1", "user": self.ta.id}, follow=True)
+        response = self.donkey.post('/edit_section_assignment.html', {"name": "Lab 2", "user": self.ta.id}, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertIn("message", response.context)
-        self.assertEqual(response.context["message"], "User added successfully.")
-        response = self.donkey.post('/assign_user/', {"name": "Lab 1", "user": self.ta2.id}, follow=True)
+        self.assertEqual(self.labTwo.user, None)
+
+    def test_assign_instructor_user_to_lecture(self):
+        self.login_as("instructor")
+        response = self.donkey.post('/edit_section_assignment.html', {"name": "Lecture 1", "user": self.instructor.id}, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertIn("message", response.context)
-        self.assertEqual(response.context["message"], "User already assigned to this lab.")
-        self.assertEqual(self.labOne.user.count(), 1) # shouldn't be 2
+        self.assertEqual(self.lectureOne.user, self.instructor)
 
+    def test_assign_instructor_user_to_lecture_not_in_course(self):
+        self.login_as("instructor")
+        response = self.donkey.post('/edit_section_assignment.html', {"name": "Lecture 2", "user": self.instructor.id}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.lectureTwo.user, None)
 
+    def test_assign_TA_to_lecture(self):
+        self.login_as("instructor")
+        response = self.donkey.post('/edit_section_assignment.html', {"name": "Lecture 2", "user": self.ta.id},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.lectureTwo.user, None)
 
+    def test_assign_instructor_to_lab(self):
+        self.login_as("instructor")
+        response = self.donkey.post('/edit_section_assignment.html', {"name": "Lab 1", "user": self.instructor.id},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.lectureTwo.user, None)
+
+    def test_change_user_success(self):
+        self.login_as("instructor")
+        response = self.donkey.post('/edit_section_assignment.html', {"name": "Lab 1", "user": self.ta.id}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.labOne.user, self.ta)
+
+        self.labOne.refresh_from_db()
+
+        response = self.donkey.post('/edit_section_assignment.html', {"name": "Lab 1", "user": self.ta2.id}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.labOne.user, self.ta2)
+
+    def test_change_user_fail(self):
+        self.login_as("instructor")
+        response = self.donkey.post('/edit_section_assignment.html', {"name": "Lab 1", "user": self.ta.id}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.labOne.user, self.ta)
+
+        self.labOne.refresh_from_db()
+
+        response = self.donkey.post('/edit_section_assignment.html', {"name": "Lab 1", "user": self.instructor.id},
+                                    follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.labOne.user, self.ta)
