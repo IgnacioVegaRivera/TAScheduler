@@ -84,7 +84,7 @@
             <input class="form-control" type="text" name="username" value="{{ user.username }}" readonly>
         </div>
         <div>
-            <label class="form-label">Password:</label>
+            <label class="form-label required">Password:</label>
             <input type="password" class="form-control" name="password" value="{{ user.password }}">
         </div>
         <div>
@@ -116,7 +116,7 @@
                    value="{{ user.address }}">
         </div>
         <div class="fullWidth">
-            <label for="roleControlSelect1" class="form-label required">
+            <label for="roleControlSelect1" class="form-label">
                 Role:</label>
             <select name="role" class="form-control" id="roleControlSelect1" disabled>
                 <option value="TA" {% if user.role == "TA" %}selected{% endif %}>TA</option>

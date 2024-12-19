@@ -30,11 +30,11 @@
         <img src="/static/Logo.jpeg" alt="TA Scheduler Logo" style="height: 10vh; width: auto;">
     </a>
 </div>
-    <div class="pfplogo2">
-    <a href="profile_page.html" >
+<div class="pfplogo2">
+    <a href="profile_page.html">
         <img src="/static/moo_deng_profilePic.png" alt="Profile Logo" style="height: 10vh; width: auto;">
     </a>
-    </div>
+</div>
 
 <div class="navbar">
     <a href="admin_home.html" style="padding: 9%">Databases</a>
@@ -214,7 +214,9 @@
                                     <label class="form-label required">Instructor(s):</label>
                                     {% for instructor in instructors %}
                                         <label class="checkbox-label">
-                                            <input type="checkbox" name="instructors" value="{{ instructor.id }}">
+                                            <input type="checkbox"
+                                                   name="instructors"
+                                                   value="{{ instructor }}">
                                             {{ instructor.first_name }} {{ instructor.last_name }}
                                         </label>
                                     {% endfor %}
