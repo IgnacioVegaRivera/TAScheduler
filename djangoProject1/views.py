@@ -6,6 +6,7 @@ from django.views import View
 from djangoProject1.MethodFiles.Administrator import CreateCourse, CreateUser, CreateSection, EditUser, EditCourse, \
     EditSection, RemoveUser, EditPersonalUser
 from djangoProject1.MethodFiles.GeneralMethods import GetUser, CheckPermission
+from djangoProject1.MethodFiles.Instructor import AssignUser
 from djangoProject1.models import User, Course, Section, DAYS_OF_WEEK
 from datetime import time
 
@@ -191,8 +192,7 @@ class ProfilePage(View):
     def get(self, request):
         user = GetUser.get_user(request)
         if not user:
-            if user.role != "Instructor":
-                return redirect('/')
+            return redirect('/')
 
         return render(request, "profile_page.html",
                       {"roles": User.ROLE_CHOICES, "user": user})
@@ -450,6 +450,14 @@ class ConfigureCoursePage(View):
 class EditSectionAssignmentPage(View):
     def get(self, request):
         user = GetUser.get_user(request)
+        if user is None:
+            return redirect('/')
+
+        can_access = CheckPermission.check_instructor(user)
+        if not can_access:
+            return render(request, "profile_page.html",
+                   {"roles": User.ROLE_CHOICES, "user": user, "message":"You cannot access this page."})
+
         user_courses = Course.objects.filter(users=user)
         instructors = User.objects.filter(role="Instructor")
         tas = User.objects.filter(role="TA")
@@ -459,7 +467,7 @@ class EditSectionAssignmentPage(View):
                                                                 'instructors': instructors, 'tas': tas, 'sections': sections, 'users': users})
 
     def post(self, request):
-        form = request.POST.get('form_name')
+        form = request.POST['form_name']
         user = GetUser.get_user(request)
         user_courses = Course.objects.filter(users=user)
         instructors = User.objects.filter(role="Instructor")
@@ -475,7 +483,12 @@ class EditSectionAssignmentPage(View):
 
     def edit_section_assignment_helper(self, request, user_courses, instructors, tas, sections, users):
 
+        section_id = request.POST['section_id']
+        section_user = request.POST['section_user']
+        section = Section.objects.get(id=section_id)
+        user = User.objects.get(id=section_user)
+        message = AssignUser.assign_user(section, user, section.course)
         return render(request, "edit_section_assignment.html", {'user_courses': user_courses,
                                                                 'instructors': instructors, 'tas': tas,
-                                                                'sections': sections, 'users': users})
+                                                                'sections': sections, 'users': users, 'message': message})
 
