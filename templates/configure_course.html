@@ -254,6 +254,10 @@
                         No User Assigned<br/>
                     {% endif %}
                     {{ section }}<br/>
+
+                    Day(s): {{ section.days }}<br/>
+                    Time: {{ section.time }}<br/>
+                    Location: {{ section.location }}<br/>
                     <div class="section-modal" popover id="editSectionModal {{ section.id }}">
                         <h1 class="formTitle">Edit Section info:</h1>
                         <div class="modal-header" id="myModal {{ section.id }}">
