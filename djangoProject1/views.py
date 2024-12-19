@@ -76,7 +76,8 @@ class ConfigureUserPage(View):
             password = request.POST['password']
             address = request.POST['address']
             skills = request.POST['skills']
-            return self.addUserHelper(username, email, password, firstname, lastname, phone, address, role, skills, request)
+            return self.addUserHelper(username, email, password, firstname, lastname, phone, address, role, skills,
+                                      request)
 
         elif form == "edit_user":
             firstname = request.POST['first_name']
@@ -87,7 +88,8 @@ class ConfigureUserPage(View):
             role = request.POST['role']
             address = request.POST['address']
             skills = request.POST['skills']
-            return self.editUserHelper(request, username, firstname, lastname, phone, email, role, address, skills, users)
+            return self.editUserHelper(request, username, firstname, lastname, phone, email, role, address, skills,
+                                       users)
 
         elif form == "remove_user":
             user_id = request.POST['user_id']
@@ -121,7 +123,7 @@ class ConfigureUserPage(View):
                 'message': "The user \"" + name + "\" has been created"})
 
     # Helper class to save/edit the user
-    def editUserHelper(self, request, username, firstname, lastname, phone, email, role, address, skills, users,):
+    def editUserHelper(self, request, username, firstname, lastname, phone, email, role, address, skills, users, ):
         user = EditUser.edit_user(request, username, firstname, lastname, phone, email, role, address, skills)
         if user is None:
             return render(request, "configure_user.html",
@@ -142,6 +144,7 @@ class ConfigureUserPage(View):
             "users": users,
             "message": message
         })
+
 
 class UserDirectoryPage(View):
     def get(self, request):
@@ -188,11 +191,12 @@ class ProfilePage(View):
     def get(self, request):
         user = GetUser.get_user(request)
         if not user:
-            return redirect('/')
+            if user.role != "Instructor":
+                return redirect('/')
 
         return render(request, "profile_page.html",
                       {"roles": User.ROLE_CHOICES, "user": user})
-        # post method:
+
     def post(self, request):
         form = request.POST.get('form_name')
         user = GetUser.get_user(request)
@@ -205,15 +209,14 @@ class ProfilePage(View):
             address = request.POST['address']
             skills = request.POST['skills']
             return self.editPersonalInfoHelper(request, password, firstname, lastname, phone, email, address, skills,
-                                       user)
+                                               user)
         else:
             return render(request, "profile_page.html", {"roles": User.ROLE_CHOICES, "user": user})
 
-    def editPersonalInfoHelper(self, request, password, firstname, lastname, phone, email, address, skills,
-                                       user):
-
+    def editPersonalInfoHelper(self, request, password, firstname, lastname, phone, email, address, skills, user):
+        
         edited_user = EditPersonalUser.edit_personal_user(request, password, firstname, lastname,
-                                                   phone, email, address, skills, user)
+                                                          phone, email, address, skills, user)
         if edited_user is None:
             return render(request, "profile_page.html",
                           {"roles": User.ROLE_CHOICES, "user": user,
@@ -222,6 +225,7 @@ class ProfilePage(View):
             return render(request, "profile_page.html",
                           {"roles": User.ROLE_CHOICES, "user": user,
                            "message": "Your information has been successfully updated"})
+
 
 class HomePage(View):
     def get(self, request):
@@ -239,7 +243,7 @@ class AdminHomePage(View):
 
         can_access = CheckPermission.check_admin(user)
         if not can_access:
-            return render(request, "home.html", {'message': "You cannot access this page."})
+            return render(request, "home.html", {'message': "You cannot access the Admin page."})
 
         # database selection
         selected_db = request.GET.get('database', 'users')  # default to users
@@ -314,7 +318,6 @@ class ConfigureCoursePage(View):
         for ta in selected_tas:
             users.append(ta)
 
-
         # will return None if the creation failed, will return a course and save it to the database if it succeeded
         course = CreateCourse.create_course(cname, users)
         if course is None:
@@ -322,7 +325,7 @@ class ConfigureCoursePage(View):
                                                              'courses': courses, 'sections': sections,
                                                              'message': "Something went wrong when creating the course \"" + cname + "\""})
         else:
-            #* unpacks the instructors and tas list so it adds individual objects
+            # * unpacks the instructors and tas list so it adds individual objects
             return render(request, "configure_course.html", {"instructors": instructors, "tas": tas,
                                                              'courses': courses, 'sections': sections,
                                                              'message': "The course \"" + cname + "\" has been created"})
@@ -397,10 +400,9 @@ class ConfigureCoursePage(View):
             message = "Failed to update course. Please check your inputs and try again."
 
         return render(request, "configure_course.html", {'courses': courses, 'sections': sections,
-                                                  'users': users, 'tas': tas, 'instructors': instructors,
-                                                  'days': DAYS_OF_WEEK,
-                                                  'message': message})
-
+                                                         'users': users, 'tas': tas, 'instructors': instructors,
+                                                         'days': DAYS_OF_WEEK,
+                                                         'message': message})
 
     def edit_section_helper(self, request, courses, instructors, tas, sections, users):
         # get all of the data we need
@@ -447,7 +449,33 @@ class ConfigureCoursePage(View):
 
 class EditSectionAssignmentPage(View):
     def get(self, request):
-        return render(request, "edit_section_assignment.html", {})
+        user = GetUser.get_user(request)
+        user_courses = Course.objects.filter(users=user)
+        instructors = User.objects.filter(role="Instructor")
+        tas = User.objects.filter(role="TA")
+        sections = Section.objects.all()
+        users = User.objects.all()
+        return render(request, "edit_section_assignment.html", {'user_courses': user_courses,
+                                                                'instructors': instructors, 'tas': tas, 'sections': sections, 'users': users})
 
     def post(self, request):
-        return render(request, "edit_section_assignment.html", {})
+        form = request.POST.get('form_name')
+        user = GetUser.get_user(request)
+        user_courses = Course.objects.filter(users=user)
+        instructors = User.objects.filter(role="Instructor")
+        tas = User.objects.filter(role="TA")
+        sections = Section.objects.all()
+        users = User.objects.all()
+        if form == "edit_section_assignment":
+            return self.edit_section_assignment_helper(request, user_courses, instructors, tas, sections, users)
+        else:
+            return render(request, "edit_section_assignment.html", {'user_courses': user_courses, 'instructors': instructors,
+                                                                    'tas': tas, 'sections': sections, 'users': users,
+                                                                    'message': "Something went wrong when fetching the form, please try again."})
+
+    def edit_section_assignment_helper(self, request, user_courses, instructors, tas, sections, users):
+
+        return render(request, "edit_section_assignment.html", {'user_courses': user_courses,
+                                                                'instructors': instructors, 'tas': tas,
+                                                                'sections': sections, 'users': users})
+

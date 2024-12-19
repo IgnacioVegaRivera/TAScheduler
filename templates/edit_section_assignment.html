@@ -20,14 +20,146 @@
     </div>
 <div class="navbar">
 {#    <a href="admin_home.html" style="padding: 9vh">Admin Home</a>#}
-    <a href="profile_page.html" style="padding: 9vh">Edit Account</a>
-    <a href="edit_section_assignment.html" class="active">Edit Section Assignment</a>
+    <a href="profile_page.html" style="padding: 23vh">Edit Account</a>
+    <a href="edit_section_assignment.html" class="active" style="padding: 23vh"> Edit Section Assignment</a>
 
 
 {#    <a href="user_directory.html" style="padding: 9vh">User Directory</a>#}
 {#    <a href="course_directory.html" style="padding: 9vh">Course Directory</a>#}
-    <a href="/" style="padding: 9vh">Log Out</a>
+    <a href="/" style="padding: 23vh">Log Out</a>
 </div>
 
+<div class="boxContainer">
+    {# displays in the order of course name, all instructors, and all labs and their respective ta #}
+    {% for course in user_courses %}
+        <div class="whiteBox">
+            <h2>{{ course.name }}</h2>
+            <p><b>Instructors</b><br/>
+                {% for instructor in course.users.all %}
+                    {{ instructor }}<br/>
+                {% empty %}
+                    No Instructor Assigned<br/>
+                {% endfor %}
+
+            <br/><br/>
+            <b>Sections and Users</b><br/>
+            {% for section in sections %}
+                {% if section.course.name == course.name %}
+                    {% if section.user %}
+                        {{ section.user }}<br/>
+                    {% else %}
+                        No User Assigned<br/>
+                    {% endif %}
+                    {{ section }}<br/>
+                    <div class="section-modal" popover id="editSectionModal {{ section.id }}">
+                        <h1 class="formTitle">Edit Section info:</h1>
+                        <div class="modal-header" id="myModal {{ section.id }}">
+                            <div class="modal-dialog">
+                                <form action=" " method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="form_name" value="edit_section">
+                                    <input type="hidden" name="section_id" value="{{ section.id }}">
+                                    <fieldset>
+                                        <legend>Section Details</legend>
+                                        <div>
+                                            <label class="form-label required">Section Name (Must Include "Lecture",
+                                                "Lab",
+                                                or "Discussion"):</label>
+                                            <input type="text" class="form-control" name="section_name"
+                                                   value="{{ section.name }}" required readonly>
+                                        </div>
+                                        <div>
+                                            <label class="form-label required">Course:</label>
+                                            <select name="section_course" required disabled>
+                                                <option></option>
+                                                {% for i in user_courses %}
+                                                    {% if i == section.course %}
+                                                        <option selected>{{ i.name }}</option>
+                                                    {% else %}
+                                                        <option>{{ i.name }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </fieldset>
+                                    <hr>
+                                    <fieldset>
+                                        <legend>Schedule</legend>
+                                        <div>
+                                            <label class="form-label">Day(s):</label>
+                                            <div class="day-checkboxes">
+                                                {% for day, day_label in days %}
+                                                    <label class="checkbox-label">
+                                                        <input type="checkbox"
+                                                               name="section_days"
+                                                               value="{{ day }}"
+                                                               {% if section.days and day in section.days %}checked{% endif %} readonly>
+                                                        {{ day_label }}
+                                                    </label>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="form-label">Time:</label>
+                                            <input type="time" class="form-control" name="section_time" readonly/>
+                                        </div>
+                                    </fieldset>
+                                    <hr>
+                                    <fieldset>
+                                        <legend>Location & Users</legend>
+                                        <div>
+                                            <label class="form-label">Location (if included, write the building and
+                                                room number):</label>
+                                            <input type="text" class="form-control" name="section_location"
+                                                   value="{{ section.location }}" readonly>
+                                        </div>
+                                        <div>
+                                            <label class="form-label">Assign User (user must be in selected course if
+                                                included, instructors can only be assigned to lectures, and TA's can
+                                                only be assigned to labs and discussions):</label>
+                                            <select name="section_user" >
+                                                <option></option>
+                                                {% for user in users %}
+                                                    {% if user == section.user %}
+                                                        {% if user.role == "Instructor" or user.role == "TA" %}
+                                                            <option value="{{ user.id }}"
+                                                                    selected>{{ user.first_name }} {{ user.last_name }}
+                                                                ({{ user.role }})
+                                                            </option>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if user.role == "Instructor" or user.role == "TA" %}
+                                                            {% if user in course.users.all %}
+                                                            <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}
+                                                                ({{ user.role }})
+                                                            </option>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </fieldset>
+                                    <div class="submitAndCancelButtons">
+                                        <input type="submit" class="greenBtn" value="Submit">
+                                        <button type="button" class="cancelButton"
+                                                popovertarget="editSectionModal {{ section.id }}"
+                                                popovertargetaction="hide">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <button popovertarget="editSectionModal {{ section.id }}" class="editButton">Edit Section</button>
+                    <br/><br/>
+                {% endif %}
+            {% endfor %}
+            <br/>
+            </p>
+        </div>
+    {% endfor %}
+</div>
 </body>
 </html>
