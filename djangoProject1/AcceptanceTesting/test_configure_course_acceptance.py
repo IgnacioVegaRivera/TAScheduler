@@ -5,9 +5,11 @@ from djangoProject1.models import User, Course, Section
 class TestConfigureCourseAcceptance(TestCase):
     def setUp(self):
         self.donkey = Client()
+        self.admin = User.objects.create(username='admin', password='skills', role='Admin')
 
     #course with 2 instructors
     def course1(self):
+
         self.inst = User.objects.create(username="inst", role="Instructor", first_name="Inst", last_name="User")
         self.ructor = User.objects.create(username="ructor", role="Instructor", first_name="Ructor", last_name="User")
         self.ructor.save()
@@ -74,7 +76,11 @@ class TestConfigureCourseAcceptance(TestCase):
         self.ructor.save()
         self.course4.users.add(self.ructor)
 
+    def login_as_admin(self):
+        self.donkey.post("/", {"username": "admin", "password": "skills"})
+
     def test_course1_shows(self):
+        self.login_as_admin()
         self.course1()
         response = self.donkey.get("/configure_course.html")
         self.assertContains(response, "Course 1")
@@ -85,6 +91,7 @@ class TestConfigureCourseAcceptance(TestCase):
         self.assertContains(response, "Edit") #each course should have an edit button on this page
 
     def test_course2_shows(self):
+        self.login_as_admin()
         self.course2()
         response = self.donkey.get("/configure_course.html")
         self.assertContains(response, "Course 2")
@@ -94,6 +101,7 @@ class TestConfigureCourseAcceptance(TestCase):
         self.assertContains(response, "Edit")
 
     def test_course3_shows(self):
+        self.login_as_admin()
         self.course3()
         response = self.donkey.get("/configure_course.html")
         self.assertContains(response, "Course 3")
@@ -106,6 +114,7 @@ class TestConfigureCourseAcceptance(TestCase):
 
     def test_course4_shows(self):
         self.course4()
+        self.donkey.post("/", {"username": "admin", "password": "skills"})
         response = self.donkey.get("/configure_course.html")
         self.assertContains(response, "Course 4")
         self.assertContains(response, "Ructor User (Instructor)")
