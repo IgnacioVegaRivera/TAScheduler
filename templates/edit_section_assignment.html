@@ -28,7 +28,9 @@
 {#    <a href="course_directory.html" style="padding: 9vh">Course Directory</a>#}
     <a href="/" style="padding: 23vh">Log Out</a>
 </div>
-
+<div style="justify-self: center">
+    {{ message }}
+</div>
 <div class="boxContainer">
     {# displays in the order of course name, all instructors, and all labs and their respective ta #}
     {% for course in user_courses %}
@@ -57,7 +59,7 @@
                             <div class="modal-dialog">
                                 <form action=" " method="post">
                                     {% csrf_token %}
-                                    <input type="hidden" name="form_name" value="edit_section">
+                                    <input type="hidden" name="form_name" value="edit_section_assignment">
                                     <input type="hidden" name="section_id" value="{{ section.id }}">
                                     <fieldset>
                                         <legend>Section Details</legend>
