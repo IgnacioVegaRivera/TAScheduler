@@ -269,6 +269,13 @@ Configure Courses page css:
     max-height: 22rem;
 }
 
+.edit-section-assignment {
+    width: 80vw;
+    max-width: 28rem;
+    height: auto;
+    max-height: 22rem;
+}
+
 
 /*
     For all styles:
