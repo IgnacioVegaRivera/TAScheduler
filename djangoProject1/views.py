@@ -486,7 +486,10 @@ class EditSectionAssignmentPage(View):
         section_id = request.POST['section_id']
         section_user = request.POST['section_user']
         section = Section.objects.get(id=section_id)
-        user = User.objects.get(id=section_user)
+        if section_user != "":
+            user = User.objects.get(id=section_user)
+        else:
+            user = None
         message = AssignUser.assign_user(section, user, section.course)
         return render(request, "edit_section_assignment.html", {'user_courses': user_courses,
                                                                 'instructors': instructors, 'tas': tas,
